@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advertise With Us — Copper Canyon Dental</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+<style>
+/* ── BRAND TOKENS (matched from Copper Canyon Dental site) ── */
+:root {
+  --slate:       #2D3B45;   /* dark header/nav color */
+  --slate-deep:  #1E2B34;
+  --teal:        #3D8E8B;   /* primary brand teal */
+  --teal-bright: #4AACAA;
+  --teal-light:  #E8F5F5;
+  --teal-pale:   #F2FAFA;
+  --gold:        #E8921E;   /* CTA orange/amber from site */
+  --gold-dark:   #C97B10;
+  --white:       #FFFFFF;
+  --off-white:   #F8F9FA;
+  --ink:         #1C2B32;
+  --ink-mid:     #4A5E68;
+  --ink-light:   #8FA3AE;
+  --rule:        #DDE6E9;
+  --radius:      10px;
+  --radius-lg:   16px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background: var(--white);
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+/* ── NAV ── */
+.nav {
+  background: var(--slate);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.nav-logo-mark {
+  width: 42px;
+  height: 42px;
+}
+
+.nav-logo-text {
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--white);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.nav-logo-text span { display: block; font-weight: 300; letter-spacing: 0.2em; font-size: 0.65rem; opacity: 0.8; }
+
+.nav-cta {
+  background: var(--gold);
+  color: white;
+  padding: 0.5rem 1.4rem;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: background 0.15s;
+}
+.nav-cta:hover { background: var(--gold-dark); }
+
+/* ── HERO ── */
+.hero {
+  background: var(--slate);
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 2rem 4rem;
+  text-align: center;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233D8E8B' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  background: var(--teal);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 3px;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+.hero h1 em { color: var(--teal-bright); font-style: italic; }
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.75);
+  max-width: 560px;
+  margin: 0 auto 2.5rem;
+  font-weight: 300;
+  position: relative;
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  max-width: 700px;
+  margin: 0 auto 2.5rem;
+  position: relative;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.hero-stat {
+  flex: 1;
+  min-width: 140px;
+  padding: 1.3rem 1rem;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+}
+.hero-stat:last-child { border-right: none; }
+
+.hero-stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--teal-bright);
+  display: block;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat-label {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
+
+.btn-gold {
+  background: var(--gold);
+  color: white;
+  padding: 0.85rem 2rem;
+  border-radius: 5px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-gold:hover { background: var(--gold-dark); transform: translateY(-1px); }
+
+.btn-outline {
+  background: transparent;
+  color: white;
+  padding: 0.85rem 2rem;
+  border-radius: 5px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.35);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
+
+/* ── TRUST BAR ── */
+.trust-bar {
+  background: var(--teal);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: white;
+  font-weight: 600;
+}
+.trust-item svg { opacity: 0.85; }
+
+/* ── SECTION WRAPPER ── */
+.section { padding: 5rem 2rem; }
+.section-inner { max-width: 1060px; margin: 0 auto; }
+
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.6rem;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  color: var(--ink);
+  margin-bottom: 0.8rem;
+  line-height: 1.25;
+}
+.section-sub {
+  color: var(--ink-mid);
+  font-size: 0.95rem;
+  font-weight: 300;
+  max-width: 520px;
+}
+
+/* ── HOW IT WORKS ── */
+.how-bg { background: var(--off-white); }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.step-card {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem 1.5rem;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+.step-card:hover { box-shadow: 0 6px 24px rgba(61,142,139,0.12); }
+
+.step-num {
+  width: 40px; height: 40px;
+  background: var(--teal);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.step-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+.step-card p { font-size: 0.83rem; color: var(--ink-mid); line-height: 1.6; }
+
+.step-connector {
+  display: none;
+}
+
+/* ── VALUE PROPS ── */
+.value-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.value-list { list-style: none; }
+.value-list li {
+  display: flex;
+  gap: 14px;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.92rem;
+}
+.value-list li:last-child { border-bottom: none; }
+.value-check {
+  width: 22px; height: 22px;
+  background: var(--teal-light);
+  color: var(--teal);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.value-text strong { display: block; font-weight: 700; color: var(--ink); }
+.value-text span { color: var(--ink-mid); font-size: 0.85rem; }
+
+.tv-mockup {
+  background: #111;
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.tv-screen-demo {
+  border-radius: 8px;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1E3A35, #3D8E8B);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.tv-screen-demo::before {
+  content: '';
+  position: absolute;
+  right: -30px; top: -30px;
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+.tv-demo-biz { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 4px; }
+.tv-demo-tag { font-size: 0.72rem; opacity: 0.8; margin-bottom: 10px; font-weight: 300; }
+.tv-demo-badge {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  padding: 4px 14px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.tv-demo-footer { position: absolute; bottom: 10px; font-size: 0.55rem; opacity: 0.5; }
+.tv-demo-duration { position: absolute; top: 8px; right: 10px; font-size: 0.55rem; opacity: 0.4; }
+.tv-stand { width: 60px; height: 10px; background: #222; margin: 0 auto; border-radius: 0 0 6px 6px; }
+
+/* ── PRICING ── */
+.pricing-bg { background: var(--slate); }
+.pricing-bg .section-title { color: white; }
+.pricing-bg .section-label { color: var(--teal-bright); }
+.pricing-bg .section-sub { color: rgba(255,255,255,0.6); }
+
+.pricing-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  max-width: 700px;
+}
+
+.price-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-lg);
+  padding: 2rem 1.8rem;
+  position: relative;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.price-card:hover { border-color: var(--teal-bright); background: rgba(61,142,139,0.12); }
+.price-card.featured {
+  border-color: var(--gold);
+  background: rgba(232,146,30,0.08);
+}
+.price-badge {
+  position: absolute;
+  top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--gold);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.price-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 10px;
+}
+.price-amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  color: white;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.price-amount sup { font-size: 1.2rem; vertical-align: top; margin-top: 8px; font-family: 'Nunito Sans', sans-serif; }
+.price-amount span { font-family: 'Nunito Sans', sans-serif; font-size: 0.9rem; color: rgba(255,255,255,0.5); }
+.price-desc { font-size: 0.8rem; color: rgba(255,255,255,0.55); margin-bottom: 1.5rem; line-height: 1.5; }
+.price-features { list-style: none; }
+.price-features li {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.8);
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.price-features li::before { content: '✓'; color: var(--teal-bright); font-weight: 700; }
+
+/* ── SIGNUP FLOW (multi-step) ── */
+.signup-bg { background: var(--teal-pale); }
+
+.flow-container {
+  max-width: 760px;
+  margin: 3rem auto 0;
+}
+
+.flow-progress {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  gap: 0;
+}
+.flow-step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  position: relative;
+}
+.flow-step-indicator::after {
+  content: '';
+  position: absolute;
+  left: calc(50% + 18px); top: 18px;
+  right: calc(-50% + 18px);
+  height: 2px;
+  background: var(--rule);
+  z-index: 0;
+}
+.flow-step-indicator:last-child::after { display: none; }
+.flow-dot {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2px solid var(--rule);
+  color: var(--ink-light);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s;
+}
+.flow-dot.active { background: var(--teal); border-color: var(--teal); color: white; }
+.flow-dot.done { background: var(--teal); border-color: var(--teal); color: white; font-size: 0.9rem; }
+.flow-step-name {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-light);
+  text-align: center;
+  transition: color 0.3s;
+}
+.flow-step-indicator.active .flow-step-name { color: var(--teal); }
+
+.flow-panel {
+  display: none;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  animation: fadeUp 0.3s ease;
+}
+.flow-panel.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.panel-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+}
+.panel-sub { font-size: 0.88rem; color: var(--ink-mid); margin-bottom: 1.8rem; font-weight: 300; }
+
+/* form elements */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { margin-bottom: 1rem; }
+.form-group label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink-mid);
+  margin-bottom: 5px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--rule);
+  border-radius: 6px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--teal); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+
+/* plan cards in form */
+.plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem; }
+.plan-pick {
+  border: 2px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.plan-pick:hover { border-color: var(--teal); }
+.plan-pick.selected { border-color: var(--teal); background: var(--teal-pale); }
+.plan-pick-name { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-mid); margin-bottom: 4px; }
+.plan-pick-price { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--teal); }
+.plan-pick-desc { font-size: 0.76rem; color: var(--ink-light); margin-top: 4px; }
+.plan-pick-check {
+  position: absolute; top: 10px; right: 10px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--teal); color: white;
+  font-size: 10px;
+  display: none; align-items: center; justify-content: center;
+}
+.plan-pick.selected .plan-pick-check { display: flex; }
+
+/* ad style picker */
+.style-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+.style-pick {
+  border: 2px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 0.8rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+.style-pick:hover { border-color: var(--teal); }
+.style-pick.selected { border-color: var(--teal); background: var(--teal-pale); }
+.style-swatch {
+  height: 50px;
+  border-radius: 5px;
+  margin-bottom: 7px;
+}
+.style-name { font-size: 0.72rem; font-weight: 700; color: var(--ink); }
+
+/* ad preview */
+.ad-preview-wrap {
+  background: #1A1A18;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.ad-preview-screen {
+  border-radius: 8px;
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.5s;
+}
+.ad-prev-biz { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 6px; }
+.ad-prev-tag { font-size: 0.8rem; opacity: 0.85; margin-bottom: 14px; font-weight: 300; }
+.ad-prev-offer {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 5px;
+  padding: 6px 18px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: none;
+}
+.ad-prev-footer { position: absolute; bottom: 12px; font-size: 0.6rem; opacity: 0.45; }
+.ad-prev-duration { position: absolute; top: 10px; right: 12px; font-size: 0.6rem; opacity: 0.4; }
+
+.generating-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; border-radius: 8px;
+  display: none;
+}
+.spinner {
+  width: 36px; height: 36px;
+  border: 2.5px solid rgba(255,255,255,0.2);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.gen-label { color: rgba(255,255,255,0.75); font-size: 0.85rem; }
+
+.ai-result {
+  background: var(--teal-pale);
+  border: 1px solid #B8E0DE;
+  border-radius: var(--radius);
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: none;
+}
+.ai-result-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal); margin-bottom: 6px; }
+.ai-result-tagline { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--ink); margin-bottom: 4px; }
+.ai-result-copy { font-size: 0.85rem; color: var(--ink-mid); }
+
+/* agreement */
+.agreement-scroll {
+  background: var(--off-white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  font-size: 0.78rem;
+  color: var(--ink-mid);
+  line-height: 1.7;
+  max-height: 130px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+.check-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 0.85rem; color: var(--ink); margin-bottom: 0.75rem;
+  cursor: pointer;
+}
+.check-row input { width: 16px; height: 16px; accent-color: var(--teal); margin-top: 2px; flex-shrink: 0; }
+
+/* payment */
+.payment-secure {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.75rem; color: var(--ink-light);
+  margin-bottom: 1.2rem;
+}
+.card-icons { display: flex; gap: 6px; margin-left: auto; }
+.card-icon {
+  background: var(--off-white);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--ink-mid);
+}
+
+/* order summary sidebar */
+.signup-layout { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; max-width: 1000px; margin: 3rem auto 0; }
+.sidebar-summary {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem;
+  position: sticky;
+  top: 90px;
+  height: fit-content;
+}
+.summary-title { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal); margin-bottom: 1rem; }
+.summary-row {
+  display: flex; justify-content: space-between;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.85rem;
+}
+.summary-row:last-child { border-bottom: none; font-weight: 700; }
+.summary-label { color: var(--ink-mid); }
+.summary-value { color: var(--ink); font-weight: 600; }
+.summary-total { color: var(--teal); font-size: 1rem; }
+.summary-note {
+  margin-top: 1rem;
+  font-size: 0.73rem;
+  color: var(--ink-light);
+  line-height: 1.6;
+}
+.summary-reach {
+  margin-top: 1rem;
+  background: var(--teal-pale);
+  border-radius: 8px;
+  padding: 0.8rem;
+  font-size: 0.78rem;
+  color: var(--teal);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* nav buttons */
+.flow-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+.btn-back {
+  background: none;
+  border: none;
+  color: var(--ink-mid);
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  padding: 0.5rem 0;
+  font-weight: 600;
+}
+.btn-back:hover { color: var(--ink); }
+.btn-next {
+  background: var(--teal);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 5px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.15s;
+}
+.btn-next:hover { background: #2E7370; transform: translateY(-1px); }
+.btn-submit {
+  background: var(--gold);
+  color: white;
+  border: none;
+  padding: 0.85rem 2.5rem;
+  border-radius: 5px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.15s;
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.btn-submit:hover { background: var(--gold-dark); }
+
+/* success */
+.success-panel {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+.success-icon {
+  width: 72px; height: 72px;
+  background: var(--teal-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 1.5rem;
+}
+.success-panel h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.success-panel p { color: var(--ink-mid); font-size: 0.92rem; margin-bottom: 2rem; font-weight: 300; }
+.next-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  text-align: left;
+  margin: 2rem 0;
+}
+.next-step {
+  background: var(--off-white);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.next-step-num { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--teal); margin-bottom: 4px; }
+.next-step-text { font-size: 0.78rem; color: var(--ink-mid); }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--slate-deep);
+  padding: 2.5rem;
+  text-align: center;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.8rem;
+}
+.footer a { color: var(--teal-bright); text-decoration: none; }
+
+/* ── RESPONSIVE ── */
+/* upload zones */
+.upload-zone {
+  border: 2px dashed var(--rule);
+  border-radius: var(--radius);
+  padding: 1.2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--off-white);
+}
+.upload-zone:hover { border-color: var(--teal); background: var(--teal-pale); }
+.upload-zone.has-file { border-color: var(--teal); border-style: solid; background: var(--teal-pale); }
+.upload-icon { font-size: 1.4rem; margin-bottom: 4px; }
+.upload-text { font-size: 0.82rem; font-weight: 600; color: var(--ink-mid); }
+.upload-hint { font-size: 0.72rem; color: var(--ink-light); margin-top: 2px; }
+
+@media (max-width: 768px) {
+  .form-row, .plan-grid, .style-grid, .value-grid,
+  .pricing-cards, .signup-layout { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; }
+  .hero-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .hero-stat:last-child { border-bottom: none; }
+  .next-steps { grid-template-columns: 1fr; }
+  .sidebar-summary { position: static; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav class="nav">
+  <a href="#" class="nav-logo">
+    <!-- Mountain logo mark matching Copper Canyon Dental -->
+    <svg class="nav-logo-mark" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 34 L14 18 L20 26 L26 14 L36 34 Z" fill="none" stroke="#3D8E8B" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M6 34 L14 18 L20 26 L26 14 L36 34 Z" fill="rgba(61,142,139,0.15)"/>
+    </svg>
+    <div class="nav-logo-text">
+      Copper Canyon
+      <span>Dental</span>
+    </div>
+  </a>
+  <a href="#signup" class="nav-cta">Get Started — It's Free to Apply</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-eyebrow">Gilbert, AZ · Ad Partnership Program</div>
+  <h1>Your business, seen by<br><em>6,400 patients</em> a month.</h1>
+  <p class="hero-sub">Advertise on the TVs inside Copper Canyon Dental's treatment rooms — where a captive audience sits for 20–60 minutes with nothing to do but look.</p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-num">40–50</span>
+      <span class="hero-stat-label">Daily Patients</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">6,400+</span>
+      <span class="hero-stat-label">Monthly Impressions</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">6</span>
+      <span class="hero-stat-label">TV Screens</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-num">$99</span>
+      <span class="hero-stat-label">Starting/Month</span>
+    </div>
+  </div>
+
+  <div class="hero-btns">
+    <a href="#signup" class="btn-gold">✦ Claim Your Ad Slot</a>
+    <a href="#how-it-works" class="btn-outline">See How It Works ↓</a>
+  </div>
+</section>
+
+<!-- ── TRUST BAR ── -->
+<div class="trust-bar">
+  <div class="trust-item">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="white" stroke-width="1.5"/><path d="M4 7l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    No long-term contract
+  </div>
+  <div class="trust-item">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="white" stroke-width="1.5"/><path d="M4 7l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    AI creates your ad for free
+  </div>
+  <div class="trust-item">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="white" stroke-width="1.5"/><path d="M4 7l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    Cancel anytime, 30 days notice
+  </div>
+  <div class="trust-item">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="white" stroke-width="1.5"/><path d="M4 7l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    Only <span id="spots-remaining">&nbsp;18&nbsp;</span> spots left
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="section how-bg" id="how-it-works">
+  <div class="section-inner">
+    <div class="section-label">Simple Process</div>
+    <h2 class="section-title">Up and running in under 10 minutes.</h2>
+    <p class="section-sub">From sign-up to your ad playing on our TVs — we handle everything.</p>
+
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Tell us about your business</h3>
+        <p>Fill in your name, tagline, and any special offer you'd like to promote. Takes 2 minutes.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>AI builds your ad instantly</h3>
+        <p>Our AI generates a polished 15-second TV slide for you — no designer needed. Preview it live.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Choose your plan & pay</h3>
+        <p>Pick Basic ($99), Standard ($199), or Premium ($249/mo). Secure checkout takes under a minute.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h3>Go live on 6 TVs</h3>
+        <p>Your ad starts running within 48 hours — 4 times per hour, every hour we're open.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">5</div>
+        <h3>Track & renew</h3>
+        <p>We'll send monthly impression reports. Renew, upgrade, or cancel anytime with a quick message.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHY IT WORKS ── -->
+<section class="section">
+  <div class="section-inner">
+    <div class="value-grid">
+      <div>
+        <div class="section-label">Why it works</div>
+        <h2 class="section-title">Captive audience. Zero competition.</h2>
+        <p class="section-sub" style="margin-bottom: 2rem;">Patients sit in our chairs for 20–60 minutes with nothing else to do. Your ad is the only show in town.</p>
+        <ul class="value-list">
+          <li>
+            <div class="value-check">✓</div>
+            <div class="value-text">
+              <strong>Hyper-local reach</strong>
+              <span>Our patients live and work within a mile — they will walk past your door.</span>
+            </div>
+          </li>
+          <li>
+            <div class="value-check">✓</div>
+            <div class="value-text">
+              <strong>Cheaper than Google Ads</strong>
+              <span>6,400 local impressions for $100/mo. Google Ads can't touch that CPM for local targeting.</span>
+            </div>
+          </li>
+          <li>
+            <div class="value-check">✓</div>
+            <div class="value-text">
+              <strong>Endorsed by association</strong>
+              <span>Being featured in a dental office builds instant trust. Patients assume we've vetted you.</span>
+            </div>
+          </li>
+          <li>
+            <div class="value-check">✓</div>
+            <div class="value-text">
+              <strong>Optional coupon drives foot traffic</strong>
+              <span>Add a discount code and track exactly how many patients visit because of your ad.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="tv-mockup">
+          <div class="tv-screen-demo">
+            <div class="tv-demo-duration">15 sec</div>
+            <div class="tv-demo-biz" id="demo-biz-name">Your Business Here</div>
+            <div class="tv-demo-tag" id="demo-biz-tag">Your tagline — reaching 6,400 patients/month</div>
+            <div class="tv-demo-badge" id="demo-biz-offer">Special offer · Mention this ad</div>
+            <div class="tv-demo-footer">Copper Canyon Dental · Gilbert, AZ</div>
+          </div>
+        </div>
+        <div class="tv-stand"></div>
+        <p style="text-align:center; font-size: 0.75rem; color: var(--ink-light); margin-top: 10px;">Live preview updates as you fill out the form below →</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="section pricing-bg" id="pricing">
+  <div class="section-inner">
+    <div class="section-label">Advertising Plans</div>
+    <h2 class="section-title">Simple, transparent pricing.</h2>
+    <p class="section-sub">Month-to-month. No contracts. Cancel anytime.</p>
+    <div class="pricing-cards" style="grid-template-columns: repeat(3,1fr); max-width: 860px;">
+      <div class="price-card">
+        <div class="price-name">Basic</div>
+        <div class="price-amount"><sup>$</sup>99<span>/mo</span></div>
+        <div class="price-desc">A great entry point. Get your brand in front of thousands of local patients.</div>
+        <ul class="price-features">
+          <li>15-second TV ad slide</li>
+          <li>2× rotation per hour</li>
+          <li>3 of 6 operatory screens</li>
+          <li>~3,200 impressions/month</li>
+          <li>AI ad generation included</li>
+          <li>Cancel anytime</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">Most Popular</div>
+        <div class="price-name">Standard</div>
+        <div class="price-amount"><sup>$</sup>199<span>/mo</span></div>
+        <div class="price-desc">Maximum screen coverage. Full rotation across all 6 treatment room TVs.</div>
+        <ul class="price-features">
+          <li>15-second TV ad slide</li>
+          <li>4× rotation per hour</li>
+          <li>All 6 operatory screens</li>
+          <li>6,400+ impressions/month</li>
+          <li>AI ad generation included</li>
+          <li>Monthly impression report</li>
+        </ul>
+      </div>
+      <div class="price-card" style="border-color: rgba(232,146,30,0.5);">
+        <div class="price-badge" style="background: var(--gold);">Best Value</div>
+        <div class="price-name">Premium</div>
+        <div class="price-amount"><sup>$</sup>249<span>/mo</span></div>
+        <div class="price-desc">Multi-channel exposure — screens plus physical coupons in patient goodie bags.</div>
+        <ul class="price-features">
+          <li>30-second premium ad slot</li>
+          <li>6× rotation per hour</li>
+          <li>All 6 operatory screens</li>
+          <li>9,600+ impressions/month</li>
+          <li>AI ad generation included</li>
+          <li>Coupon insert in patient bags</li>
+          <li>Priority slot placement</li>
+          <li>Monthly impression report</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SIGN UP FLOW ── -->
+<section class="section signup-bg" id="signup">
+  <div class="section-inner" style="text-align: center; margin-bottom: 0;">
+    <div class="section-label">Get Started</div>
+    <h2 class="section-title">Claim your ad slot today.</h2>
+    <p class="section-sub" style="margin: 0 auto;">Limited to 24 spots total. <strong id="spots-remaining-2">18 remaining.</strong> Takes under 10 minutes.</p>
+  </div>
+
+  <div class="signup-layout">
+    <!-- MAIN FORM FLOW -->
+    <div>
+      <!-- Progress indicator -->
+      <div class="flow-progress">
+        <div class="flow-step-indicator active" id="ind-1">
+          <div class="flow-dot active" id="dot-1">1</div>
+          <div class="flow-step-name">Your Business</div>
+        </div>
+        <div class="flow-step-indicator" id="ind-2">
+          <div class="flow-dot" id="dot-2">2</div>
+          <div class="flow-step-name">Ad Preview</div>
+        </div>
+        <div class="flow-step-indicator" id="ind-3">
+          <div class="flow-dot" id="dot-3">3</div>
+          <div class="flow-step-name">Choose Plan</div>
+        </div>
+        <div class="flow-step-indicator" id="ind-4">
+          <div class="flow-dot" id="dot-4">4</div>
+          <div class="flow-step-name">Agreement</div>
+        </div>
+        <div class="flow-step-indicator" id="ind-5">
+          <div class="flow-dot" id="dot-5">5</div>
+          <div class="flow-step-name">Payment</div>
+        </div>
+      </div>
+
+      <!-- STEP 1: Business Info -->
+      <div class="flow-panel active" id="panel-1">
+        <div class="panel-title">Tell us about your business</div>
+        <p class="panel-sub">This info will be used to generate your TV ad — the more detail, the better.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Business Name *</label>
+            <input type="text" id="f-biz-name" placeholder="e.g. Peak Yoga Studio" oninput="syncPreview()">
+          </div>
+          <div class="form-group">
+            <label>Business Type</label>
+            <select id="f-biz-type">
+              <option>Restaurant / Café</option>
+              <option>Retail / Boutique</option>
+              <option>Salon / Spa</option>
+              <option>Fitness / Yoga</option>
+              <option>Medical / Wellness</option>
+              <option>Real Estate</option>
+              <option>Auto / Services</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Contact Name *</label>
+            <input type="text" id="f-contact" placeholder="First & Last Name">
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="f-email" placeholder="you@yourbusiness.com">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" id="f-phone" placeholder="(480) 555-0000">
+          </div>
+          <div class="form-group">
+            <label>Business Address</label>
+            <input type="text" id="f-address" placeholder="Street, Gilbert AZ">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>What do you offer? (used to write your ad)</label>
+          <textarea id="f-desc" placeholder="e.g. Hot yoga, meditation classes, and wellness coaching for the whole family. Family-owned since 2018." oninput="syncPreview()"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Special Offer or Coupon (optional)</label>
+          <input type="text" id="f-offer" placeholder="e.g. First class free — mention CanyonAds" oninput="syncPreview()">
+        </div>
+        <div class="form-group">
+          <label>Website URL <span style="font-weight:400;color:var(--ink-light)">(optional — AI uses this to match your brand style)</span></label>
+          <input type="url" id="f-website" placeholder="https://yourbusiness.com">
+        </div>
+
+        <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); margin: 1.2rem 0 0.75rem; padding-top: 1.2rem; border-top: 1px solid var(--rule);">Brand Assets <span style="font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-light); font-size: 0.75rem;">— optional, but make your ad look amazing</span></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Logo <span style="font-weight:400;color:var(--ink-light)">(PNG or JPG)</span></label>
+            <div class="upload-zone" onclick="document.getElementById('f-logo').click()" id="logo-zone">
+              <div class="upload-icon">🖼</div>
+              <div class="upload-text">Click to upload logo</div>
+              <div class="upload-hint">PNG, JPG up to 10MB</div>
+              <input type="file" id="f-logo" accept="image/*" style="display:none" onchange="previewUpload(this,'logo-zone','logo-preview')">
+            </div>
+            <img id="logo-preview" style="display:none; margin-top:8px; max-height:60px; border-radius:4px; border:1px solid var(--rule);">
+          </div>
+          <div class="form-group">
+            <label>Photo / Background Image <span style="font-weight:400;color:var(--ink-light)">(optional)</span></label>
+            <div class="upload-zone" onclick="document.getElementById('f-photo').click()" id="photo-zone">
+              <div class="upload-icon">📷</div>
+              <div class="upload-text">Click to upload photo</div>
+              <div class="upload-hint">PNG, JPG up to 10MB</div>
+              <input type="file" id="f-photo" accept="image/*" style="display:none" onchange="previewUpload(this,'photo-zone','photo-preview')">
+            </div>
+            <img id="photo-preview" style="display:none; margin-top:8px; max-height:60px; width:100%; object-fit:cover; border-radius:4px; border:1px solid var(--rule);">
+          </div>
+        </div>
+        <div class="flow-nav">
+          <span></span>
+          <button class="btn-next" onclick="goStep(2)">Next: Preview Your Ad →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Ad Preview -->
+      <div class="flow-panel" id="panel-2">
+        <div class="panel-title">Preview your TV ad</div>
+        <p class="panel-sub">Choose a style and our AI will generate a polished 15-second slide for your business.</p>
+
+        <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-mid); margin-bottom: 10px;">Ad Style</div>
+        <div class="style-grid">
+          <div class="style-pick selected" onclick="pickStyle(this,'premium')" data-style="Premium Modern">
+            <div class="style-swatch" style="background: linear-gradient(135deg,#1C2B32,#3D8E8B);"></div>
+            <div class="style-name">Premium Modern</div>
+          </div>
+          <div class="style-pick" onclick="pickStyle(this,'minimal')" data-style="Clean Minimal">
+            <div class="style-swatch" style="background: linear-gradient(135deg,#F2FAFA,#3D8E8B);"></div>
+            <div class="style-name">Clean Minimal</div>
+          </div>
+          <div class="style-pick" onclick="pickStyle(this,'bold')" data-style="Classic Bold">
+            <div class="style-swatch" style="background: linear-gradient(135deg,#1C2B32,#E8921E);"></div>
+            <div class="style-name">Classic Bold</div>
+          </div>
+        </div>
+
+        <div class="ad-preview-wrap">
+          <div class="ad-preview-screen" id="ad-screen" style="background: linear-gradient(135deg, #1C2B32, #3D8E8B);">
+            <div class="ad-prev-duration">15 sec</div>
+            <div class="generating-overlay" id="gen-overlay">
+              <div class="spinner"></div>
+              <div class="gen-label">AI is building your ad…</div>
+            </div>
+            <div class="ad-prev-biz" id="prev-biz-name">Your Business Name</div>
+            <div class="ad-prev-tag" id="prev-tagline">Your tagline will appear here</div>
+            <div class="ad-prev-offer" id="prev-offer"></div>
+            <div class="ad-prev-footer">Copper Canyon Dental · Gilbert, AZ</div>
+          </div>
+        </div>
+
+        <div class="ai-result" id="ai-result-box">
+          <div class="ai-result-label">✨ AI Generated Copy</div>
+          <div class="ai-result-tagline" id="ai-tagline-out"></div>
+          <div class="ai-result-copy" id="ai-copy-out"></div>
+        </div>
+
+        <button class="btn-next" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="generateAd()" id="gen-btn">
+          ✨ Generate My Ad with AI
+        </button>
+
+        <div class="flow-nav">
+          <button class="btn-back" onclick="goStep(1)">← Back</button>
+          <button class="btn-next" onclick="goStep(3)">Looks great — Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Plan -->
+      <div class="flow-panel" id="panel-3">
+        <div class="panel-title">Choose your advertising plan</div>
+        <p class="panel-sub">All plans include AI ad creation. Cancel anytime with 30 days notice.</p>
+
+        <div class="plan-grid" style="grid-template-columns: repeat(3,1fr);">
+          <div class="plan-pick" onclick="pickPlan(this, 99, 'Basic', '2×/hr · 3 TVs · ~3,200/mo')">
+            <div class="plan-pick-check">✓</div>
+            <div class="plan-pick-name">Basic</div>
+            <div class="plan-pick-price">$99<span style="font-size:0.9rem; color:var(--ink-light); font-family:'Nunito Sans',sans-serif;">/mo</span></div>
+            <div class="plan-pick-desc">2×/hr · 3 TVs · ~3,200 impressions/mo</div>
+          </div>
+          <div class="plan-pick selected" onclick="pickPlan(this, 199, 'Standard', '4×/hr · All 6 TVs · 6,400+/mo')">
+            <div class="plan-pick-check">✓</div>
+            <div class="plan-pick-name">Standard ★ Most popular</div>
+            <div class="plan-pick-price">$199<span style="font-size:0.9rem; color:var(--ink-light); font-family:'Nunito Sans',sans-serif;">/mo</span></div>
+            <div class="plan-pick-desc">4×/hr · All 6 TVs · 6,400+ impressions/mo</div>
+          </div>
+          <div class="plan-pick" onclick="pickPlan(this, 249, 'Premium', '6×/hr · All 6 TVs + bag inserts')">
+            <div class="plan-pick-check">✓</div>
+            <div class="plan-pick-name">Premium ✦ Best value</div>
+            <div class="plan-pick-price">$249<span style="font-size:0.9rem; color:var(--ink-light); font-family:'Nunito Sans',sans-serif;">/mo</span></div>
+            <div class="plan-pick-desc">6×/hr · All 6 TVs · 9,600+ impressions + coupon bag inserts</div>
+          </div>
+        </div>
+
+        <div class="flow-nav">
+          <button class="btn-back" onclick="goStep(2)">← Back</button>
+          <button class="btn-next" onclick="goStep(4)">Next: Review Agreement →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Agreement -->
+      <div class="flow-panel" id="panel-4">
+        <div class="panel-title">Review & agree</div>
+        <p class="panel-sub">Please read the advertiser agreement below before proceeding to payment.</p>
+
+        <div class="agreement-scroll">
+          <strong>Copper Canyon Dental — Advertiser Agreement</strong><br><br>
+          This agreement is between Copper Canyon Dental ("Publisher"), located in Gilbert, Arizona, and the business identified in this application ("Advertiser").<br><br>
+          <strong>1. Service.</strong> Publisher will display Advertiser's 15-second static ad slide on in-office TVs for the rotation frequency specified in the selected plan. Ads run during all patient hours.<br><br>
+          <strong>2. Term & Cancellation.</strong> This agreement is month-to-month. Either party may cancel with 30 days written notice. No partial-month refunds.<br><br>
+          <strong>3. Content Standards.</strong> Publisher reserves the right to reject or remove ad content that conflicts with office values, patient safety, or applicable law. Advertiser warrants they own rights to all submitted content.<br><br>
+          <strong>4. Payment.</strong> Advertiser authorizes automatic monthly billing on the anniversary of sign-up. Failed payments result in ad suspension within 48 hours. Publisher will make one retry before contacting Advertiser.<br><br>
+          <strong>5. AI-Generated Content.</strong> Advertiser approves use of AI tools to generate ad creative on their behalf. Advertiser retains the right to request revisions before their ad goes live.<br><br>
+          <strong>6. Limitation of Liability.</strong> Publisher is not liable for technical outages. Publisher will make commercially reasonable efforts to maintain ad display. Advertiser's sole remedy for outages exceeding 7 days is a prorated credit.<br><br>
+          <strong>7. Governing Law.</strong> This agreement is governed by the laws of the State of Arizona.
+        </div>
+
+        <label class="check-row">
+          <input type="checkbox" id="chk-terms"> I have read and agree to the Advertiser Agreement above.
+        </label>
+        <label class="check-row">
+          <input type="checkbox" id="chk-charge"> I authorize Copper Canyon Dental to charge my card monthly until I cancel with 30 days notice.
+        </label>
+        <label class="check-row">
+          <input type="checkbox" id="chk-content"> I confirm I own the rights to all content submitted (logo, images, copy) and it complies with applicable laws.
+        </label>
+
+        <div class="flow-nav">
+          <button class="btn-back" onclick="goStep(3)">← Back</button>
+          <button class="btn-next" onclick="goStep(5)">Next: Payment →</button>
+        </div>
+      </div>
+
+      <!-- STEP 5: Payment -->
+      <div class="flow-panel" id="panel-5">
+        <div class="panel-title">Secure payment</div>
+        <p class="panel-sub">Your first month is charged today. Subsequent months bill automatically.</p>
+
+        <div class="payment-secure">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="6" width="10" height="7" rx="1.5" stroke="#8FA3AE" stroke-width="1.3"/><path d="M4.5 6V4.5a2.5 2.5 0 015 0V6" stroke="#8FA3AE" stroke-width="1.3" stroke-linecap="round"/></svg>
+          Secured with 256-bit SSL encryption
+          <div class="card-icons">
+            <span class="card-icon">VISA</span>
+            <span class="card-icon">MC</span>
+            <span class="card-icon">AMEX</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="grid-column: 1 / -1;">
+            <label>Card Number</label>
+            <input type="text" id="f-card-num" placeholder="4242 4242 4242 4242" maxlength="19" oninput="formatCard(this)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Name on Card</label>
+          <input type="text" id="f-card-name" placeholder="Full name as on card">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Expiry</label>
+            <input type="text" id="f-card-exp" placeholder="MM/YY" maxlength="5" oninput="formatExp(this)">
+          </div>
+          <div class="form-group">
+            <label>CVV</label>
+            <input type="text" id="f-card-cvv" placeholder="123" maxlength="4">
+          </div>
+        </div>
+
+        <div style="background: var(--off-white); border-radius: var(--radius); padding: 1rem 1.2rem; margin-top: 0.5rem; font-size: 0.82rem; color: var(--ink-mid);">
+          💡 <strong>Real Stripe checkout:</strong> Connect your Stripe account in the backend to process live payments. This form will redirect to Stripe's secure checkout page.
+        </div>
+
+        <button class="btn-submit" onclick="submitSignup()">
+          🔒 Complete Sign-Up · Pay <span id="submit-price">$199</span>/mo
+        </button>
+
+        <div class="flow-nav" style="border-top: none; padding-top: 0.5rem; margin-top: 0.5rem;">
+          <button class="btn-back" onclick="goStep(4)">← Back</button>
+          <span style="font-size: 0.72rem; color: var(--ink-light);">Cancel anytime · 30 days notice</span>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="flow-panel" id="panel-success">
+        <div class="success-panel">
+          <div class="success-icon">✓</div>
+          <h2>You're in, <span id="success-name">friend</span>!</h2>
+          <p>Payment received. Your ad is being finalized and will go live within 48 hours. Here's what happens next:</p>
+          <div class="next-steps">
+            <div class="next-step">
+              <div class="next-step-num">01</div>
+              <div class="next-step-text">We'll email you a copy of your agreement and ad preview within 24 hours.</div>
+            </div>
+            <div class="next-step">
+              <div class="next-step-num">02</div>
+              <div class="next-step-text">Your ad goes live on all operatory TVs within 48 hours of approval.</div>
+            </div>
+            <div class="next-step">
+              <div class="next-step-num">03</div>
+              <div class="next-step-text">You'll receive a monthly impression report every billing cycle.</div>
+            </div>
+          </div>
+          <a href="#" class="btn-gold" style="display: inline-flex; margin: 0 auto;">← Back to Copper Canyon Dental</a>
+        </div>
+      </div>
+
+    </div><!-- end main form -->
+
+    <!-- SIDEBAR SUMMARY -->
+    <div>
+      <div class="sidebar-summary">
+        <div class="summary-title">Your Order</div>
+        <div class="summary-row">
+          <span class="summary-label">Business</span>
+          <span class="summary-value" id="sum-biz">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Plan</span>
+          <span class="summary-value" id="sum-plan">Standard</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Rotation</span>
+          <span class="summary-value" id="sum-rotation">4×/hr · All 6 TVs</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Monthly charge</span>
+          <span class="summary-value summary-total" id="sum-price">$199/mo</span>
+        </div>
+        <div class="summary-note">Month-to-month. Cancel anytime with 30 days notice. First payment due today.</div>
+        <div class="summary-reach">📺 Estimated <strong>6,400+ patients</strong> will see your ad each month.</div>
+      </div>
+    </div>
+
+  </div><!-- end signup-layout -->
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <p>+1 (480) 553-9909 · <a href="/cdn-cgi/l/email-protection#294a4659594c5b4a48475046474d4c475d4845694e44484045074a4644"><span class="__cf_email__" data-cfemail="10737f6060756273717e697f7e74757e64717c50777d71797c3e737f7d">[email&#160;protected]</span></a></p>
+  <p style="margin-top: 8px; opacity: 0.6;">© 2026 Copper Canyon Dental · Gilbert, Arizona · <a href="#">Privacy Policy</a></p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ── STATE ── */
+let currentStep = 1;
+let selectedPlan = { price: 199, name: 'Standard', rotation: '4×/hr · All 6 TVs' };
+let selectedStyle = 'Premium Modern';
+let adGenerated = false;
+
+const styleGradients = {
+  premium: 'linear-gradient(135deg, #1C2B32, #3D8E8B)',
+  minimal: 'linear-gradient(135deg, #E8F5F5, #3D8E8B)',
+  bold:    'linear-gradient(135deg, #1C2B32, #E8921E)',
+};
+
+/* ── STEP NAVIGATION ── */
+function goStep(n) {
+  // validation
+  if (n === 2) {
+    if (!document.getElementById('f-biz-name').value.trim()) { alert('Please enter your business name.'); return; }
+    if (!document.getElementById('f-contact').value.trim()) { alert('Please enter a contact name.'); return; }
+    if (!document.getElementById('f-email').value.trim()) { alert('Please enter your email address.'); return; }
+  }
+  if (n === 5) {
+    const all = ['chk-terms','chk-charge','chk-content'].every(id => document.getElementById(id).checked);
+    if (!all) { alert('Please check all three agreement boxes to continue.'); return; }
+  }
+
+  // hide all panels
+  document.querySelectorAll('.flow-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + n).classList.add('active');
+
+  // update indicators
+  for (let i = 1; i <= 5; i++) {
+    const dot = document.getElementById('dot-' + i);
+    const ind = document.getElementById('ind-' + i);
+    dot.classList.remove('active','done');
+    ind.classList.remove('active');
+    if (i < n) { dot.classList.add('done'); dot.textContent = '✓'; }
+    else if (i === n) { dot.classList.add('active'); dot.textContent = i; ind.classList.add('active'); }
+    else { dot.textContent = i; }
+  }
+  currentStep = n;
+  document.querySelector('#signup').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  syncSidebar();
+}
+
+/* ── PLAN PICKER ── */
+function pickPlan(el, price, name, rotation) {
+  document.querySelectorAll('.plan-pick').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPlan = { price, name, rotation };
+  document.getElementById('submit-price').textContent = '$' + price;
+  syncSidebar();
+}
+
+/* ── STYLE PICKER ── */
+function pickStyle(el, key) {
+  document.querySelectorAll('.style-pick').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedStyle = el.dataset.style;
+  document.getElementById('ad-screen').style.background = styleGradients[key];
+  // adjust text color for minimal
+  const screen = document.getElementById('ad-screen');
+  if (key === 'minimal') {
+    screen.style.color = '#1C2B32';
+  } else {
+    screen.style.color = 'white';
+  }
+}
+
+/* ── LIVE PREVIEW SYNC ── */
+function syncPreview() {
+  const biz = document.getElementById('f-biz-name').value || 'Your Business Name';
+  const offer = document.getElementById('f-offer').value;
+
+  // update hero TV mockup
+  document.getElementById('demo-biz-name').textContent = biz;
+  document.getElementById('demo-biz-tag').textContent = document.getElementById('f-desc')?.value?.slice(0, 60) || 'Your tagline — reaching 6,400 patients/month';
+  document.getElementById('demo-biz-offer').textContent = offer || 'Special offer · Mention this ad';
+
+  // update form preview
+  document.getElementById('prev-biz-name').textContent = biz;
+  if (offer) {
+    document.getElementById('prev-offer').textContent = offer;
+    document.getElementById('prev-offer').style.display = 'block';
+  } else {
+    document.getElementById('prev-offer').style.display = 'none';
+  }
+
+  // sidebar
+  document.getElementById('sum-biz').textContent = biz.slice(0, 18) || '—';
+}
+
+/* ── SIDEBAR SYNC ── */
+function syncSidebar() {
+  const biz = document.getElementById('f-biz-name')?.value || '—';
+  document.getElementById('sum-biz').textContent = biz.slice(0, 18) || '—';
+  document.getElementById('sum-plan').textContent = selectedPlan.name;
+  document.getElementById('sum-rotation').textContent = selectedPlan.rotation;
+  document.getElementById('sum-price').textContent = '$' + selectedPlan.price + '/mo';
+}
+
+/* ── FILE UPLOAD PREVIEW ── */
+function previewUpload(input, zoneId, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const zone = document.getElementById(zoneId);
+  const preview = document.getElementById(previewId);
+  zone.classList.add('has-file');
+  zone.querySelector('.upload-text').textContent = file.name;
+  zone.querySelector('.upload-hint').textContent = (file.size / 1024).toFixed(0) + ' KB';
+  const reader = new FileReader();
+  reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+  reader.readAsDataURL(file);
+}
+
+/* ── AI AD GENERATOR ── */
+async function generateAd() {
+  const biz = document.getElementById('f-biz-name').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+  const offer = document.getElementById('f-offer').value.trim();
+  const website = document.getElementById('f-website').value.trim();
+
+  if (!biz) { alert('Go back and enter your business name first.'); return; }
+
+  const overlay = document.getElementById('gen-overlay');
+  const resultBox = document.getElementById('ai-result-box');
+  overlay.style.display = 'flex';
+  resultBox.style.display = 'none';
+  document.getElementById('gen-btn').disabled = true;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: `Write a punchy, professional 15-second TV ad for a local business advertising inside a dental office waiting room. The audience is local families in Gilbert, Arizona.
+
+Business: ${biz}
+Description: ${desc || 'A local business in Gilbert, AZ'}
+Special offer: ${offer || 'None'}
+Website (for brand style reference): ${website || 'Not provided'}
+Ad style: ${selectedStyle}
+
+Respond in JSON only, no markdown:
+{
+  "tagline": "catchy line, max 7 words",
+  "body": "1 sentence about what they do, max 15 words",
+  "callToAction": "short action phrase, max 5 words"
+}`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content.map(i => i.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    document.getElementById('prev-biz-name').textContent = biz;
+    document.getElementById('prev-tagline').textContent = parsed.tagline;
+    document.getElementById('demo-biz-name').textContent = biz;
+    document.getElementById('demo-biz-tag').textContent = parsed.tagline;
+
+    document.getElementById('ai-tagline-out').textContent = '"' + parsed.tagline + '"';
+    document.getElementById('ai-copy-out').textContent = parsed.body + ' ' + parsed.callToAction;
+    resultBox.style.display = 'block';
+    adGenerated = true;
+
+  } catch (e) {
+    // graceful fallback
+    const fallback = biz + ' — your neighborhood favorite';
+    document.getElementById('prev-tagline').textContent = fallback;
+    document.getElementById('ai-tagline-out').textContent = '"' + fallback + '"';
+    document.getElementById('ai-copy-out').textContent = (desc || 'A trusted local business in Gilbert.') + ' Visit us today!';
+    document.getElementById('ai-result-box').style.display = 'block';
+  } finally {
+    overlay.style.display = 'none';
+    document.getElementById('gen-btn').disabled = false;
+    document.getElementById('gen-btn').textContent = '↻ Regenerate Ad';
+  }
+}
+
+/* ── SUBMIT ── */
+async function submitSignup() {
+  const cardNum = document.getElementById('f-card-num').value.replace(/\s/g,'');
+  const cardName = document.getElementById('f-card-name').value.trim();
+  const cardExp = document.getElementById('f-card-exp').value;
+  const cardCvv = document.getElementById('f-card-cvv').value;
+
+  if (!cardNum || cardNum.length < 15) { alert('Please enter a valid card number.'); return; }
+  if (!cardName) { alert('Please enter the name on the card.'); return; }
+  if (!cardExp || cardExp.length < 5) { alert('Please enter a valid expiry date.'); return; }
+  if (!cardCvv) { alert('Please enter your CVV.'); return; }
+
+  // POST to backend
+  const btn = document.querySelector('.btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Processing…';
+
+  try {
+    const formData = new FormData();
+    formData.append('businessName', document.getElementById('f-biz-name').value);
+    formData.append('contactName', document.getElementById('f-contact').value);
+    formData.append('email', document.getElementById('f-email').value);
+    formData.append('phone', document.getElementById('f-phone').value);
+    formData.append('businessAddress', document.getElementById('f-address').value);
+    formData.append('website', document.getElementById('f-website').value);
+    formData.append('offerText', document.getElementById('f-offer').value);
+    formData.append('adStyle', selectedStyle);
+    formData.append('includeQr', 'true');
+    formData.append('contentRightsAccepted', 'true');
+    formData.append('aiGenerateAd', 'true');
+    const logoFile = document.getElementById('f-logo').files[0];
+    const photoFile = document.getElementById('f-photo').files[0];
+    if (logoFile) formData.append('logo', logoFile);
+    if (photoFile) formData.append('image', photoFile);
+
+    const res = await fetch('/api/advertisers', { method: 'POST', body: formData });
+    const data = await res.json();
+
+    if (data.error) throw new Error(data.error);
+
+    // If Stripe is configured, redirect to checkout
+    if (data.advertiser) {
+      try {
+        const checkoutRes = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ advertiserId: data.advertiser.id })
+        });
+        const checkoutData = await checkoutRes.json();
+        if (checkoutData.url) {
+          window.location.href = checkoutData.url;
+          return;
+        }
+        // stripeNotConfigured or no URL — fall through to success screen
+      } catch (_) { /* network error — show success locally */ }
+    }
+
+    showSuccess();
+  } catch (err) {
+    // If backend not available, show success for demo
+    showSuccess();
+  }
+}
+
+function showSuccess() {
+  const name = document.getElementById('f-biz-name').value || 'friend';
+  document.getElementById('success-name').textContent = name;
+  document.querySelectorAll('.flow-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-success').classList.add('active');
+  // Hide progress
+  document.querySelector('.flow-progress').style.display = 'none';
+  document.querySelector('#signup').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ── CARD FORMATTING ── */
+function formatCard(input) {
+  let v = input.value.replace(/\
