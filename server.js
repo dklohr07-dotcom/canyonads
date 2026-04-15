@@ -293,6 +293,80 @@ Respond in JSON only, no markdown, no code fences:
   }
 });
 
+// API: FETCH LOGO + TAGLINE FROM WEBSITE
+// API: FETCH LOGO + TAGLINE FROM WEBSITE
+// Returns logo as base64 to avoid browser CORS on external images
+app.get('/api/fetch-logo', async (req, res) => {
+  const siteUrl = req.query.url;
+  if (!siteUrl) return res.status(400).json({ error: 'url parameter required' });
+
+  const ua = { 'User-Agent': 'Mozilla/5.0 (compatible; CanyonAds/1.0)' };
+
+  const fetchWithTimeout = (url, opts = {}, ms = 7000) => {
+    const ctrl  = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(timer));
+  };
+
+  const imageToBase64 = async (imgUrl) => {
+    try {
+      const r = await fetchWithTimeout(imgUrl, { headers: ua }, 5000);
+      if (!r.ok) return null;
+      const ct = r.headers.get('content-type') || 'image/png';
+      if (!ct.startsWith('image/') && ct !== 'image/x-icon') return null;
+      const buf = await r.arrayBuffer();
+      return `data:${ct};base64,${Buffer.from(buf).toString('base64')}`;
+    } catch (e) { return null; }
+  };
+
+  try {
+    const parsed = new URL(siteUrl);
+    const origin = parsed.origin;
+
+    const htmlRes = await fetchWithTimeout(origin, { headers: ua });
+    if (!htmlRes.ok) throw new Error(`HTTP ${htmlRes.status}`);
+    const html = await htmlRes.text();
+
+    let rawLogoUrl = null;
+
+    const ogImg = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+               || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+    if (ogImg?.[1]) rawLogoUrl = ogImg[1].startsWith('http') ? ogImg[1] : origin + ogImg[1];
+
+    if (!rawLogoUrl) {
+      const apple = html.match(/<link[^>]+rel=["']apple-touch-icon[^"']*["'][^>]+href=["']([^"']+)["']/i)
+                 || html.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["']apple-touch-icon[^"']*["']/i);
+      if (apple?.[1]) rawLogoUrl = apple[1].startsWith('http') ? apple[1] : origin + apple[1];
+    }
+
+    if (!rawLogoUrl) {
+      const fav = html.match(/<link[^>]+rel=["'][^"']*icon[^"']*["'][^>]+href=["']([^"']+)["']/i)
+               || html.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["'][^"']*icon[^"']*["']/i);
+      if (fav?.[1]) rawLogoUrl = fav[1].startsWith('http') ? fav[1] : origin + fav[1];
+    }
+
+    if (!rawLogoUrl) rawLogoUrl = origin + '/favicon.ico';
+
+    const logoUrl = await imageToBase64(rawLogoUrl);
+
+    let siteDescription = null;
+    const ogDesc = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']{5,160})["']/i)
+                || html.match(/<meta[^>]+content=["']([^"']{5,160})["'][^>]+property=["']og:description["']/i);
+    if (ogDesc?.[1]) siteDescription = ogDesc[1].trim();
+
+    if (!siteDescription) {
+      const metaDesc = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']{5,160})["']/i)
+                    || html.match(/<meta[^>]+content=["']([^"']{5,160})["'][^>]+name=["']description["']/i);
+      if (metaDesc?.[1]) siteDescription = metaDesc[1].trim();
+    }
+
+    return res.json({ logoUrl, rawLogoUrl, siteDescription });
+  } catch (error) {
+    console.error('fetch-logo error:', error.message);
+    return res.status(500).json({ error: 'Could not fetch from that URL. Make sure it starts with https://' });
+  }
+});
+
 // ERROR HANDLER
 app.use((error, _req, res, _next) => {
   console.error(error);

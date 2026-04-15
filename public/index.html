@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Advertise With Us — Copper Canyon Dental</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 /* ── BRAND TOKENS (matched from Copper Canyon Dental site) ── */
 :root {
@@ -332,7 +333,7 @@ body {
   flex-shrink: 0;
   margin-top: 1px;
 }
-.value-text strong { display: block; font-weight: 700; color: var(--ink); }
+.value-text strong { display: block; font-weight: 700; color: var(--teal); margin-bottom: 2px; }
 .value-text span { color: var(--ink-mid); font-size: 0.85rem; }
 
 .tv-mockup {
@@ -844,6 +845,61 @@ body {
 }
 .footer a { color: var(--teal-bright); text-decoration: none; }
 
+.des-tab {
+  padding: 7px 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: none;
+  background: none;
+  color: var(--ink-light);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: 'Nunito Sans', sans-serif;
+}
+.des-tab:hover { color: var(--ink); }
+.des-tab.on { color: var(--teal); border-bottom-color: var(--teal); }
+.gov {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 10;
+  border-radius: 6px;
+}
+.des-caption {
+  font-size: 0.68rem;
+  color: var(--ink-light);
+  text-align: center;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+/* Logo inside TV slides — hard constraints prevent overflow on any screen */
+.slide-logo {
+  display: block;
+  max-height: 26px;
+  max-width: 100px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.slide-logo-sm {
+  display: block;
+  max-height: 20px;
+  max-width: 80px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 /* ── RESPONSIVE ── */
 /* upload zones */
 .upload-zone {
@@ -862,13 +918,121 @@ body {
 .upload-hint { font-size: 0.72rem; color: var(--ink-light); margin-top: 2px; }
 
 @media (max-width: 768px) {
-  .form-row, .plan-grid, .style-grid, .value-grid,
-  .pricing-cards, .signup-layout { grid-template-columns: 1fr; }
-  .hero-stats { flex-direction: column; }
-  .hero-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
-  .hero-stat:last-child { border-bottom: none; }
+
+  /* ── NAV ── */
+  .nav { padding: 0 1rem; height: auto; min-height: 56px; flex-wrap: wrap; gap: 0; justify-content: space-between; }
+  .nav-logo-text { font-size: 0.75rem; }
+  .nav-cta { font-size: 0.72rem; padding: 0.42rem 0.9rem; margin: 6px 0; }
+
+  /* ── HERO ── */
+  .hero { padding: 3rem 1.2rem 2.5rem; }
+  .hero h1 { font-size: 2rem; }
+  .hero-sub { font-size: 0.88rem; }
+  .hero-stats {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-radius: 10px;
+  }
+  .hero-stat {
+    flex: 1 1 calc(50% - 1px);
+    min-width: 0;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .hero-stat:nth-child(2n) { border-right: none; }
+  .hero-stat:nth-child(3),
+  .hero-stat:nth-child(4) { border-bottom: none; }
+  .hero-stat-num { font-size: 1.5rem; }
+  .hero-btns { flex-direction: column; align-items: center; }
+  .btn-gold, .btn-outline { width: 100%; max-width: 300px; justify-content: center; }
+
+  /* ── TRUST BAR ── */
+  .trust-bar { gap: 0.8rem; padding: 0.9rem 1rem; justify-content: flex-start; }
+  .trust-item { font-size: 0.75rem; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 3rem 1.2rem; }
+  .section-title { font-size: 1.5rem; }
+
+  /* ── STEPS ── */
+  .steps { grid-template-columns: 1fr; gap: 0.85rem; }
+
+  /* ── VALUE / WHY IT WORKS ── */
+  .value-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .tv-mockup { max-width: 360px; margin: 0 auto; }
+
+  /* ── PRICING ── */
+  .pricing-cards { grid-template-columns: 1fr !important; max-width: 100% !important; }
+  .price-card { padding: 1.5rem 1.2rem; }
+
+  /* ── SIGNUP LAYOUT ── */
+  .signup-layout { grid-template-columns: 1fr; }
+  .sidebar-summary { position: static; margin-top: 1rem; }
+
+  /* ── FORM ── */
+  .form-row { grid-template-columns: 1fr; }
+  .plan-grid { grid-template-columns: 1fr !important; }
+  .style-grid { grid-template-columns: 1fr 1fr; }
+
+  /* ── PLAN PICKER (step 3) ── */
+  .plan-pick { padding: 1rem; }
+  .plan-pick-price { font-size: 1.3rem; }
+
+  /* ── AD PREVIEW (step 2) ── */
+  .ad-preview-frame { padding: 1rem; min-height: 160px; }
+  .des-tab { padding: 6px 10px; font-size: 0.68rem; }
+  .flow-panel { padding: 1.2rem 1rem; }
+
+  /* ── PLAN PICKER (step 3) mobile ── */
+  .plan-pick { padding: 0.8rem 0.6rem; }
+  .plan-pick-price { font-size: 1.2rem; }
+  .plan-pick-name { font-size: 0.62rem; }
+  .plan-pick-desc { font-size: 0.7rem; }
+
+  /* ── AGREEMENT (step 4) ── */
+  .agreement-scroll { max-height: 110px; font-size: 0.75rem; }
+  .check-row { font-size: 0.82rem; }
+
+  /* ── PAYMENT (step 5) ── */
+  .payment-secure { flex-wrap: wrap; gap: 6px; }
+  .card-icons { margin-left: 0; }
+
+  /* ── SUCCESS ── */
+  .success-panel { padding: 2rem 0.5rem; }
+  .success-panel h2 { font-size: 1.4rem; }
   .next-steps { grid-template-columns: 1fr; }
-  .sidebar-summary { position: static; }
+
+  /* ── FLOW PROGRESS ── */
+  .flow-progress { gap: 0; overflow-x: auto; padding-bottom: 4px; }
+  .flow-step-indicator { min-width: 56px; }
+  .flow-step-name { font-size: 0.55rem; }
+  .flow-panel { padding: 1.4rem 1.1rem; }
+  .panel-title { font-size: 1.2rem; }
+
+  /* ── UPLOAD GRID ── */
+  .uploads-grid-2col { grid-template-columns: 1fr; }
+
+  /* ── FLOW NAV ── */
+  .flow-nav { flex-wrap: wrap; gap: 10px; }
+  .btn-next { width: 100%; justify-content: center; }
+
+  /* ── FOOTER ── */
+  .footer { padding: 1.8rem 1rem; font-size: 0.75rem; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 1.65rem; }
+  .hero-eyebrow { font-size: 0.62rem; }
+  .nav-cta { display: none; }
+  .hero-btns .btn-gold { font-size: 0.85rem; padding: 0.75rem 1.4rem; }
+  .section-title { font-size: 1.3rem; }
+  .step-card { padding: 1.1rem 1rem; }
+  .price-amount { font-size: 2.4rem; }
+  .flow-step-name { display: none; }
+  .flow-dot { width: 30px; height: 30px; font-size: 0.72rem; }
+  .style-grid { grid-template-columns: 1fr 1fr 1fr; }
+  .plan-pick-price { font-size: 1.15rem; }
+  .trust-bar { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
 }
 </style>
 </head>
@@ -984,7 +1148,7 @@ body {
     <div class="value-grid">
       <div>
         <div class="section-label">Why it works</div>
-        <h2 class="section-title">Captive audience. Zero competition.</h2>
+        <h2 class="section-title" style="color: white;">Captive audience. Zero competition.</h2>
         <p class="section-sub" style="margin-bottom: 2rem;">Patients sit in our chairs for 20–60 minutes with nothing else to do. Your ad is the only show in town.</p>
         <ul class="value-list">
           <li>
@@ -998,7 +1162,7 @@ body {
             <div class="value-check">✓</div>
             <div class="value-text">
               <strong>Cheaper than Google Ads</strong>
-              <span>6,400 local impressions for $100/mo. Google Ads can't touch that CPM for local targeting.</span>
+              <span>6,400 local impressions from $99/mo. Google Ads can't touch that CPM for local targeting.</span>
             </div>
           </li>
           <li>
@@ -1130,7 +1294,7 @@ body {
         <div class="form-row">
           <div class="form-group">
             <label>Business Name *</label>
-            <input type="text" id="f-biz-name" placeholder="e.g. Peak Yoga Studio" oninput="syncPreview()">
+            <input type="text" id="f-biz-name" placeholder="e.g. Peak Yoga Studio" oninput="syncPreview()" autocomplete="organization">
           </div>
           <div class="form-group">
             <label>Business Type</label>
@@ -1149,21 +1313,21 @@ body {
         <div class="form-row">
           <div class="form-group">
             <label>Contact Name *</label>
-            <input type="text" id="f-contact" placeholder="First & Last Name">
+            <input type="text" id="f-contact" placeholder="First & Last Name" autocomplete="name">
           </div>
           <div class="form-group">
             <label>Email *</label>
-            <input type="email" id="f-email" placeholder="you@yourbusiness.com">
+            <input type="email" id="f-email" placeholder="you@yourbusiness.com" autocomplete="email">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Phone</label>
-            <input type="tel" id="f-phone" placeholder="(480) 555-0000">
+            <input type="tel" id="f-phone" placeholder="(480) 555-0000" autocomplete="tel">
           </div>
           <div class="form-group">
             <label>Business Address</label>
-            <input type="text" id="f-address" placeholder="Street, Gilbert AZ">
+            <input type="text" id="f-address" placeholder="Street, Gilbert AZ" autocomplete="street-address">
           </div>
         </div>
         <div class="form-group">
@@ -1171,34 +1335,45 @@ body {
           <textarea id="f-desc" placeholder="e.g. Hot yoga, meditation classes, and wellness coaching for the whole family. Family-owned since 2018." oninput="syncPreview()"></textarea>
         </div>
         <div class="form-group">
+          <label>Tagline <span style="font-weight:400;color:var(--ink-light)">(optional — shows on your ad · AI will write one if blank)</span></label>
+          <div style="display:flex;gap:8px;align-items:stretch;">
+            <input type="text" id="f-tagline" placeholder="e.g. Gilbert's most loved yoga studio" oninput="syncPreview()" style="flex:1;" autocomplete="off">
+            <button type="button" onclick="fetchTaglineFromWebsite()" id="fetch-tagline-btn" style="white-space:nowrap;padding:0 12px;font-size:0.74rem;font-weight:600;color:var(--teal);background:var(--teal-pale);border:1.5px solid #B8E0DE;border-radius:6px;cursor:pointer;font-family:'Nunito Sans',sans-serif;" title="Pull tagline from website description">🌐 Fetch</button>
+          </div>
+          <div id="fetch-tagline-status" style="font-size:0.68rem;color:var(--ink-light);margin-top:3px;display:none;"></div>
+        </div>
+        <div class="form-group">
           <label>Special Offer or Coupon (optional)</label>
           <input type="text" id="f-offer" placeholder="e.g. First class free — mention CanyonAds" oninput="syncPreview()">
         </div>
         <div class="form-group">
           <label>Website URL <span style="font-weight:400;color:var(--ink-light)">(optional — AI uses this to match your brand style)</span></label>
-          <input type="url" id="f-website" placeholder="https://yourbusiness.com">
+          <input type="url" id="f-website" placeholder="https://yourbusiness.com" autocomplete="url" oninput="scheduleQRUpdate()">
         </div>
 
-        <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); margin: 1.2rem 0 0.75rem; padding-top: 1.2rem; border-top: 1px solid var(--rule);">Brand Assets <span style="font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-light); font-size: 0.75rem;">— optional, but make your ad look amazing</span></div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Logo <span style="font-weight:400;color:var(--ink-light)">(PNG or JPG)</span></label>
-            <div class="upload-zone" onclick="document.getElementById('f-logo').click()" id="logo-zone">
+        <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); margin: 1.2rem 0 0.75rem; padding-top: 1.2rem; border-top: 1px solid var(--rule);">Brand Assets <span style="font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-light); font-size: 0.75rem;">— optional, makes your ad shine</span></div>
+        <div class="uploads-grid-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;">
+          <div class="form-group" style="display:flex;flex-direction:column;">
+            <label style="min-height:2.4rem;display:flex;align-items:flex-end;margin-bottom:5px;">Logo <span style="font-weight:400;color:var(--ink-light);margin-left:4px;">(PNG or JPG)</span></label>
+            <!-- file input outside the zone, triggered by label -->
+            <input type="file" id="f-logo" accept="image/*" style="display:none" onchange="previewUpload(this,'logo-zone','logo-preview')">
+            <label for="f-logo" class="upload-zone" id="logo-zone" style="flex:1;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;">
               <div class="upload-icon">🖼</div>
               <div class="upload-text">Click to upload logo</div>
               <div class="upload-hint">PNG, JPG up to 10MB</div>
-              <input type="file" id="f-logo" accept="image/*" style="display:none" onchange="previewUpload(this,'logo-zone','logo-preview')">
-            </div>
-            <img id="logo-preview" style="display:none; margin-top:8px; max-height:60px; border-radius:4px; border:1px solid var(--rule);">
+            </label>
+            <img id="logo-preview" style="display:none; margin-top:8px; max-height:60px; max-width:100%; object-fit:contain; border-radius:4px; border:1px solid var(--rule);">
+            <button type="button" id="fetch-logo-btn" onclick="fetchLogoFromWebsite()" style="margin-top:7px;width:100%;padding:6px;font-size:0.74rem;font-weight:600;color:var(--teal);background:var(--teal-pale);border:1.5px solid #B8E0DE;border-radius:6px;cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;">🌐 Fetch from website</button>
+            <div id="fetch-logo-status" style="font-size:0.68rem;color:var(--ink-light);margin-top:4px;text-align:center;display:none;"></div>
           </div>
-          <div class="form-group">
-            <label>Photo / Background Image <span style="font-weight:400;color:var(--ink-light)">(optional)</span></label>
-            <div class="upload-zone" onclick="document.getElementById('f-photo').click()" id="photo-zone">
+          <div class="form-group" style="display:flex;flex-direction:column;">
+            <label style="min-height:2.4rem;display:flex;align-items:flex-end;margin-bottom:5px;">Photo <span style="font-weight:400;color:var(--ink-light);margin-left:4px;">(PNG or JPG)</span></label>
+            <input type="file" id="f-photo" accept="image/*" style="display:none" onchange="previewUpload(this,'photo-zone','photo-preview')">
+            <label for="f-photo" class="upload-zone" id="photo-zone" style="flex:1;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;">
               <div class="upload-icon">📷</div>
               <div class="upload-text">Click to upload photo</div>
               <div class="upload-hint">PNG, JPG up to 10MB</div>
-              <input type="file" id="f-photo" accept="image/*" style="display:none" onchange="previewUpload(this,'photo-zone','photo-preview')">
-            </div>
+            </label>
             <img id="photo-preview" style="display:none; margin-top:8px; max-height:60px; width:100%; object-fit:cover; border-radius:4px; border:1px solid var(--rule);">
           </div>
         </div>
@@ -1211,47 +1386,166 @@ body {
       <!-- STEP 2: Ad Preview -->
       <div class="flow-panel" id="panel-2">
         <div class="panel-title">Preview your TV ad</div>
-        <p class="panel-sub">Choose a style and our AI will generate a polished 15-second slide for your business.</p>
+        <p class="panel-sub">AI generates 6 completely different designs. Flip through and pick your favourite.</p>
 
-        <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-mid); margin-bottom: 10px;">Ad Style</div>
-        <div class="style-grid">
-          <div class="style-pick selected" onclick="pickStyle(this,'premium')" data-style="Premium Modern">
-            <div class="style-swatch" style="background: linear-gradient(135deg,#1C2B32,#3D8E8B);"></div>
-            <div class="style-name">Premium Modern</div>
-          </div>
-          <div class="style-pick" onclick="pickStyle(this,'minimal')" data-style="Clean Minimal">
-            <div class="style-swatch" style="background: linear-gradient(135deg,#F2FAFA,#3D8E8B);"></div>
-            <div class="style-name">Clean Minimal</div>
-          </div>
-          <div class="style-pick" onclick="pickStyle(this,'bold')" data-style="Classic Bold">
-            <div class="style-swatch" style="background: linear-gradient(135deg,#1C2B32,#E8921E);"></div>
-            <div class="style-name">Classic Bold</div>
+        <!-- Design tab pills — scrollable on mobile -->
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:1.2rem;padding-bottom:2px;">
+          <div style="display:flex;gap:6px;border-bottom:1px solid var(--rule);min-width:max-content;">
+            <button class="des-tab on" onclick="showDesign(0,this)">1 · Split</button>
+            <button class="des-tab" onclick="showDesign(1,this)">2 · Cinematic</button>
+            <button class="des-tab" onclick="showDesign(2,this)">3 · Bold Type</button>
+            <button class="des-tab" onclick="showDesign(3,this)">4 · Neon</button>
+            <button class="des-tab" onclick="showDesign(4,this)">5 · Editorial</button>
+            <button class="des-tab" onclick="showDesign(5,this)">6 · Retro</button>
+            <button class="des-tab" onclick="showVideoPanel(this)" id="tab-video" style="color:var(--gold);font-weight:700;">🎬 Video Ad</button>
           </div>
         </div>
 
-        <div class="ad-preview-wrap">
-          <div class="ad-preview-screen" id="ad-screen" style="background: linear-gradient(135deg, #1C2B32, #3D8E8B);">
-            <div class="ad-prev-duration">15 sec</div>
-            <div class="generating-overlay" id="gen-overlay">
-              <div class="spinner"></div>
-              <div class="gen-label">AI is building your ad…</div>
+        <!-- Design slide panels -->
+        <div id="des-0">
+          <div style="background:#0E0E0E;border-radius:12px;padding:8px;margin-bottom:0.6rem;">
+            <div style="border-radius:6px;aspect-ratio:16/9;position:relative;overflow:hidden;" id="dslide-0">
+              <div class="gov" id="gov-0"><div class="spinner"></div><div class="gen-label">Designing…</div></div>
+              <div id="dsc-0" style="position:absolute;inset:0;"></div>
             </div>
-            <div class="ad-prev-biz" id="prev-biz-name">Your Business Name</div>
-            <div class="ad-prev-tag" id="prev-tagline">Your tagline will appear here</div>
-            <div class="ad-prev-offer" id="prev-offer"></div>
-            <div class="ad-prev-footer">Copper Canyon Dental · Gilbert, AZ</div>
           </div>
+          <div class="des-caption">Split Panel — dark teal left panel · photo right · offer badge</div>
+        </div>
+        <div id="des-1" style="display:none;">
+          <div style="background:#0E0E0E;border-radius:12px;padding:8px;margin-bottom:0.6rem;">
+            <div style="border-radius:6px;aspect-ratio:16/9;position:relative;overflow:hidden;" id="dslide-1">
+              <div class="gov" id="gov-1"><div class="spinner"></div><div class="gen-label">Designing…</div></div>
+              <div id="dsc-1" style="position:absolute;inset:0;"></div>
+            </div>
+          </div>
+          <div class="des-caption">Cinematic — full-bleed photo · frosted glass bar · centered title</div>
+        </div>
+        <div id="des-2" style="display:none;">
+          <div style="background:#0E0E0E;border-radius:12px;padding:8px;margin-bottom:0.6rem;">
+            <div style="border-radius:6px;aspect-ratio:16/9;position:relative;overflow:hidden;" id="dslide-2">
+              <div class="gov" id="gov-2"><div class="spinner"></div><div class="gen-label">Designing…</div></div>
+              <div id="dsc-2" style="position:absolute;inset:0;"></div>
+            </div>
+          </div>
+          <div class="des-caption">Bold Type — black background · giant headline · accent stripe</div>
+        </div>
+        <div id="des-3" style="display:none;">
+          <div style="background:#0E0E0E;border-radius:12px;padding:8px;margin-bottom:0.6rem;">
+            <div style="border-radius:6px;aspect-ratio:16/9;position:relative;overflow:hidden;" id="dslide-3">
+              <div class="gov" id="gov-3"><div class="spinner"></div><div class="gen-label">Designing…</div></div>
+              <div id="dsc-3" style="position:absolute;inset:0;"></div>
+            </div>
+          </div>
+          <div class="des-caption">Neon — dark background · glowing teal accents · bold contrast</div>
+        </div>
+        <div id="des-4" style="display:none;">
+          <div style="background:#0E0E0E;border-radius:12px;padding:8px;margin-bottom:0.6rem;">
+            <div style="border-radius:6px;aspect-ratio:16/9;position:relative;overflow:hidden;" id="dslide-4">
+              <div class="gov" id="gov-4"><div class="spinner"></div><div class="gen-label">Designing…</div></div>
+              <div id="dsc-4" style="position:absolute;inset:0;"></div>
+            </div>
+          </div>
+          <div class="des-caption">Editorial — cream/warm background · magazine layout · elegant serif</div>
+        </div>
+        <div id="des-5" style="display:none;">
+          <div style="background:#0E0E0E;border-radius:12px;padding:8px;margin-bottom:0.6rem;">
+            <div style="border-radius:6px;aspect-ratio:16/9;position:relative;overflow:hidden;" id="dslide-5">
+              <div class="gov" id="gov-5"><div class="spinner"></div><div class="gen-label">Designing…</div></div>
+              <div id="dsc-5" style="position:absolute;inset:0;"></div>
+            </div>
+          </div>
+          <div class="des-caption">Retro — warm amber tones · vintage badge · bold sans-serif</div>
         </div>
 
-        <div class="ai-result" id="ai-result-box">
-          <div class="ai-result-label">✨ AI Generated Copy</div>
+        <!-- VIDEO AD PANEL -->
+        <div id="des-video" style="display:none;">
+
+          <div style="background:var(--teal-pale);border:1px solid #B8E0DE;border-radius:10px;padding:1.1rem 1.2rem;margin-bottom:1rem;">
+            <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal);margin-bottom:6px;">🎬 Animated Video Ad Generator</div>
+            <div style="font-size:0.82rem;color:var(--ink-mid);line-height:1.6;">Creates a real 15-second animated HTML5 ad — motion, transitions, countdown timer. Download it and play fullscreen on your TVs, or screen-record to export as MP4.</div>
+          </div>
+
+          <!-- Animation style picker -->
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-mid);margin-bottom:8px;">Animation Style</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem;">
+            <div class="vid-style-pick selected" onclick="pickVidStyle(this,'reveal')" style="border:2px solid var(--teal);background:var(--teal-pale);border-radius:8px;padding:0.7rem 0.5rem;cursor:pointer;text-align:center;transition:all 0.15s;">
+              <div style="font-size:1.1rem;margin-bottom:3px;">▶</div>
+              <div style="font-size:0.68rem;font-weight:700;color:var(--ink);">Reveal</div>
+              <div style="font-size:0.6rem;color:var(--ink-light);">Slide-in text</div>
+            </div>
+            <div class="vid-style-pick" onclick="pickVidStyle(this,'pulse')" style="border:2px solid var(--rule);border-radius:8px;padding:0.7rem 0.5rem;cursor:pointer;text-align:center;transition:all 0.15s;">
+              <div style="font-size:1.1rem;margin-bottom:3px;">◉</div>
+              <div style="font-size:0.68rem;font-weight:700;color:var(--ink);">Pulse</div>
+              <div style="font-size:0.6rem;color:var(--ink-light);">Zoom + fade</div>
+            </div>
+            <div class="vid-style-pick" onclick="pickVidStyle(this,'story')" style="border:2px solid var(--rule);border-radius:8px;padding:0.7rem 0.5rem;cursor:pointer;text-align:center;transition:all 0.15s;">
+              <div style="font-size:1.1rem;margin-bottom:3px;">◈</div>
+              <div style="font-size:0.68rem;font-weight:700;color:var(--ink);">Story</div>
+              <div style="font-size:0.6rem;color:var(--ink-light);">Scene by scene</div>
+            </div>
+          </div>
+
+          <!-- Extra images for video -->
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--ink-mid);margin-bottom:6px;">Extra Images <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-light);font-size:0.7rem;">— up to 3, optional</span></div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem;">
+            <div>
+              <input type="file" id="vid-img-1" accept="image/*" style="display:none" onchange="previewVidImg(this,1)">
+              <label for="vid-img-1" style="display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed var(--rule);border-radius:7px;padding:0.7rem 0.4rem;cursor:pointer;text-align:center;background:var(--off-white);min-height:70px;transition:all 0.15s;" id="vid-img-1-zone">
+                <div style="font-size:1rem;">📸</div>
+                <div style="font-size:0.62rem;color:var(--ink-mid);margin-top:2px;" id="vid-img-1-lbl">Image 1</div>
+              </label>
+              <img id="vid-img-1-prev" style="display:none;width:100%;height:40px;object-fit:cover;border-radius:4px;margin-top:4px;">
+            </div>
+            <div>
+              <input type="file" id="vid-img-2" accept="image/*" style="display:none" onchange="previewVidImg(this,2)">
+              <label for="vid-img-2" style="display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed var(--rule);border-radius:7px;padding:0.7rem 0.4rem;cursor:pointer;text-align:center;background:var(--off-white);min-height:70px;transition:all 0.15s;" id="vid-img-2-zone">
+                <div style="font-size:1rem;">📸</div>
+                <div style="font-size:0.62rem;color:var(--ink-mid);margin-top:2px;" id="vid-img-2-lbl">Image 2</div>
+              </label>
+              <img id="vid-img-2-prev" style="display:none;width:100%;height:40px;object-fit:cover;border-radius:4px;margin-top:4px;">
+            </div>
+            <div>
+              <input type="file" id="vid-img-3" accept="image/*" style="display:none" onchange="previewVidImg(this,3)">
+              <label for="vid-img-3" style="display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed var(--rule);border-radius:7px;padding:0.7rem 0.4rem;cursor:pointer;text-align:center;background:var(--off-white);min-height:70px;transition:all 0.15s;" id="vid-img-3-zone">
+                <div style="font-size:1rem;">📸</div>
+                <div style="font-size:0.62rem;color:var(--ink-mid);margin-top:2px;" id="vid-img-3-lbl">Image 3</div>
+              </label>
+              <img id="vid-img-3-prev" style="display:none;width:100%;height:40px;object-fit:cover;border-radius:4px;margin-top:4px;">
+            </div>
+          </div>
+
+          <!-- Preview frame -->
+          <div style="background:#0E0E0E;border-radius:12px;padding:8px;margin-bottom:0.75rem;">
+            <div style="border-radius:6px;aspect-ratio:16/9;position:relative;overflow:hidden;background:#111;" id="vid-preview-frame">
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,0.4);">
+                <div style="font-size:2rem;">🎬</div>
+                <div style="font-size:0.75rem;">Click "Build Video Ad" to preview</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:0.68rem;color:var(--ink-light);text-align:center;margin-bottom:1rem;">Preview plays inline · Download opens fullscreen on your TVs</div>
+
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <button style="width:100%;padding:0.75rem;border:none;border-radius:8px;background:var(--gold);color:white;font-family:'Nunito Sans',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="buildVideoAd()" id="vid-build-btn">
+              🎬 Build Video Ad
+            </button>
+            <button style="width:100%;padding:0.6rem;border:1.5px solid var(--rule);border-radius:8px;background:var(--white);color:var(--ink);font-family:'Nunito Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="downloadVideoAd()" id="vid-download-btn" disabled style="opacity:0.4;">
+              ⬇ Download Video Ad (.html)
+            </button>
+          </div>
+        </div>
+          <div class="ai-result-label">✨ AI Copy — <span id="ai-des-label">Design 1</span></div>
           <div class="ai-result-tagline" id="ai-tagline-out"></div>
           <div class="ai-result-copy" id="ai-copy-out"></div>
         </div>
 
-        <button class="btn-next" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="generateAd()" id="gen-btn">
-          ✨ Generate My Ad with AI
-        </button>
+        <!-- Action buttons — stack on mobile -->
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1rem;">
+          <button class="btn-next" style="width:100%;justify-content:center;" onclick="generateAllDesigns()" id="gen-btn">
+            ✨ Generate All 6 Designs
+          </button>
+          <button style="width:100%;padding:0.6rem 1rem;font-size:0.82rem;border-radius:6px;border:1.5px solid var(--rule);background:var(--white);cursor:pointer;font-family:'Nunito Sans',sans-serif;font-weight:600;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:6px;" onclick="regenDesign()">↻ Redo this design only</button>
+        </div>
 
         <div class="flow-nav">
           <button class="btn-back" onclick="goStep(1)">← Back</button>
@@ -1342,21 +1636,21 @@ body {
         <div class="form-row">
           <div class="form-group" style="grid-column: 1 / -1;">
             <label>Card Number</label>
-            <input type="text" id="f-card-num" placeholder="4242 4242 4242 4242" maxlength="19" oninput="formatCard(this)">
+            <input type="text" id="f-card-num" placeholder="4242 4242 4242 4242" maxlength="19" inputmode="numeric" autocomplete="cc-number" oninput="formatCard(this)">
           </div>
         </div>
         <div class="form-group">
           <label>Name on Card</label>
-          <input type="text" id="f-card-name" placeholder="Full name as on card">
+          <input type="text" id="f-card-name" placeholder="Full name as on card" autocomplete="cc-name">
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Expiry</label>
-            <input type="text" id="f-card-exp" placeholder="MM/YY" maxlength="5" oninput="formatExp(this)">
+            <input type="text" id="f-card-exp" placeholder="MM/YY" maxlength="5" inputmode="numeric" autocomplete="cc-exp" oninput="formatExp(this)">
           </div>
           <div class="form-group">
             <label>CVV</label>
-            <input type="text" id="f-card-cvv" placeholder="123" maxlength="4">
+            <input type="text" id="f-card-cvv" placeholder="123" maxlength="4" inputmode="numeric" autocomplete="cc-csc">
           </div>
         </div>
 
@@ -1454,6 +1748,11 @@ function goStep(n) {
     if (!document.getElementById('f-biz-name').value.trim()) { alert('Please enter your business name.'); return; }
     if (!document.getElementById('f-contact').value.trim()) { alert('Please enter a contact name.'); return; }
     if (!document.getElementById('f-email').value.trim()) { alert('Please enter your email address.'); return; }
+    // Auto-generate QR from website URL when entering step 2
+    const url = document.getElementById('f-website').value.trim();
+    if (url && !flowQrDataUrl) {
+      makeQR(url).then(dataUrl => { flowQrDataUrl = dataUrl; refreshFlowSlides(); });
+    }
   }
   if (n === 5) {
     const all = ['chk-terms','chk-charge','chk-content'].every(id => document.getElementById(id).checked);
@@ -1513,17 +1812,11 @@ function syncPreview() {
   document.getElementById('demo-biz-tag').textContent = document.getElementById('f-desc')?.value?.slice(0, 60) || 'Your tagline — reaching 6,400 patients/month';
   document.getElementById('demo-biz-offer').textContent = offer || 'Special offer · Mention this ad';
 
-  // update form preview
-  document.getElementById('prev-biz-name').textContent = biz;
-  if (offer) {
-    document.getElementById('prev-offer').textContent = offer;
-    document.getElementById('prev-offer').style.display = 'block';
-  } else {
-    document.getElementById('prev-offer').style.display = 'none';
-  }
-
   // sidebar
   document.getElementById('sum-biz').textContent = biz.slice(0, 18) || '—';
+
+  // refresh the 3 flow slides live
+  if (typeof refreshFlowSlides === 'function') refreshFlowSlides();
 }
 
 /* ── SIDEBAR SYNC ── */
@@ -1535,6 +1828,749 @@ function syncSidebar() {
   document.getElementById('sum-price').textContent = '$' + selectedPlan.price + '/mo';
 }
 
+/* ── FETCH TAGLINE FROM WEBSITE ── */
+async function fetchTaglineFromWebsite() {
+  const url = document.getElementById('f-website').value.trim();
+  if (!url) { alert('Please enter a website URL first (below).'); return; }
+
+  const btn    = document.getElementById('fetch-tagline-btn');
+  const status = document.getElementById('fetch-tagline-status');
+  const input  = document.getElementById('f-tagline');
+  btn.disabled = true;
+  btn.textContent = '⏳';
+  status.style.display = 'block';
+  status.textContent = 'Reading website…';
+
+  try {
+    const res  = await fetch('/api/fetch-logo?url=' + encodeURIComponent(url));
+    const data = await res.json();
+    // Re-use the same endpoint — it returns siteDescription if found
+    if (data.siteDescription) {
+      input.value = data.siteDescription;
+      syncPreview();
+      status.textContent = '✓ Tagline pulled from website.';
+      status.style.color = 'var(--teal)';
+    } else {
+      status.textContent = 'No tagline found — try typing one manually.';
+      status.style.color = 'var(--ink-light)';
+    }
+  } catch(e) {
+    status.textContent = 'Could not reach server.';
+    status.style.color = 'var(--ink-light)';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🌐 Fetch';
+  }
+}
+
+/* ── FETCH LOGO FROM WEBSITE ── */
+async function fetchLogoFromWebsite() {
+  const url = document.getElementById('f-website').value.trim();
+  if (!url) { alert('Please enter a website URL first (in the field above).'); return; }
+
+  const btn    = document.getElementById('fetch-logo-btn');
+  const status = document.getElementById('fetch-logo-status');
+  const preview = document.getElementById('logo-preview');
+  btn.disabled = true;
+  btn.textContent = '⏳ Fetching…';
+  status.style.display = 'block';
+  status.textContent = 'Looking up logo from website…';
+
+  try {
+    const res  = await fetch('/api/fetch-logo?url=' + encodeURIComponent(url));
+    const data = await res.json();
+
+    if (data.logoUrl) {
+      preview.src = data.logoUrl;
+      preview.style.display = 'block';
+      preview.onerror = () => {
+        preview.style.display = 'none';
+        status.textContent = 'Image loaded but could not display. Try uploading manually.';
+      };
+      document.getElementById('logo-zone').classList.add('has-file');
+      document.getElementById('logo-zone').querySelector('.upload-text').textContent = 'Logo from website';
+      document.getElementById('logo-zone').querySelector('.upload-hint').textContent = new URL(url).hostname;
+      status.textContent = '✓ Logo found — showing exactly as it appears on your site.';
+      status.style.color = 'var(--teal)';
+      btn.style.display = 'none';
+      if (typeof refreshFlowSlides === 'function') refreshFlowSlides();
+    } else {
+      status.textContent = 'No logo found automatically. Please upload one manually.';
+      status.style.color = 'var(--ink-light)';
+      btn.disabled = false;
+      btn.innerHTML = '🌐 Try again';
+    }
+  } catch(e) {
+    status.textContent = 'Could not reach server. Upload your logo manually instead.';
+    status.style.color = 'var(--ink-light)';
+    btn.disabled = false;
+    btn.innerHTML = '🌐 Fetch from website';
+  }
+}
+
+/* ── DESIGN TABS ── */
+let activeDesign = 0;
+let desGenerated = [null, null, null, null, null, null];
+let flowQrDataUrl = null;
+
+function showDesign(idx, tabEl) {
+  activeDesign = idx;
+  document.querySelectorAll('.des-tab').forEach(t => {
+    t.style.color = 'var(--ink-light)';
+    t.style.borderBottomColor = 'transparent';
+  });
+  tabEl.style.color = 'var(--teal)';
+  tabEl.style.borderBottomColor = 'var(--teal)';
+  [0,1,2,3,4,5].forEach(i => {
+    document.getElementById('des-'+i).style.display = i === idx ? '' : 'none';
+  });
+  if (desGenerated[idx]) showDesignCopy(idx);
+}
+
+/* ── QR GENERATION ── */
+let _qrTimer = null;
+function scheduleQRUpdate() {
+  clearTimeout(_qrTimer);
+  _qrTimer = setTimeout(async () => {
+    const url = document.getElementById('f-website').value.trim();
+    flowQrDataUrl = url ? await makeQR(url) : null;
+    refreshFlowSlides();
+  }, 600);
+}
+
+function makeQR(url) {
+  return new Promise(resolve => {
+    if (!url) { resolve(null); return; }
+    const div = document.createElement('div');
+    div.style.cssText = 'position:absolute;left:-9999px;width:80px;height:80px;';
+    document.body.appendChild(div);
+    try {
+      new QRCode(div, { text: url, width: 80, height: 80, colorDark: '#000', colorLight: '#fff', correctLevel: QRCode.CorrectLevel.M });
+      setTimeout(() => {
+        const canvas = div.querySelector('canvas');
+        const img    = div.querySelector('img');
+        const result = canvas ? canvas.toDataURL('image/png') : (img ? img.src : null);
+        document.body.removeChild(div);
+        resolve(result);
+      }, 250);
+    } catch(e) { document.body.removeChild(div); resolve(null); }
+  });
+}
+
+function flowQrChip(size) {
+  if (!flowQrDataUrl) return '';
+  return `<div style="background:white;border-radius:3px;padding:2px;width:${size}px;height:${size}px;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+    <img src="${flowQrDataUrl}" style="width:${size-4}px;height:${size-4}px;display:block;">
+  </div>`;
+}
+
+/* ── 3 SLIDE RENDERERS ── */
+function renderFlowSplit(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const loc = location ? location : 'Gilbert, AZ';
+  const photoSection = photoSrc
+    ? `<div style="flex:1;background:url(${photoSrc}) center/cover;position:relative;"><div style="position:absolute;inset:0;background:rgba(28,58,56,0.3);"></div></div>`
+    : `<div style="flex:1;background:#2A5250;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+         <div style="font-size:5rem;font-weight:900;color:rgba(255,255,255,0.04);letter-spacing:-0.05em;">★</div>
+       </div>`;
+  el.innerHTML = `
+    <div style="position:absolute;inset:0;display:flex;font-family:'Nunito Sans',sans-serif;color:white;">
+      <div style="width:55%;background:#1C3A38;display:flex;flex-direction:column;justify-content:space-between;padding:12px 14px;">
+        <div>
+          ${logoSrc ? `<img src="${logoSrc}" class="slide-logo" style="margin-bottom:7px;">` : ''}
+          <div style="font-family:'Playfair Display',serif;font-size:clamp(0.85rem,2.5vw,1.2rem);font-weight:700;line-height:1.15;">${biz||'Your Business'}</div>
+          <div style="font-size:clamp(0.5rem,1.3vw,0.7rem);opacity:0.75;margin-top:5px;line-height:1.35;">${tagline||''}</div>
+          ${offer?`<div style="margin-top:7px;background:#E8921E;display:inline-block;padding:3px 9px;border-radius:3px;font-size:clamp(0.42rem,1vw,0.58rem);font-weight:700;">${offer}</div>`:''}
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.15);padding-top:5px;display:flex;justify-content:space-between;align-items:flex-end;">
+          <div>
+            <div style="font-size:0.38rem;opacity:0.5;text-transform:uppercase;letter-spacing:0.07em;">Advertised at</div>
+            <div style="font-size:0.42rem;font-weight:700;opacity:0.8;">Copper Canyon Dental · ${loc}</div>
+          </div>
+          ${flowQrChip(34)}
+        </div>
+      </div>
+      <div style="width:45%;display:flex;flex-direction:column;">
+        ${photoSection}
+        <div style="background:#E8921E;padding:5px 10px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:clamp(0.38rem,0.9vw,0.48rem);font-weight:800;letter-spacing:0.06em;text-transform:uppercase;">${cta||'Visit us today'}</span>
+          <span style="font-size:0.36rem;opacity:0.8;font-weight:600;">15 sec</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderFlowCinematic(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const loc = location ? location : 'Gilbert, AZ';
+  const bgStyle = photoSrc ? `background:url(${photoSrc}) center/cover;` : `background:linear-gradient(160deg,#0D2B28 0%,#1C5250 45%,#0A1F1E 100%);`;
+  el.innerHTML = `
+    <div style="position:absolute;inset:0;${bgStyle}font-family:'Nunito Sans',sans-serif;color:white;">
+      ${photoSrc?`<div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,20,18,0.45) 0%,rgba(5,20,18,0.1) 40%,rgba(5,20,18,0.8) 100%);"></div>`:''}
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#3D8E8B,#E8921E,transparent);"></div>
+      ${logoSrc?`<img src="${logoSrc}" class="slide-logo" style="position:absolute;top:10px;left:13px;">`:''}
+      <div style="position:absolute;top:10px;right:11px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:2px 7px;font-size:0.4rem;font-weight:700;letter-spacing:0.06em;">15 SEC</div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px 34px;">
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(0.9rem,2.8vw,1.4rem);font-weight:700;text-align:center;line-height:1.15;text-shadow:0 2px 12px rgba(0,0,0,0.6);">${biz||'Your Business'}</div>
+        <div style="width:36px;height:1px;background:rgba(255,255,255,0.4);margin:6px auto;"></div>
+        <div style="font-size:clamp(0.5rem,1.4vw,0.73rem);opacity:0.85;text-align:center;max-width:72%;line-height:1.4;text-shadow:0 1px 5px rgba(0,0,0,0.5);">${tagline||''}</div>
+        ${offer?`<div style="margin-top:8px;background:rgba(232,146,30,0.9);border-radius:20px;padding:3px 13px;font-size:clamp(0.44rem,1vw,0.58rem);font-weight:700;">${offer}</div>`:''}
+      </div>
+      <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(5,20,18,0.72);padding:5px 13px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(61,142,139,0.4);">
+        <div>
+          <div style="font-size:0.36rem;opacity:0.5;text-transform:uppercase;letter-spacing:0.08em;">Proud sponsor · ${loc}</div>
+          <div style="font-size:0.46rem;font-weight:700;color:#4AACAA;">${cta||'Visit us today'}</div>
+        </div>
+        ${flowQrChip(32)}
+      </div>
+    </div>`;
+}
+
+function renderFlowBoldType(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const loc = location ? location : 'Gilbert, AZ';
+  const nameFs = biz && biz.length > 14 ? 'clamp(0.9rem,2.6vw,1.35rem)' : 'clamp(1.1rem,3.2vw,1.8rem)';
+  el.innerHTML = `
+    <div style="position:absolute;inset:0;background:#0A0F0E;font-family:'Nunito Sans',sans-serif;color:white;overflow:hidden;">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(to bottom,#3D8E8B,#E8921E);"></div>
+      <div style="position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:6rem;font-weight:900;color:rgba(255,255,255,0.03);line-height:1;letter-spacing:-0.05em;">${(biz||'BIZ').toUpperCase()}</div>
+      ${logoSrc?`<img src="${logoSrc}" class="slide-logo" style="position:absolute;top:10px;right:11px;opacity:0.9;">`:''}
+      <div style="position:absolute;left:18px;top:50%;transform:translateY(-55%);">
+        <div style="font-size:0.44rem;text-transform:uppercase;letter-spacing:0.14em;color:#3D8E8B;font-weight:700;margin-bottom:6px;">Now advertising at</div>
+        <div style="font-family:'Playfair Display',serif;font-size:${nameFs};font-weight:700;line-height:1.05;letter-spacing:-0.02em;max-width:68%;">${biz||'Your Business'}</div>
+        <div style="width:32px;height:2px;background:#E8921E;margin:8px 0;"></div>
+        <div style="font-size:clamp(0.48rem,1.2vw,0.68rem);color:rgba(255,255,255,0.7);max-width:62%;line-height:1.4;">${tagline||''}</div>
+      </div>
+      ${offer?`<div style="position:absolute;bottom:30px;left:0;right:0;background:rgba(232,146,30,0.15);border-top:1px solid rgba(232,146,30,0.4);border-bottom:1px solid rgba(232,146,30,0.4);padding:3px 18px;font-size:clamp(0.4rem,1vw,0.54rem);font-weight:700;color:#E8921E;">${offer}</div>`:''}
+      <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(61,142,139,0.12);border-top:1px solid rgba(61,142,139,0.25);padding:4px 13px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${flowQrChip(28)}
+          <div>
+            <div style="font-size:0.34rem;opacity:0.45;text-transform:uppercase;letter-spacing:0.08em;">Copper Canyon Dental · ${loc}</div>
+            <div style="font-size:0.42rem;font-weight:700;color:#4AACAA;">${cta||'Visit us today'}</div>
+          </div>
+        </div>
+        <span style="font-size:0.34rem;opacity:0.4;">15 sec</span>
+      </div>
+    </div>`;
+}
+
+/* ── DESIGN 4: NEON ── */
+function renderFlowNeon(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
+  const el = document.getElementById(containerId); if (!el) return;
+  const loc = location ? location : 'Gilbert, AZ';
+  el.innerHTML = `
+    <div style="position:absolute;inset:0;background:#050E0D;font-family:'Nunito Sans',sans-serif;color:white;overflow:hidden;">
+      <!-- grid lines -->
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(61,142,139,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(61,142,139,0.07) 1px,transparent 1px);background-size:28px 28px;"></div>
+      <!-- glow orb -->
+      <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(61,142,139,0.25) 0%,transparent 70%);top:-60px;right:-40px;pointer-events:none;"></div>
+      <!-- top accent line -->
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 0%,#3D8E8B 40%,#4AACAA 60%,transparent 100%);box-shadow:0 0 8px rgba(61,142,139,0.8);"></div>
+
+      ${logoSrc?`<img src="${logoSrc}" class="slide-logo" style="position:absolute;top:11px;left:14px;filter:drop-shadow(0 0 4px rgba(61,142,139,0.8));">`:''}
+
+      <!-- main content -->
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 22px 36px;">
+        <div style="font-size:0.38rem;text-transform:uppercase;letter-spacing:0.2em;color:#3D8E8B;font-weight:700;margin-bottom:6px;text-shadow:0 0 8px rgba(61,142,139,0.8);">◈ Now Featuring ◈</div>
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(0.9rem,2.8vw,1.4rem);font-weight:700;text-align:center;line-height:1.15;text-shadow:0 0 20px rgba(255,255,255,0.3);">${biz||'Your Business'}</div>
+        <div style="width:40px;height:1px;background:#3D8E8B;margin:6px auto;box-shadow:0 0 6px rgba(61,142,139,0.8);"></div>
+        <div style="font-size:clamp(0.5rem,1.3vw,0.7rem);color:rgba(255,255,255,0.75);text-align:center;max-width:75%;line-height:1.4;">${tagline||''}</div>
+        ${offer?`<div style="margin-top:8px;border:1px solid #3D8E8B;border-radius:3px;padding:3px 12px;font-size:clamp(0.42rem,1vw,0.56rem);font-weight:700;color:#4AACAA;text-shadow:0 0 8px rgba(74,172,170,0.6);box-shadow:0 0 8px rgba(61,142,139,0.2);">${offer}</div>`:``}
+      </div>
+      <!-- bottom bar -->
+      <div style="position:absolute;bottom:0;left:0;right:0;border-top:1px solid rgba(61,142,139,0.4);background:rgba(5,14,13,0.8);padding:4px 13px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:0.32rem;color:rgba(61,142,139,0.7);text-transform:uppercase;letter-spacing:0.1em;">Copper Canyon Dental · ${loc}</div>
+          <div style="font-size:0.42rem;font-weight:700;color:#4AACAA;text-shadow:0 0 6px rgba(74,172,170,0.5);">${cta||'Visit us today'}</div>
+        </div>
+        ${flowQrChip(30)}
+      </div>
+      <div style="position:absolute;top:10px;right:12px;font-size:0.36rem;color:#3D8E8B;opacity:0.6;">15 SEC</div>
+    </div>`;
+}
+
+/* ── DESIGN 5: EDITORIAL ── */
+function renderFlowEditorial(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
+  const el = document.getElementById(containerId); if (!el) return;
+  const loc = location ? location : 'Gilbert, AZ';
+  const hasPh = !!photoSrc;
+  el.innerHTML = `
+    <div style="position:absolute;inset:0;background:#F5EED8;font-family:'Nunito Sans',sans-serif;overflow:hidden;">
+      <!-- top rule -->
+      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:#1C2B32;"></div>
+      <div style="position:absolute;top:4px;left:0;right:0;height:2px;background:#E8921E;"></div>
+
+      ${hasPh
+        ? `<!-- photo strip right -->
+           <div style="position:absolute;right:0;top:0;bottom:0;width:40%;background:url(${photoSrc}) center/cover;"></div>
+           <div style="position:absolute;right:40%;top:0;bottom:0;width:2px;background:#1C2B32;"></div>`
+        : `<!-- decorative right panel -->
+           <div style="position:absolute;right:0;top:0;bottom:0;width:38%;background:#E8E0C8;display:flex;align-items:center;justify-content:center;">
+             <div style="font-size:4rem;color:rgba(28,43,50,0.08);font-weight:900;transform:rotate(-12deg);">★</div>
+           </div>
+           <div style="position:absolute;right:38%;top:0;bottom:0;width:2px;background:#1C2B32;"></div>`}
+
+      <!-- content left -->
+      <div style="position:absolute;left:0;top:6px;width:${hasPh?'58%':'60%'};bottom:0;padding:12px 16px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+          ${logoSrc?`<img src="${logoSrc}" class="slide-logo-sm" style="margin-bottom:6px;">`:`<div style="font-size:0.32rem;text-transform:uppercase;letter-spacing:0.14em;color:#8A7A5A;margin-bottom:5px;">Local Business Spotlight</div>`}
+          <div style="font-family:'Playfair Display',serif;font-size:clamp(0.8rem,2.4vw,1.2rem);font-weight:700;color:#1C2B32;line-height:1.15;letter-spacing:-0.01em;">${biz||'Your Business'}</div>
+          <div style="width:28px;height:2px;background:#E8921E;margin:5px 0;"></div>
+          <div style="font-size:clamp(0.46rem,1.2vw,0.66rem);color:#4A3E2A;line-height:1.4;font-style:italic;">${tagline||''}</div>
+          ${offer?`<div style="margin-top:6px;background:#E8921E;display:inline-block;padding:2px 8px;font-size:clamp(0.38rem,0.9vw,0.52rem);font-weight:700;color:white;border-radius:2px;">${offer}</div>`:``}
+        </div>
+        <div style="border-top:1px solid rgba(28,43,50,0.2);padding-top:5px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:0.34rem;color:#8A7A5A;font-style:italic;">Copper Canyon Dental · ${loc}</div>
+          ${flowQrChip(26)}
+        </div>
+      </div>
+
+      <!-- bottom orange strip -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:18px;background:#1C2B32;display:flex;align-items:center;justify-content:space-between;padding:0 12px;">
+        <span style="font-size:0.32rem;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.1em;">${cta||'Visit us today'}</span>
+        <span style="font-size:0.3rem;color:rgba(255,255,255,0.4);">15 sec · Advertised at Copper Canyon Dental</span>
+      </div>
+    </div>`;
+}
+
+/* ── DESIGN 6: RETRO ── */
+function renderFlowRetro(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
+  const el = document.getElementById(containerId); if (!el) return;
+  const loc = location ? location : 'Gilbert, AZ';
+  const shortBiz = (biz||'Your Business').toUpperCase();
+  el.innerHTML = `
+    <div style="position:absolute;inset:0;background:#2A1A06;font-family:'Nunito Sans',sans-serif;color:#F5D79A;overflow:hidden;">
+      <!-- outer frame -->
+      <div style="position:absolute;inset:5px;border:2px solid rgba(232,146,30,0.5);border-radius:3px;pointer-events:none;"></div>
+      <div style="position:absolute;inset:9px;border:1px solid rgba(232,146,30,0.2);border-radius:2px;pointer-events:none;"></div>
+
+      ${photoSrc?`<div style="position:absolute;inset:12px;background:url(${photoSrc}) center/cover;opacity:0.2;border-radius:2px;"></div>`:''}
+
+      <!-- corner ornaments -->
+      <div style="position:absolute;top:14px;left:14px;font-size:0.5rem;color:rgba(232,146,30,0.5);">◆</div>
+      <div style="position:absolute;top:14px;right:14px;font-size:0.5rem;color:rgba(232,146,30,0.5);">◆</div>
+      <div style="position:absolute;bottom:22px;left:14px;font-size:0.5rem;color:rgba(232,146,30,0.5);">◆</div>
+      <div style="position:absolute;bottom:22px;right:14px;font-size:0.5rem;color:rgba(232,146,30,0.5);">◆</div>
+
+      <!-- center content -->
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 20px 32px;">
+        ${logoSrc?`<img src="${logoSrc}" class="slide-logo-sm" style="margin-bottom:7px;">`:`<div style="font-size:0.32rem;text-transform:uppercase;letter-spacing:0.22em;color:rgba(245,215,154,0.55);margin-bottom:5px;">◈ Established ◈</div>`}
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(0.85rem,2.6vw,1.35rem);font-weight:700;text-align:center;line-height:1.1;color:#F5D79A;letter-spacing:0.02em;">${shortBiz}</div>
+        <div style="display:flex;align-items:center;gap:6px;margin:5px 0;">
+          <div style="height:1px;width:20px;background:rgba(232,146,30,0.6);"></div>
+          <div style="font-size:0.4rem;color:#E8921E;">✦</div>
+          <div style="height:1px;width:20px;background:rgba(232,146,30,0.6);"></div>
+        </div>
+        <div style="font-size:clamp(0.46rem,1.2vw,0.65rem);color:rgba(245,215,154,0.75);text-align:center;max-width:72%;line-height:1.4;font-style:italic;">${tagline||''}</div>
+        ${offer?`<div style="margin-top:7px;border:1px solid rgba(232,146,30,0.7);border-radius:2px;padding:2px 10px;font-size:clamp(0.38rem,0.9vw,0.52rem);font-weight:700;color:#E8921E;text-transform:uppercase;letter-spacing:0.06em;">${offer}</div>`:``}
+      </div>
+      <!-- bottom bar -->
+      <div style="position:absolute;bottom:0;left:0;right:0;background:#1A0E03;border-top:1px solid rgba(232,146,30,0.3);padding:3px 12px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:0.3rem;color:rgba(245,215,154,0.4);text-transform:uppercase;letter-spacing:0.1em;">Copper Canyon Dental · ${loc}</div>
+          <div style="font-size:0.4rem;font-weight:700;color:#E8921E;">${cta||'Visit us today'}</div>
+        </div>
+        ${flowQrChip(28)}
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// VIDEO AD SYSTEM
+// ═══════════════════════════════════════════════════════════════════
+let vidStyle = 'reveal';
+let vidImages = [null, null, null]; // base64 data urls for extra images
+let builtVideoHtml = null;
+
+function showVideoPanel(tabEl) {
+  activeDesign = -1; // none of the static designs
+  document.querySelectorAll('.des-tab').forEach(t => {
+    t.style.color = 'var(--ink-light)';
+    t.style.borderBottomColor = 'transparent';
+  });
+  tabEl.style.color = 'var(--gold)';
+  tabEl.style.borderBottomColor = 'var(--gold)';
+  [0,1,2,3,4,5].forEach(i => { document.getElementById('des-'+i).style.display = 'none'; });
+  document.getElementById('des-video').style.display = '';
+  document.getElementById('ai-result-box').style.display = 'none';
+}
+
+function pickVidStyle(el, style) {
+  document.querySelectorAll('.vid-style-pick').forEach(s => {
+    s.style.border = '2px solid var(--rule)';
+    s.style.background = '';
+  });
+  el.style.border = '2px solid var(--teal)';
+  el.style.background = 'var(--teal-pale)';
+  vidStyle = style;
+}
+
+function previewVidImg(input, num) {
+  const file = input.files[0]; if (!file) return;
+  const lbl  = document.getElementById('vid-img-'+num+'-lbl');
+  const prev = document.getElementById('vid-img-'+num+'-prev');
+  const zone = document.getElementById('vid-img-'+num+'-zone');
+  lbl.textContent = file.name.length > 12 ? file.name.slice(0,10)+'…' : file.name;
+  zone.style.borderColor = 'var(--teal)';
+  zone.style.borderStyle = 'solid';
+  const reader = new FileReader();
+  reader.onload = e => {
+    vidImages[num-1] = e.target.result;
+    prev.src = e.target.result;
+    prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+// Collect all available images in priority order
+function collectImages() {
+  const imgs = [];
+  // photo upload from step 1
+  const ph = document.getElementById('photo-preview');
+  if (ph && ph.style.display !== 'none' && ph.src) imgs.push(ph.src);
+  // extra video images
+  vidImages.forEach(v => { if (v) imgs.push(v); });
+  // logo as a visual element
+  const lg = document.getElementById('logo-preview');
+  if (lg && lg.style.display !== 'none' && lg.src) imgs.push(lg.src);
+  return imgs;
+}
+
+// ── ANIMATION BUILDER: REVEAL ─────────────────────────────────────
+// Text slides in from left, image zooms in from right, countdown bar
+function buildReveal(biz, tagline, offer, cta, loc, logoSrc, images) {
+  const bg    = images[0] ? `url('${images[0]}') center/cover` : 'linear-gradient(135deg,#1C3A38,#3D8E8B)';
+  const img2  = images[1] ? `<div class="rimg2" style="position:absolute;right:0;top:0;bottom:0;width:42%;background:url('${images[1]}') center/cover;animation:imgReveal 1s 0.8s both;"></div>` : '';
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:1920px;height:1080px;overflow:hidden;font-family:'Arial',sans-serif;background:#1C2B32;}
+.bg{position:absolute;inset:0;background:${bg};}
+.overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,30,28,0.92) 0%,rgba(12,30,28,0.75) 55%,rgba(12,30,28,0.1) 100%);}
+${images[0]?'':'.bg{background:linear-gradient(135deg,#0D2B28,#1C5250);}'}
+.content{position:absolute;left:80px;top:50%;transform:translateY(-50%);}
+.tag{font-size:18px;text-transform:uppercase;letter-spacing:6px;color:#3D8E8B;margin-bottom:20px;animation:slideIn 0.8s 0.3s both;}
+.name{font-size:88px;font-weight:900;color:white;line-height:1;margin-bottom:16px;animation:slideIn 0.8s 0.55s both;text-shadow:0 4px 20px rgba(0,0,0,0.5);}
+.tagline{font-size:32px;color:rgba(255,255,255,0.8);margin-bottom:28px;max-width:780px;animation:slideIn 0.8s 0.75s both;}
+.offer{display:inline-block;background:#E8921E;color:white;padding:14px 32px;font-size:26px;font-weight:700;border-radius:4px;margin-bottom:32px;animation:slideIn 0.8s 0.95s both;}
+.cta{font-size:22px;color:#4AACAA;font-weight:700;letter-spacing:2px;text-transform:uppercase;animation:slideIn 0.8s 1.1s both;}
+.loc{font-size:18px;color:rgba(255,255,255,0.5);margin-top:8px;animation:slideIn 0.8s 1.2s both;}
+${logoSrc?`.logo{position:absolute;top:50px;right:56px;max-height:70px;max-width:200px;object-fit:contain;animation:fadeIn 1s 0.5s both;}`:''}
+.footer{position:absolute;bottom:0;left:0;right:0;height:60px;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:space-between;padding:0 60px;border-top:3px solid #E8921E;}
+.footer-left{font-size:18px;color:rgba(255,255,255,0.7);letter-spacing:2px;text-transform:uppercase;}
+.footer-right{font-size:18px;color:rgba(255,255,255,0.5);}
+.progress{position:absolute;bottom:60px;left:0;height:4px;background:#E8921E;animation:progress 15s linear both;}
+${img2?'.rimg2{animation:imgReveal 1s 0.8s both;}':''}
+@keyframes slideIn{from{opacity:0;transform:translateX(-60px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes progress{from{width:0;}to{width:100%;}}
+@keyframes imgReveal{from{opacity:0;transform:scale(1.08);}to{opacity:1;transform:scale(1);}}
+</style></head><body>
+<div class="bg"></div><div class="overlay"></div>
+${img2}
+${logoSrc?`<img class="logo" src="${logoSrc}">`:''}
+<div class="content">
+  <div class="tag">Copper Canyon Dental presents</div>
+  <div class="name">${biz||'Your Business'}</div>
+  ${tagline?`<div class="tagline">${tagline}</div>`:''}
+  ${offer?`<div class="offer">${offer}</div>`:''}
+  <div class="cta">${cta||'Visit us today'}</div>
+  ${loc?`<div class="loc">📍 ${loc}</div>`:''}
+</div>
+<div class="footer">
+  <span class="footer-left">Copper Canyon Dental · Gilbert, AZ</span>
+  <span class="footer-right">15-Second TV Ad</span>
+</div>
+<div class="progress"></div>
+</body></html>`;
+}
+
+// ── ANIMATION BUILDER: PULSE ──────────────────────────────────────
+// Dramatic zoom-out background, text fades in with scale, pulsing CTA
+function buildPulse(biz, tagline, offer, cta, loc, logoSrc, images) {
+  const bg = images[0] ? `url('${images[0]}') center/cover` : 'linear-gradient(160deg,#0A0F0E,#1C3A38,#0D2B28)';
+  const extraImgs = images.slice(1,3).map((src,i) =>
+    `<div style="position:absolute;${i===0?'left:0;top:0;width:50%;height:50%':'right:0;bottom:0;width:50%;height:50%'};background:url('${src}') center/cover;opacity:0.3;"></div>`
+  ).join('');
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:1920px;height:1080px;overflow:hidden;font-family:'Arial',sans-serif;background:#0A0F0E;}
+.bg{position:absolute;inset:0;background:${bg};animation:zoomOut 15s ease-out both;}
+.ov{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0.75) 100%);}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(61,142,139,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(61,142,139,0.06) 1px,transparent 1px);background-size:48px 48px;}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px;}
+.eyebrow{font-size:18px;text-transform:uppercase;letter-spacing:8px;color:#3D8E8B;margin-bottom:24px;animation:fadeUp 1s 0.4s both;}
+.name{font-size:110px;font-weight:900;color:white;line-height:0.9;margin-bottom:20px;animation:fadeUp 1s 0.65s both;text-shadow:0 0 60px rgba(61,142,139,0.4);}
+.line{width:100px;height:3px;background:#E8921E;margin:0 auto 24px;animation:expand 0.8s 0.9s both;}
+.tagline{font-size:34px;color:rgba(255,255,255,0.8);max-width:1000px;margin-bottom:32px;animation:fadeUp 1s 1s both;}
+.offer{background:rgba(232,146,30,0.9);border:2px solid #E8921E;border-radius:40px;padding:16px 48px;font-size:28px;font-weight:700;color:white;margin-bottom:24px;animation:pulse 2s 1.5s infinite,fadeUp 1s 1.2s both;}
+.cta{font-size:22px;font-weight:700;color:#4AACAA;text-transform:uppercase;letter-spacing:3px;animation:fadeUp 1s 1.4s both;}
+.loc{font-size:18px;color:rgba(255,255,255,0.45);margin-top:10px;animation:fadeUp 1s 1.5s both;}
+${logoSrc?`.logo{position:absolute;top:44px;left:60px;max-height:64px;max-width:180px;object-fit:contain;animation:fadeIn 1.2s 0.5s both;}`:''}
+.progress{position:absolute;bottom:0;left:0;height:5px;background:linear-gradient(90deg,#3D8E8B,#E8921E);animation:progress 15s linear both;}
+.timer{position:absolute;top:44px;right:60px;font-size:16px;color:rgba(255,255,255,0.35);font-weight:600;letter-spacing:2px;}
+@keyframes zoomOut{from{transform:scale(1.12);}to{transform:scale(1);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes expand{from{width:0;}to{width:100px;}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,146,30,0.4);}50%{box-shadow:0 0 0 20px rgba(232,146,30,0);}}
+@keyframes progress{from{width:0;}to{width:100%;}}
+</style></head><body>
+<div class="bg"></div>${extraImgs}<div class="ov"></div><div class="grid"></div>
+${logoSrc?`<img class="logo" src="${logoSrc}">`:''}
+<div class="timer">15 SEC</div>
+<div class="center">
+  <div class="eyebrow">Featured at Copper Canyon Dental</div>
+  <div class="name">${biz||'Your Business'}</div>
+  <div class="line"></div>
+  ${tagline?`<div class="tagline">${tagline}</div>`:''}
+  ${offer?`<div class="offer">${offer}</div>`:''}
+  <div class="cta">${cta||'Visit us today'}</div>
+  ${loc?`<div class="loc">📍 ${loc}</div>`:''}
+</div>
+<div class="progress"></div>
+</body></html>`;
+}
+
+// ── ANIMATION BUILDER: STORY ──────────────────────────────────────
+// 3 scenes: intro (0-5s), main (5-10s), CTA (10-15s)
+function buildStory(biz, tagline, offer, cta, loc, logoSrc, images) {
+  const sc1bg = images[0] ? `url('${images[0]}') center/cover` : 'linear-gradient(135deg,#1C2B32,#3D8E8B)';
+  const sc2bg = images[1] ? `url('${images[1]}') center/cover` : 'linear-gradient(135deg,#0D2B28,#1C5250)';
+  const sc3bg = images[2] ? `url('${images[2]}') center/cover` : 'linear-gradient(135deg,#1C2B32,#B85A10)';
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:1920px;height:1080px;overflow:hidden;font-family:'Arial',sans-serif;}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.s1{background:${sc1bg};animation:scene1 5s forwards;}
+.s2{background:${sc2bg};opacity:0;animation:scene2 5s 5s forwards;}
+.s3{background:${sc3bg};opacity:0;animation:scene3 5s 10s forwards;}
+.ov{position:absolute;inset:0;background:rgba(0,0,0,0.55);}
+.pad{position:relative;z-index:1;padding:80px;}
+/* Scene 1 — intro */
+.s1 .intro-label{font-size:20px;text-transform:uppercase;letter-spacing:7px;color:#4AACAA;margin-bottom:16px;animation:fadeUp 0.8s 0.3s both;}
+.s1 .intro-name{font-size:100px;font-weight:900;color:white;line-height:0.95;animation:fadeUp 0.9s 0.5s both;}
+.s1 .intro-loc{font-size:22px;color:rgba(255,255,255,0.55);margin-top:20px;animation:fadeUp 0.8s 0.8s both;}
+/* Scene 2 — main message */
+.s2 .main-tag{font-size:32px;color:rgba(255,255,255,0.75);margin-bottom:24px;max-width:1100px;animation:fadeUp 0.8s 5.3s both;}
+.s2 .main-offer{background:#E8921E;border-radius:6px;padding:18px 52px;font-size:38px;font-weight:700;color:white;margin-bottom:24px;display:inline-block;animation:scale-in 0.6s 5.8s both;}
+.s2 .main-name{font-size:52px;font-weight:700;color:white;animation:fadeUp 0.8s 5.2s both;}
+/* Scene 3 — CTA */
+.s3 .cta-label{font-size:22px;text-transform:uppercase;letter-spacing:6px;color:#4AACAA;margin-bottom:20px;animation:fadeUp 0.8s 10.3s both;}
+.s3 .cta-main{font-size:80px;font-weight:900;color:white;margin-bottom:20px;animation:fadeUp 0.9s 10.5s both;}
+.s3 .cta-sub{font-size:30px;color:rgba(255,255,255,0.7);animation:fadeUp 0.8s 10.8s both;}
+.s3 .cta-loc{font-size:20px;color:rgba(255,255,255,0.45);margin-top:14px;animation:fadeUp 0.8s 11s both;}
+/* Logo */
+${logoSrc?`.logo{position:absolute;bottom:50px;right:60px;max-height:60px;max-width:160px;object-fit:contain;z-index:10;animation:fadeIn 1s 0.5s both;}`:''}
+/* Progress */
+.progress{position:absolute;bottom:0;left:0;height:5px;background:linear-gradient(90deg,#3D8E8B,#4AACAA,#E8921E);z-index:20;animation:progress 15s linear both;}
+/* Scene dots */
+.dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:20;}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);}
+.dot.d1{animation:dotOn 5s forwards;}
+.dot.d2{animation:dotOn 5s 5s forwards;}
+.dot.d3{animation:dotOn 5s 10s forwards;}
+@keyframes scene1{0%{opacity:1;}80%{opacity:1;}100%{opacity:0;pointer-events:none;}}
+@keyframes scene2{0%{opacity:0;}10%{opacity:1;}80%{opacity:1;}100%{opacity:0;pointer-events:none;}}
+@keyframes scene3{0%{opacity:0;}10%{opacity:1;}100%{opacity:1;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes scale-in{from{opacity:0;transform:scale(0.8);}to{opacity:1;transform:scale(1);}}
+@keyframes progress{from{width:0;}to{width:100%;}}
+@keyframes dotOn{0%{background:rgba(255,255,255,0.3);}1%{background:white;}99%{background:white;}100%{background:rgba(255,255,255,0.3);}}
+</style></head><body>
+<!-- Scene 1 -->
+<div class="scene s1"><div class="ov"></div>
+  <div class="pad">
+    <div class="intro-label">Advertised at Copper Canyon Dental</div>
+    <div class="intro-name">${biz||'Your Business'}</div>
+    ${loc?`<div class="intro-loc">📍 ${loc}</div>`:''}
+  </div>
+</div>
+<!-- Scene 2 -->
+<div class="scene s2"><div class="ov"></div>
+  <div class="pad">
+    <div class="main-name">${biz||'Your Business'}</div>
+    ${tagline?`<div class="main-tag">${tagline}</div>`:''}
+    ${offer?`<div class="main-offer">${offer}</div>`:''}
+  </div>
+</div>
+<!-- Scene 3 -->
+<div class="scene s3"><div class="ov"></div>
+  <div class="pad">
+    <div class="cta-label">Come visit us</div>
+    <div class="cta-main">${cta||'Visit Us Today'}</div>
+    ${tagline?`<div class="cta-sub">${tagline}</div>`:''}
+    ${loc?`<div class="cta-loc">📍 ${loc}</div>`:''}
+  </div>
+</div>
+${logoSrc?`<img class="logo" src="${logoSrc}">`:''}
+<div class="progress"></div>
+<div class="dots"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div></div>
+</body></html>`;
+}
+
+async function buildVideoAd() {
+  const biz     = document.getElementById('f-biz-name').value.trim() || 'Your Business';
+  const tagline = document.getElementById('f-tagline')?.value.trim() || (desGenerated[0]?.tagline || '');
+  const offer   = document.getElementById('f-offer').value.trim();
+  const cta     = desGenerated[0]?.callToAction || 'Visit us today';
+  const loc     = document.getElementById('f-address')?.value.trim() || '';
+  const logoEl  = document.getElementById('logo-preview');
+  const logoSrc = logoEl && logoEl.style.display !== 'none' ? logoEl.src : null;
+  const images  = collectImages();
+
+  const btn = document.getElementById('vid-build-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;display:inline-block;animation:spin 0.7s linear infinite;margin-right:6px;"></span>Building…';
+
+  // Small delay so spinner renders
+  await new Promise(r => setTimeout(r, 50));
+
+  try {
+    if (vidStyle === 'reveal')      builtVideoHtml = buildReveal(biz, tagline, offer, cta, loc, logoSrc, images);
+    else if (vidStyle === 'pulse')  builtVideoHtml = buildPulse(biz, tagline, offer, cta, loc, logoSrc, images);
+    else                            builtVideoHtml = buildStory(biz, tagline, offer, cta, loc, logoSrc, images);
+
+    // Show inline preview in an iframe
+    const frame = document.getElementById('vid-preview-frame');
+    frame.innerHTML = `<iframe srcdoc="${builtVideoHtml.replace(/"/g,'&quot;')}" style="width:100%;height:100%;border:none;border-radius:6px;pointer-events:none;" scrolling="no"></iframe>`;
+
+    const dlBtn = document.getElementById('vid-download-btn');
+    dlBtn.disabled = false;
+    dlBtn.style.opacity = '1';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '🎬 Rebuild Video Ad';
+  }
+}
+
+function downloadVideoAd() {
+  if (!builtVideoHtml) { alert('Please build the video ad first.'); return; }
+  const biz  = (document.getElementById('f-biz-name').value.trim() || 'ad').replace(/\s+/g,'-').toLowerCase();
+  const blob = new Blob([builtVideoHtml], { type: 'text/html' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `${biz}-video-ad-15sec.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+// ═══════════════════════════════════════════════════════════════════
+// END VIDEO AD SYSTEM
+// ═══════════════════════════════════════════════════════════════════
+
+const FLOW_RENDERERS = [renderFlowSplit, renderFlowCinematic, renderFlowBoldType, renderFlowNeon, renderFlowEditorial, renderFlowRetro];
+const FLOW_TONES = [
+  'warm and welcoming, community-focused',
+  'high-energy and exciting',
+  'sleek and professional',
+  'bold and modern, tech-forward',
+  'elegant and refined, magazine-style',
+  'nostalgic and charming, local roots'
+];
+const DES_LABELS = ['Design 1 — Split Panel', 'Design 2 — Cinematic', 'Design 3 — Bold Type', 'Design 4 — Neon', 'Design 5 — Editorial', 'Design 6 — Retro'];
+
+function refreshFlowSlides() {
+  const biz      = document.getElementById('f-biz-name').value || 'Your Business';
+  const offer    = document.getElementById('f-offer').value.trim();
+  const taglineField = document.getElementById('f-tagline')?.value.trim() || '';
+  const address  = document.getElementById('f-address')?.value.trim() || '';
+  const logoEl   = document.getElementById('logo-preview');
+  const logoSrc  = logoEl && logoEl.style.display !== 'none' ? logoEl.src : null;
+  const photoEl  = document.getElementById('photo-preview');
+  const photoSrc = photoEl && photoEl.style.display !== 'none' ? photoEl.src : null;
+  [0,1,2,3,4,5].forEach(i => {
+    const g = desGenerated[i];
+    const tagline = taglineField || g?.tagline || '';
+    FLOW_RENDERERS[i]('dsc-'+i, biz, tagline, offer, g?.body||'', g?.callToAction||'Visit us today', logoSrc, photoSrc, address);
+  });
+}
+
+async function generateAllDesigns() {
+  const biz     = document.getElementById('f-biz-name').value.trim();
+  const desc    = document.getElementById('f-desc').value.trim();
+  const offer   = document.getElementById('f-offer').value.trim();
+  const website = document.getElementById('f-website').value.trim();
+  if (!biz) { alert('Please enter your business name first.'); return; }
+
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;display:inline-block;animation:spin 0.7s linear infinite;margin-right:6px;"></span>Generating 6 designs…';
+
+  if (website) flowQrDataUrl = await makeQR(website);
+  [0,1,2,3,4,5].forEach(i => { const ov = document.getElementById('gov-'+i); if(ov) ov.style.display = 'flex'; });
+
+  const fallbacks = [
+    `${biz} — your Gilbert favorite`, `${biz} — energy for Gilbert families`,
+    `${biz} — trusted in Gilbert`, `${biz} — the next generation`, `${biz} — locally loved`, `${biz} — Gilbert's own`
+  ];
+  const fallbackCTAs = ['Visit us today','Come see us!','Stop in soon','Discover more','Book now','Find us nearby'];
+
+  const results = await Promise.all(FLOW_TONES.map(async (tone, i) => {
+    try {
+      const res = await fetch('/api/generate-copy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ businessName: biz, description: desc, offer, website, adStyle: tone })
+      });
+      const parsed = await res.json();
+      if (parsed.error) throw new Error(parsed.error);
+      return parsed;
+    } catch(e) {
+      return { tagline: fallbacks[i], body: desc ? desc.slice(0,70) : 'A trusted local business in Gilbert, AZ.', callToAction: fallbackCTAs[i] };
+    }
+  }));
+
+  desGenerated = results;
+  [0,1,2,3,4,5].forEach(i => { const ov = document.getElementById('gov-'+i); if(ov) ov.style.display = 'none'; });
+
+  refreshFlowSlides();
+  showDesignCopy(activeDesign);
+  document.getElementById('ai-result-box').style.display = 'block';
+  btn.disabled = false;
+  btn.innerHTML = '↻ Regenerate All 6 Designs';
+}
+
+async function regenDesign() {
+  const biz     = document.getElementById('f-biz-name').value.trim();
+  const desc    = document.getElementById('f-desc').value.trim();
+  const offer   = document.getElementById('f-offer').value.trim();
+  const website = document.getElementById('f-website').value.trim();
+  if (!biz) return;
+  const ov = document.getElementById('gov-'+activeDesign);
+  if (ov) ov.style.display = 'flex';
+  try {
+    const toneIdx = (activeDesign + 1 + Math.floor(Math.random()*3)) % 6;
+    const res = await fetch('/api/generate-copy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ businessName: biz, description: desc, offer, website, adStyle: FLOW_TONES[toneIdx] })
+    });
+    const parsed = await res.json();
+    if (!parsed.error) desGenerated[activeDesign] = parsed;
+  } catch(e) {}
+  if (ov) ov.style.display = 'none';
+  refreshFlowSlides();
+  showDesignCopy(activeDesign);
+}
+
+function showDesignCopy(idx) {
+  const g = desGenerated[idx];
+  if (!g) return;
+  document.getElementById('ai-des-label').textContent = DES_LABELS[idx];
+  document.getElementById('ai-tagline-out').textContent = '\u201c' + g.tagline + '\u201d';
+  document.getElementById('ai-copy-out').textContent    = g.body + ' ' + g.callToAction;
+}
+
+/* ── OLD generateAd kept as alias so nothing breaks ── */
+async function generateAd() { return generateAllDesigns(); }
+
 /* ── FILE UPLOAD PREVIEW ── */
 function previewUpload(input, zoneId, previewId) {
   const file = input.files[0];
@@ -1542,88 +2578,20 @@ function previewUpload(input, zoneId, previewId) {
   const zone = document.getElementById(zoneId);
   const preview = document.getElementById(previewId);
   zone.classList.add('has-file');
-  zone.querySelector('.upload-text').textContent = file.name;
+  zone.querySelector('.upload-text').textContent = file.name.length > 20 ? file.name.slice(0,18)+'…' : file.name;
   zone.querySelector('.upload-hint').textContent = (file.size / 1024).toFixed(0) + ' KB';
   const reader = new FileReader();
-  reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
-  reader.readAsDataURL(file);
-}
-
-/* ── AI AD GENERATOR ── */
-async function generateAd() {
-  const biz     = document.getElementById('f-biz-name').value.trim();
-  const desc    = document.getElementById('f-desc').value.trim();
-  const offer   = document.getElementById('f-offer').value.trim();
-  const website = document.getElementById('f-website').value.trim();
-
-  if (!biz) { alert('Go back and enter your business name first.'); return; }
-
-  const overlay   = document.getElementById('gen-overlay');
-  const resultBox = document.getElementById('ai-result-box');
-  const genBtn    = document.getElementById('gen-btn');
-  overlay.style.display = 'flex';
-  resultBox.style.display = 'none';
-  genBtn.disabled = true;
-
-  try {
-    const response = await fetch('/api/generate-copy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ businessName: biz, description: desc, offer, website, adStyle: selectedStyle })
-    });
-    const parsed = await response.json();
-    if (parsed.error) throw new Error(parsed.error);
-
-    renderSlide(biz, parsed.tagline, offer, parsed.body, parsed.callToAction);
-    document.getElementById('demo-biz-name').textContent  = biz;
-    document.getElementById('demo-biz-tag').textContent   = parsed.tagline;
-    document.getElementById('ai-tagline-out').textContent = '\u201c' + parsed.tagline + '\u201d';
-    document.getElementById('ai-copy-out').textContent    = parsed.body + ' ' + parsed.callToAction;
-    resultBox.style.display = 'block';
-    adGenerated = true;
-
-  } catch (e) {
-    console.warn('AI generation failed:', e.message);
-    const tagline = biz + ' \u2014 your Gilbert neighborhood favorite';
-    renderSlide(biz, tagline, offer, desc || 'A trusted local business in Gilbert.', 'Visit us today!');
-    document.getElementById('ai-tagline-out').textContent = '\u201c' + tagline + '\u201d';
-    document.getElementById('ai-copy-out').textContent    = (desc || 'A trusted local business in Gilbert.') + ' Visit us today!';
-    resultBox.style.display = 'block';
-  } finally {
-    overlay.style.display = 'none';
-    genBtn.disabled = false;
-    genBtn.textContent = '\u21bb Regenerate Ad';
-  }
-}
-
-/* ── RENDER TV SLIDE ── */
-function renderSlide(biz, tagline, offer, body, cta) {
-  const screen = document.getElementById('ad-screen');
-  const logoPreview = document.getElementById('logo-preview');
-  const logoSrc = (logoPreview && logoPreview.style.display !== 'none') ? logoPreview.src : null;
-
-  const styleKey = selectedStyle === 'Clean Minimal' ? 'minimal' : selectedStyle === 'Classic Bold' ? 'bold' : 'premium';
-  const accents  = {
-    premium: { bar: 'rgba(232,146,30,0.92)', text: '#fff' },
-    minimal: { bar: 'rgba(61,142,139,0.88)',  text: '#fff' },
-    bold:    { bar: 'rgba(232,146,30,1)',      text: '#fff' },
+  reader.onload = e => {
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    // Hide the fetch button if user manually uploads a logo
+    if (zoneId === 'logo-zone') {
+      const fb = document.getElementById('fetch-logo-btn');
+      if (fb) fb.style.display = 'none';
+    }
+    if (typeof refreshFlowSlides === 'function') refreshFlowSlides();
   };
-  const accent = accents[styleKey];
-
-  screen.innerHTML = `
-    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 2rem;gap:6px;text-align:center;">
-      ${logoSrc ? `<img src="${logoSrc}" style="max-height:48px;max-width:150px;object-fit:contain;margin-bottom:6px;filter:brightness(0) invert(1);opacity:0.95;">` : ''}
-      <div style="font-family:'Playfair Display',serif;font-size:clamp(1rem,3.5vw,1.6rem);font-weight:700;line-height:1.2;text-shadow:0 1px 6px rgba(0,0,0,0.35);">${biz}</div>
-      <div style="font-size:clamp(0.65rem,1.8vw,0.9rem);opacity:0.88;line-height:1.4;max-width:85%;">${tagline}</div>
-      ${offer ? `<div style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.38);border-radius:4px;padding:4px 16px;font-size:clamp(0.55rem,1.2vw,0.72rem);font-weight:700;letter-spacing:0.04em;margin-top:2px;">${offer}</div>` : ''}
-      ${body  ? `<div style="font-size:clamp(0.5rem,1.1vw,0.64rem);opacity:0.65;max-width:78%;margin-top:2px;">${body}</div>` : ''}
-    </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;background:${accent.bar};padding:5px 14px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(2px);">
-      <span style="font-size:0.55rem;font-weight:700;letter-spacing:0.07em;color:${accent.text};">COPPER CANYON DENTAL \xb7 GILBERT, AZ</span>
-      <span style="font-size:0.58rem;font-weight:600;color:${accent.text};opacity:0.95;">${cta || 'Visit us today'}</span>
-    </div>
-    <div style="position:absolute;top:8px;right:10px;font-size:0.5rem;opacity:0.35;color:white;">15 sec</div>
-  `;
+  reader.readAsDataURL(file);
 }
 
 /* ── SUBMIT ── */
@@ -1641,7 +2609,7 @@ async function submitSignup() {
   // POST to backend
   const btn = document.querySelector('.btn-submit');
   btn.disabled = true;
-  btn.textContent = 'Processing…';
+  btn.innerHTML = '⏳ Processing…';
 
   try {
     const formData = new FormData();
@@ -1652,6 +2620,7 @@ async function submitSignup() {
     formData.append('businessAddress', document.getElementById('f-address').value);
     formData.append('website', document.getElementById('f-website').value);
     formData.append('offerText', document.getElementById('f-offer').value);
+    formData.append('planName', selectedPlan.name);
     formData.append('adStyle', selectedStyle);
     formData.append('includeQr', 'true');
     formData.append('contentRightsAccepted', 'true');
@@ -1702,4 +2671,14 @@ function showSuccess() {
 
 /* ── CARD FORMATTING ── */
 function formatCard(input) {
-  let v = input.value.replace(/\
+  let v = input.value.replace(/\D/g, '').slice(0, 16);
+  input.value = v.replace(/(\d{4})(?=\d)/g, '$1 ');
+}
+function formatExp(input) {
+  let v = input.value.replace(/\D/g, '').slice(0, 4);
+  if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2);
+  input.value = v;
+}
+</script>
+</body>
+</html>
