@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Copper Canyon Dental — TV Display</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #0A1A18;
+  font-family: 'Nunito Sans', sans-serif;
+  color: white;
+}
+
+/* ── LAYOUT: sidebar left | main right ── */
+.tv-shell {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  grid-template-rows: 1fr 64px;
+  width: 100vw;
+  height: 100vh;
+  gap: 0;
+}
+
+/* ══════════════════════════════════════
+   LEFT SIDEBAR
+══════════════════════════════════════ */
+.sidebar {
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
+  background: linear-gradient(180deg, #0D2B26 0%, #071A17 100%);
+  border-right: 2px solid rgba(61,142,139,0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 20px 20px;
+  gap: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle dot-grid texture */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(61,142,139,0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+/* Copper Canyon logo area */
+.clinic-logo-wrap {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(61,142,139,0.3);
+  width: 100%;
+}
+
+.clinic-logo-mark {
+  margin-bottom: 10px;
+}
+
+.clinic-name {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: white;
+  line-height: 1.2;
+}
+.clinic-tagline-small {
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* Time + date */
+.clock-wrap {
+  position: relative; z-index: 1; text-align: center; width: 100%;
+}
+.clock-time {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  color: #4AACAA;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+.clock-date {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.5);
+  margin-top: 4px;
+  letter-spacing: 0.06em;
+}
+
+/* Whitening ad card */
+.promo-card {
+  position: relative; z-index: 1;
+  background: linear-gradient(135deg, #1C3A38, #0F2520);
+  border: 1px solid rgba(61,142,139,0.4);
+  border-radius: 12px;
+  padding: 18px 16px;
+  width: 100%;
+  text-align: center;
+  flex-shrink: 0;
+}
+.promo-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+.promo-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  color: white;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.promo-body { font-size: 0.7rem; color: rgba(255,255,255,0.65); line-height: 1.5; margin-bottom: 10px; }
+.promo-badge {
+  display: inline-block;
+  background: #E8921E;
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+.promo-cta {
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 7px;
+}
+
+/* Advertiser mini slot */
+.ad-slot {
+  position: relative; z-index: 1;
+  width: 100%;
+  border: 1px solid rgba(61,142,139,0.25);
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.3);
+}
+.ad-slot-label {
+  font-size: 0.52rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.3);
+  text-align: center;
+  padding: 5px 0 3px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.ad-slot-content {
+  padding: 12px 14px;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: opacity 0.8s;
+}
+.ad-biz-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  color: white;
+  margin-bottom: 3px;
+}
+.ad-biz-tag { font-size: 0.62rem; color: rgba(255,255,255,0.55); line-height: 1.4; }
+.ad-biz-offer {
+  margin-top: 7px;
+  background: rgba(232,146,30,0.2);
+  border: 1px solid rgba(232,146,30,0.4);
+  border-radius: 4px;
+  padding: 3px 9px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #E8921E;
+}
+
+/* ══════════════════════════════════════
+   MAIN VIDEO AREA
+══════════════════════════════════════ */
+.main-screen {
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+  position: relative;
+  overflow: hidden;
+  background: #0A0F0E;
+}
+
+/* The iframe that plays the ad */
+.ad-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* Overlay shown when no ad is loaded */
+.no-ad-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: linear-gradient(135deg, #0A1A18, #071210);
+  text-align: center;
+  padding: 40px;
+}
+.no-ad-overlay .dental-icon { font-size: 4rem; opacity: 0.3; }
+.no-ad-overlay h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: rgba(255,255,255,0.5);
+}
+.no-ad-overlay p { font-size: 0.88rem; color: rgba(255,255,255,0.3); max-width: 400px; line-height: 1.6; }
+
+/* Ad loading transition */
+.ad-fade { animation: adFadeIn 1s ease forwards; }
+@keyframes adFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Next ad progress bar */
+.ad-progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3D8E8B, #4AACAA);
+  width: 0%;
+  transition: none;
+}
+
+/* ══════════════════════════════════════
+   BOTTOM SCROLL BAR
+══════════════════════════════════════ */
+.scroll-bar {
+  grid-row: 2 / 3;
+  grid-column: 1 / 3;
+  background: linear-gradient(90deg, #0D2B26, #071A17);
+  border-top: 2px solid rgba(61,142,139,0.4);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.scroll-label {
+  flex-shrink: 0;
+  background: #3D8E8B;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: white;
+  gap: 8px;
+  z-index: 2;
+}
+
+.scroll-track {
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+}
+
+.scroll-inner {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+  animation: scrollText 60s linear infinite;
+  gap: 0;
+}
+
+.scroll-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 40px;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.scroll-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #E8921E;
+  flex-shrink: 0;
+}
+
+@keyframes scrollText {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── CONTROL PANEL (hidden, toggle with C key) ── */
+.control-panel {
+  position: fixed;
+  top: 0; right: 0;
+  width: 360px;
+  height: 100vh;
+  background: rgba(7, 26, 23, 0.97);
+  border-left: 2px solid rgba(61,142,139,0.5);
+  padding: 24px 20px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+  backdrop-filter: blur(8px);
+}
+.control-panel.open { transform: translateX(0); }
+.ctrl-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: white;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(61,142,139,0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ctrl-close {
+  background: none; border: none; color: rgba(255,255,255,0.5);
+  font-size: 1.2rem; cursor: pointer;
+}
+.ctrl-section { margin-bottom: 18px; }
+.ctrl-label {
+  font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.1em; color: #3D8E8B; margin-bottom: 8px; display: block;
+}
+.ctrl-input {
+  width: 100%; padding: 8px 12px;
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(61,142,139,0.35);
+  border-radius: 7px; color: white; font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.85rem; outline: none;
+}
+.ctrl-input:focus { border-color: #3D8E8B; }
+.ctrl-textarea { height: 80px; resize: vertical; }
+.ctrl-btn {
+  width: 100%; padding: 0.65rem; border: none; border-radius: 7px;
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.85rem; font-weight: 700;
+  cursor: pointer; transition: all 0.15s; margin-top: 6px;
+}
+.ctrl-btn-primary { background: #3D8E8B; color: white; }
+.ctrl-btn-primary:hover { background: #2E7370; }
+.ctrl-btn-gold { background: #E8921E; color: white; }
+.ctrl-btn-gold:hover { background: #C97B10; }
+.ctrl-btn-outline {
+  background: transparent; color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.ctrl-hint {
+  font-size: 0.65rem; color: rgba(255,255,255,0.35);
+  margin-top: 5px; line-height: 1.5;
+}
+.ctrl-status {
+  font-size: 0.72rem; color: #4AACAA; margin-top: 6px;
+  min-height: 16px;
+}
+.ctrl-toggle-hint {
+  position: fixed; bottom: 72px; right: 12px;
+  background: rgba(61,142,139,0.85); color: white;
+  font-size: 0.65rem; padding: 5px 10px; border-radius: 4px;
+  letter-spacing: 0.06em; opacity: 0.6;
+  pointer-events: none;
+}
+.ads-list { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
+.ad-list-item {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between;
+  align-items: center; font-size: 0.78rem; color: rgba(255,255,255,0.8);
+}
+.ad-remove {
+  background: none; border: none; color: rgba(255,100,100,0.6);
+  cursor: pointer; font-size: 1rem; padding: 0 4px;
+}
+.file-input-wrap { position: relative; }
+.file-input-wrap input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.file-input-label {
+  display: block; width: 100%; padding: 8px; text-align: center;
+  background: rgba(255,255,255,0.07); border: 1px dashed rgba(61,142,139,0.4);
+  border-radius: 7px; color: rgba(255,255,255,0.5); font-size: 0.78rem; cursor: pointer;
+}
+
+/* Spinner */
+.spin { animation: spin 0.8s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="tv-shell">
+
+  <!-- ══ LEFT SIDEBAR ══ -->
+  <aside class="sidebar">
+
+    <!-- Copper Canyon Dental Logo -->
+    <div class="clinic-logo-wrap">
+      <div class="clinic-logo-mark">
+        <svg width="56" height="48" viewBox="0 0 56 48" fill="none">
+          <path d="M4 44 L14 20 L22 32 L30 10 L44 44 Z" fill="none" stroke="#3D8E8B" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M4 44 L14 20 L22 32 L30 10 L44 44 Z" fill="rgba(61,142,139,0.18)"/>
+          <line x1="4" y1="44" x2="52" y2="44" stroke="rgba(61,142,139,0.4)" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="clinic-name">Copper Canyon<br>Dental</div>
+      <div class="clinic-tagline-small">Gilbert, Arizona</div>
+    </div>
+
+    <!-- Live clock -->
+    <div class="clock-wrap">
+      <div class="clock-time" id="clock-time">12:00 PM</div>
+      <div class="clock-date" id="clock-date">Monday, January 1</div>
+    </div>
+
+    <!-- Whitening promo -->
+    <div class="promo-card">
+      <span class="promo-icon">✨</span>
+      <div class="promo-title">Teeth Whitening Special</div>
+      <div class="promo-body">Brighten your smile by up to 8 shades in a single in-office visit. Ask us about our take-home kit too!</div>
+      <span class="promo-badge">Ask us today!</span>
+      <div class="promo-cta">Mention this screen for 15% off</div>
+    </div>
+
+    <!-- Advertiser rotating slot -->
+    <div class="ad-slot">
+      <div class="ad-slot-label">Featured Neighbour</div>
+      <div class="ad-slot-content" id="sidebar-ad">
+        <div class="ad-biz-name" style="color:rgba(255,255,255,0.3);font-size:0.75rem;">Ad slot available</div>
+        <div class="ad-biz-tag" style="font-size:0.6rem;margin-top:4px;">advertise@coppercanyondental.com</div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══ MAIN SCREEN ══ -->
+  <main class="main-screen" id="main-screen">
+
+    <div class="no-ad-overlay" id="no-ad-overlay">
+      <div class="dental-icon">🦷</div>
+      <h2>Welcome</h2>
+      <p>Press <kbd style="background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:3px;font-family:monospace;">C</kbd> to open the control panel and add your first advertiser ad.</p>
+    </div>
+
+    <iframe class="ad-iframe" id="ad-iframe" style="display:none;" scrolling="no"></iframe>
+    <div class="ad-progress" id="ad-progress"></div>
+
+  </main>
+
+  <!-- ══ SCROLL BAR ══ -->
+  <div class="scroll-bar">
+    <div class="scroll-label">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="white" stroke-width="1.5"/><path d="M7 4v3l2 2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Copper Canyon Dental
+    </div>
+    <div class="scroll-track">
+      <div class="scroll-inner" id="scroll-inner">
+        <!-- Items duplicated for seamless loop -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ CONTROL PANEL ══ -->
+<div class="control-panel" id="control-panel">
+  <div class="ctrl-title">
+    Display Controls
+    <button class="ctrl-close" onclick="togglePanel()">✕</button>
+  </div>
+
+  <!-- Add Ad from URL -->
+  <div class="ctrl-section">
+    <span class="ctrl-label">Add Advertiser Ad</span>
+    <input class="ctrl-input" id="ctrl-biz-name" placeholder="Business name">
+    <input class="ctrl-input" id="ctrl-biz-tagline" placeholder="Tagline" style="margin-top:6px;">
+    <input class="ctrl-input" id="ctrl-biz-offer" placeholder="Special offer (optional)" style="margin-top:6px;">
+    <input class="ctrl-input" id="ctrl-biz-url" placeholder="Website URL (https://...)" style="margin-top:6px;" type="url">
+    <input class="ctrl-input" id="ctrl-biz-loc" placeholder="Business location (e.g. Gilbert, AZ)" style="margin-top:6px;">
+
+    <div style="margin-top:8px;">
+      <span class="ctrl-label" style="margin-bottom:5px;display:block;">Animation Style</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+        <label style="text-align:center;cursor:pointer;">
+          <input type="radio" name="ctrl-anim" value="reveal" checked style="display:none;">
+          <div class="ctrl-anim-pick" style="border:1.5px solid #3D8E8B;border-radius:6px;padding:6px 4px;font-size:0.65rem;color:white;background:rgba(61,142,139,0.2);">▶ Reveal</div>
+        </label>
+        <label style="text-align:center;cursor:pointer;">
+          <input type="radio" name="ctrl-anim" value="pulse" style="display:none;">
+          <div class="ctrl-anim-pick" style="border:1.5px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">◉ Pulse</div>
+        </label>
+        <label style="text-align:center;cursor:pointer;">
+          <input type="radio" name="ctrl-anim" value="story" style="display:none;">
+          <div class="ctrl-anim-pick" style="border:1.5px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">◈ Story</div>
+        </label>
+      </div>
+    </div>
+
+    <div style="margin-top:8px;" class="file-input-wrap">
+      <label class="file-input-label" id="ctrl-img-label">📸 Upload extra images (optional, up to 3)</label>
+      <input type="file" accept="image/*" multiple id="ctrl-extra-imgs" onchange="handleCtrlImages(this)">
+    </div>
+
+    <button class="ctrl-btn ctrl-btn-primary" onclick="fetchAndBuildAd()" style="margin-top:10px;" id="ctrl-fetch-btn">
+      🌐 Fetch from Website &amp; Build Ad
+    </button>
+    <button class="ctrl-btn ctrl-btn-outline" onclick="buildManualAd()" style="margin-top:6px;">
+      ✨ Build Ad (no fetch, use entered details)
+    </button>
+    <div class="ctrl-status" id="ctrl-status"></div>
+  </div>
+
+  <!-- Advertiser list -->
+  <div class="ctrl-section">
+    <span class="ctrl-label">Ad Queue (<span id="ads-count">0</span> ads · loops automatically)</span>
+    <div class="ads-list" id="ads-list">
+      <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);text-align:center;padding:10px;">No ads added yet</div>
+    </div>
+  </div>
+
+  <!-- Scroll bar customise -->
+  <div class="ctrl-section">
+    <span class="ctrl-label">Scroll Bar Messages</span>
+    <textarea class="ctrl-input ctrl-textarea" id="ctrl-scroll-msgs" placeholder="One message per line. Leave blank to use defaults."></textarea>
+    <button class="ctrl-btn ctrl-btn-outline" onclick="applyScrollMsgs()" style="margin-top:6px;">Apply Messages</button>
+  </div>
+
+  <!-- Display settings -->
+  <div class="ctrl-section">
+    <span class="ctrl-label">Ad Duration (seconds per ad)</span>
+    <input class="ctrl-input" id="ctrl-duration" type="number" value="15" min="5" max="60">
+  </div>
+
+  <button class="ctrl-btn ctrl-btn-gold" onclick="toggleFullscreen()">⛶ Toggle Fullscreen</button>
+  <div class="ctrl-hint" style="margin-top:8px;">Press <strong>C</strong> anywhere to open/close this panel. Press <strong>F</strong> for fullscreen.</div>
+</div>
+
+<div class="ctrl-toggle-hint">Press C for controls</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────
+const ADS        = [];          // array of { name, tagline, offer, loc, html }
+let   adIndex    = 0;
+let   adTimer    = null;
+let   progressRaf = null;
+let   ctrlImages = [];          // extra uploaded image data-URLs
+
+// ── DEFAULT SCROLL MESSAGES ─────────────────────────────────────────
+const DEFAULT_MSGS = [
+  "Thank you for choosing Copper Canyon Dental — your smile is our priority! 😊",
+  "🦷 Dental Fact: You should brush your teeth for at least 2 minutes, twice a day.",
+  "🦷 Did you know? The average person spends 38 days brushing their teeth over a lifetime.",
+  "🦷 Dental Fact: Enamel is the hardest substance your body produces — harder than bone!",
+  "🦷 Tip: Replace your toothbrush every 3–4 months, or after an illness.",
+  "🦷 Dental Fact: Flossing removes up to 40% of the plaque your toothbrush can't reach.",
+  "🦷 Did you know? A dental cleaning can reduce your risk of heart disease and stroke.",
+  "🦷 Tip: Drink more water! Fluoridated water helps strengthen enamel and prevent cavities.",
+  "🦷 Dental Fact: Cavities are the second most common disease in the US, after the common cold.",
+  "Thank you for choosing Copper Canyon Dental · Call us at (480) 553-9909 to schedule your next visit!",
+  "🦷 Tip: Chewing sugar-free gum after meals stimulates saliva, which naturally cleans your teeth.",
+  "🦷 Dental Fact: Your tongue has a unique print just like your fingerprints.",
+  "🦷 Did you know? Teeth start forming before birth — babies are born with 20 primary teeth already in the jaw.",
+  "Ask us about our teeth whitening special — brighten your smile by up to 8 shades! ✨",
+  "🦷 Tip: Acidic drinks like soda and juice can erode enamel — rinse with water after drinking them.",
+  "Thank you for your patience · Our team will be with you shortly 😊",
+  "🦷 Dental Fact: Over 50% of people say a smile is the first thing they notice about someone.",
+  "🦷 Tip: Night guards can protect your teeth from grinding while you sleep — ask us about custom-fit options.",
+];
+
+// ── CLOCK ─────────────────────────────────────────────────────────
+function updateClock() {
+  const now  = new Date();
+  const h    = now.getHours();
+  const m    = String(now.getMinutes()).padStart(2,'0');
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const h12  = ((h % 12) || 12);
+  document.getElementById('clock-time').textContent = `${h12}:${m} ${ampm}`;
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('clock-date').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+// ── SCROLL BAR ─────────────────────────────────────────────────────
+function buildScrollBar(messages) {
+  const inner = document.getElementById('scroll-inner');
+  const msgs  = messages && messages.length ? messages : DEFAULT_MSGS;
+  // Duplicate for seamless loop
+  const html  = [...msgs, ...msgs].map(msg =>
+    `<span class="scroll-item"><span class="scroll-dot"></span>${msg}</span>`
+  ).join('');
+  inner.innerHTML = html;
+  // Reset animation
+  inner.style.animation = 'none';
+  inner.offsetHeight; // reflow
+  const totalWidth = inner.scrollWidth / 2;
+  const duration   = Math.max(30, msgs.length * 5);
+  inner.style.animation = `scrollText ${duration}s linear infinite`;
+}
+buildScrollBar();
+
+// ── CONTROL PANEL TOGGLE ───────────────────────────────────────────
+function togglePanel() {
+  document.getElementById('control-panel').classList.toggle('open');
+}
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'c' || e.key === 'C') togglePanel();
+  if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+});
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+// Radio button style update
+document.querySelectorAll('input[name="ctrl-anim"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    document.querySelectorAll('.ctrl-anim-pick').forEach(el => {
+      el.style.border = '1.5px solid rgba(255,255,255,0.15)';
+      el.style.background = '';
+      el.style.color = 'rgba(255,255,255,0.6)';
+    });
+    const pick = radio.nextElementSibling;
+    pick.style.border = '1.5px solid #3D8E8B';
+    pick.style.background = 'rgba(61,142,139,0.2)';
+    pick.style.color = 'white';
+  });
+});
+
+// ── EXTRA IMAGES ──────────────────────────────────────────────────
+function handleCtrlImages(input) {
+  ctrlImages = [];
+  const lbl = document.getElementById('ctrl-img-label');
+  const files = Array.from(input.files).slice(0, 3);
+  lbl.textContent = files.length ? `📸 ${files.length} image(s) selected` : '📸 Upload extra images (optional, up to 3)';
+  const readers = files.map(f => new Promise(resolve => {
+    const r = new FileReader();
+    r.onload = e => resolve(e.target.result);
+    r.readAsDataURL(f);
+  }));
+  Promise.all(readers).then(urls => { ctrlImages = urls; });
+}
+
+// ── FETCH & BUILD AD FROM URL ──────────────────────────────────────
+async function fetchAndBuildAd() {
+  const url = document.getElementById('ctrl-biz-url').value.trim();
+  if (!url) { setStatus('Please enter a website URL first.', 'orange'); return; }
+
+  const btn = document.getElementById('ctrl-fetch-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin">⏳</span> Fetching website…';
+  setStatus('Fetching logo and description from website…');
+
+  let logoDataUrl = null, desc = null;
+
+  try {
+    const res  = await fetch('/api/fetch-logo?url=' + encodeURIComponent(url));
+    const data = await res.json();
+    if (data.logoUrl)        logoDataUrl = data.logoUrl;
+    if (data.siteDescription && !document.getElementById('ctrl-biz-tagline').value.trim()) {
+      document.getElementById('ctrl-biz-tagline').value = data.siteDescription.slice(0, 100);
+    }
+    setStatus('✓ Website data fetched — building ad…');
+  } catch(e) {
+    setStatus('Could not fetch website — building with entered details.', 'rgba(255,200,100,0.8)');
+  }
+
+  buildAd(logoDataUrl);
+  btn.disabled = false;
+  btn.innerHTML = '🌐 Fetch from Website &amp; Build Ad';
+}
+
+function buildManualAd() {
+  setStatus('Building ad with entered details…');
+  buildAd(null);
+}
+
+function buildAd(logoSrc) {
+  const name    = document.getElementById('ctrl-biz-name').value.trim();
+  const tagline = document.getElementById('ctrl-biz-tagline').value.trim();
+  const offer   = document.getElementById('ctrl-biz-offer').value.trim();
+  const loc     = document.getElementById('ctrl-biz-loc').value.trim();
+  const anim    = document.querySelector('input[name="ctrl-anim"]:checked')?.value || 'reveal';
+
+  if (!name) { setStatus('Please enter a business name.', 'orange'); return; }
+
+  const images = [...ctrlImages];
+
+  let html;
+  if (anim === 'reveal')      html = buildReveal(name, tagline, offer, offer||'Visit us today', loc, logoSrc, images);
+  else if (anim === 'pulse')  html = buildPulse(name, tagline, offer, offer||'Visit us today', loc, logoSrc, images);
+  else                        html = buildStory(name, tagline, offer, offer||'Visit us today', loc, logoSrc, images);
+
+  addAd({ name, tagline, offer, loc, html });
+  setStatus(`✓ "${name}" added to queue (${ADS.length} total).`, '#4AACAA');
+
+  // Clear inputs for next advertiser
+  document.getElementById('ctrl-biz-name').value    = '';
+  document.getElementById('ctrl-biz-tagline').value = '';
+  document.getElementById('ctrl-biz-offer').value   = '';
+  document.getElementById('ctrl-biz-url').value     = '';
+  document.getElementById('ctrl-biz-loc').value     = '';
+  ctrlImages = [];
+  document.getElementById('ctrl-img-label').textContent = '📸 Upload extra images (optional, up to 3)';
+  document.getElementById('ctrl-extra-imgs').value  = '';
+}
+
+// ── AD QUEUE ──────────────────────────────────────────────────────
+function addAd(ad) {
+  ADS.push(ad);
+  renderAdList();
+  updateSidebarAd();
+  if (ADS.length === 1) {
+    // First ad — show it immediately
+    document.getElementById('no-ad-overlay').style.display = 'none';
+    playAdAt(0);
+  }
+}
+
+function removeAd(i) {
+  ADS.splice(i, 1);
+  renderAdList();
+  if (ADS.length === 0) {
+    clearTimeout(adTimer);
+    cancelAnimationFrame(progressRaf);
+    document.getElementById('ad-iframe').style.display  = 'none';
+    document.getElementById('no-ad-overlay').style.display = 'flex';
+    document.getElementById('ad-progress').style.width  = '0%';
+  } else {
+    adIndex = adIndex % ADS.length;
+    playAdAt(adIndex);
+  }
+}
+
+function renderAdList() {
+  const list = document.getElementById('ads-list');
+  document.getElementById('ads-count').textContent = ADS.length;
+  if (!ADS.length) {
+    list.innerHTML = '<div style="font-size:0.72rem;color:rgba(255,255,255,0.3);text-align:center;padding:10px;">No ads added yet</div>';
+    return;
+  }
+  list.innerHTML = ADS.map((ad, i) => `
+    <div class="ad-list-item">
+      <span>${i === adIndex ? '▶ ' : ''}${ad.name}</span>
+      <button class="ad-remove" onclick="removeAd(${i})" title="Remove">✕</button>
+    </div>
+  `).join('');
+}
+
+// ── PLAY AD ───────────────────────────────────────────────────────
+function playAdAt(i) {
+  if (!ADS.length) return;
+  adIndex = i % ADS.length;
+  const ad      = ADS[adIndex];
+  const iframe  = document.getElementById('ad-iframe');
+  const bar     = document.getElementById('ad-progress');
+  const duration = parseInt(document.getElementById('ctrl-duration').value || '15') * 1000;
+
+  iframe.style.display = 'block';
+  iframe.classList.remove('ad-fade');
+  void iframe.offsetWidth;
+  iframe.classList.add('ad-fade');
+  iframe.srcdoc = ad.html;
+
+  renderAdList();
+
+  // Progress bar
+  cancelAnimationFrame(progressRaf);
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  const start = performance.now();
+  function tickProgress(now) {
+    const pct = Math.min(100, ((now - start) / duration) * 100);
+    bar.style.width = pct + '%';
+    if (pct < 100) progressRaf = requestAnimationFrame(tickProgress);
+  }
+  progressRaf = requestAnimationFrame(tickProgress);
+
+  clearTimeout(adTimer);
+  adTimer = setTimeout(() => {
+    playAdAt((adIndex + 1) % ADS.length);
+  }, duration);
+}
+
+// ── SIDEBAR AD ROTATION ───────────────────────────────────────────
+let sidebarAdIdx = 0;
+function updateSidebarAd() {
+  if (!ADS.length) return;
+  const ad  = ADS[sidebarAdIdx % ADS.length];
+  const el  = document.getElementById('sidebar-ad');
+  el.style.opacity = '0';
+  setTimeout(() => {
+    el.innerHTML = `
+      <div class="ad-biz-name">${ad.name}</div>
+      ${ad.tagline ? `<div class="ad-biz-tag">${ad.tagline}</div>` : ''}
+      ${ad.offer   ? `<div class="ad-biz-offer">${ad.offer}</div>` : ''}
+    `;
+    el.style.opacity = '1';
+    sidebarAdIdx = (sidebarAdIdx + 1) % ADS.length;
+  }, 400);
+}
+setInterval(updateSidebarAd, 8000);
+
+// ── SCROLL BAR CUSTOMISE ──────────────────────────────────────────
+function applyScrollMsgs() {
+  const raw = document.getElementById('ctrl-scroll-msgs').value.trim();
+  const msgs = raw ? raw.split('\n').map(l => l.trim()).filter(Boolean) : null;
+  buildScrollBar(msgs);
+}
+
+// ── STATUS HELPER ─────────────────────────────────────────────────
+function setStatus(msg, color) {
+  const el = document.getElementById('ctrl-status');
+  el.textContent = msg;
+  el.style.color = color || '#4AACAA';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// AD BUILDERS (identical to the signup flow builders)
+// ══════════════════════════════════════════════════════════════════
+function buildReveal(biz, tagline, offer, cta, loc, logoSrc, images) {
+  const bg = images[0] ? `url('${images[0]}') center/cover` : 'linear-gradient(135deg,#1C3A38,#3D8E8B)';
+  const img2 = images[1] ? `<div style="position:absolute;right:0;top:0;bottom:0;width:42%;background:url('${images[1]}') center/cover;animation:imgReveal 1s 0.8s both;"></div>` : '';
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:100%;height:100%;overflow:hidden;font-family:'Arial',sans-serif;background:#1C2B32;}
+html{width:100%;height:100%;}
+.bg{position:fixed;inset:0;background:${bg};}
+.ov{position:fixed;inset:0;background:linear-gradient(90deg,rgba(12,30,28,0.92) 0%,rgba(12,30,28,0.72) 55%,rgba(12,30,28,0.1) 100%);}
+${images[0]?'':'.bg{background:linear-gradient(135deg,#0D2B28,#1C5250);}'}
+.content{position:fixed;left:6%;top:50%;transform:translateY(-50%);}
+.tag{font-size:clamp(10px,1.4vw,20px);text-transform:uppercase;letter-spacing:.4em;color:#3D8E8B;margin-bottom:1.2em;animation:slideIn .8s .3s both;}
+.name{font-size:clamp(28px,7vw,90px);font-weight:900;color:white;line-height:1;margin-bottom:.2em;animation:slideIn .8s .55s both;text-shadow:0 4px 20px rgba(0,0,0,.5);}
+.tline{font-size:clamp(12px,2.4vw,30px);color:rgba(255,255,255,.8);margin-bottom:.9em;max-width:50vw;animation:slideIn .8s .75s both;}
+.ofr{display:inline-block;background:#E8921E;color:white;padding:.4em 1em;font-size:clamp(10px,1.8vw,22px);font-weight:700;border-radius:4px;margin-bottom:.9em;animation:slideIn .8s .95s both;}
+.cta{font-size:clamp(10px,1.6vw,20px);color:#4AACAA;font-weight:700;letter-spacing:.15em;text-transform:uppercase;animation:slideIn .8s 1.1s both;}
+.loc{font-size:clamp(9px,1.2vw,17px);color:rgba(255,255,255,.45);margin-top:.4em;animation:slideIn .8s 1.2s both;}
+${logoSrc?`.logo{position:fixed;top:4%;right:4%;max-height:8vh;max-width:16vw;object-fit:contain;animation:fadeIn 1s .5s both;}`:''}
+.footer{position:fixed;bottom:0;left:0;right:0;height:7%;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:space-between;padding:0 5%;border-top:3px solid #E8921E;}
+.fl{font-size:clamp(9px,1.3vw,17px);color:rgba(255,255,255,.7);letter-spacing:.15em;text-transform:uppercase;}
+.fr{font-size:clamp(9px,1.3vw,16px);color:rgba(255,255,255,.4);}
+.prog{position:fixed;bottom:7%;left:0;height:4px;background:#E8921E;animation:progress 15s linear both;}
+@keyframes slideIn{from{opacity:0;transform:translateX(-50px);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes progress{from{width:0;}to{width:100%;}}
+@keyframes imgReveal{from{opacity:0;transform:scale(1.08);}to{opacity:1;transform:scale(1);}}
+</style></head><body>
+<div class="bg"></div><div class="ov"></div>${img2}
+${logoSrc?`<img class="logo" src="${logoSrc}">`:''}
+<div class="content">
+  <div class="tag">Copper Canyon Dental presents</div>
+  <div class="name">${biz||'Your Business'}</div>
+  ${tagline?`<div class="tline">${tagline}</div>`:''}
+  ${offer?`<div class="ofr">${offer}</div>`:''}
+  <div class="cta">${cta||'Visit us today'}</div>
+  ${loc?`<div class="loc">📍 ${loc}</div>`:''}
+</div>
+<div class="footer"><span class="fl">Copper Canyon Dental · Gilbert, AZ</span><span class="fr">15-Second TV Ad</span></div>
+<div class="prog"></div>
+</body></html>`;
+}
+
+function buildPulse(biz, tagline, offer, cta, loc, logoSrc, images) {
+  const bg = images[0] ? `url('${images[0]}') center/cover` : 'linear-gradient(160deg,#0A0F0E,#1C3A38)';
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}html,body{width:100%;height:100%;overflow:hidden;font-family:'Arial',sans-serif;}
+.bg{position:fixed;inset:0;background:${bg};animation:zoom 15s ease-out both;}
+.ov{position:fixed;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,.2),rgba(0,0,0,.78));}
+.grid{position:fixed;inset:0;background-image:linear-gradient(rgba(61,142,139,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(61,142,139,.06) 1px,transparent 1px);background-size:3vw 3vw;}
+.c{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6%;}
+.eye{font-size:clamp(10px,1.3vw,18px);text-transform:uppercase;letter-spacing:.5em;color:#3D8E8B;margin-bottom:1.4em;animation:fadeUp 1s .4s both;}
+.name{font-size:clamp(30px,9vw,110px);font-weight:900;color:white;line-height:.9;margin-bottom:.5em;animation:fadeUp 1s .65s both;text-shadow:0 0 5vw rgba(61,142,139,.4);}
+.line{width:80px;height:3px;background:#E8921E;margin:0 auto 1.2em;animation:expand .8s .9s both;}
+.tline{font-size:clamp(12px,2.6vw,34px);color:rgba(255,255,255,.8);max-width:70vw;margin-bottom:1.2em;animation:fadeUp 1s 1s both;}
+.ofr{background:rgba(232,146,30,.9);border-radius:40px;padding:.4em 1.6em;font-size:clamp(11px,2.2vw,28px);font-weight:700;color:white;margin-bottom:.8em;display:inline-block;animation:pulse 2s 1.5s infinite,fadeUp 1s 1.2s both;}
+.cta{font-size:clamp(10px,1.7vw,22px);font-weight:700;color:#4AACAA;text-transform:uppercase;letter-spacing:.2em;animation:fadeUp 1s 1.4s both;}
+.loc{font-size:clamp(9px,1.2vw,18px);color:rgba(255,255,255,.4);margin-top:.5em;animation:fadeUp 1s 1.5s both;}
+${logoSrc?`.logo{position:fixed;top:4%;left:5%;max-height:8vh;max-width:16vw;object-fit:contain;animation:fadeIn 1.2s .5s both;}`:''}
+.prog{position:fixed;bottom:0;left:0;height:5px;background:linear-gradient(90deg,#3D8E8B,#E8921E);animation:progress 15s linear both;}
+.timer{position:fixed;top:4%;right:5%;font-size:clamp(9px,1.2vw,16px);color:rgba(255,255,255,.3);letter-spacing:.15em;}
+@keyframes zoom{from{transform:scale(1.12);}to{transform:scale(1);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(2em);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes expand{from{width:0;}to{width:80px;}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,146,30,.4);}50%{box-shadow:0 0 0 2vw rgba(232,146,30,0);}}
+@keyframes progress{from{width:0;}to{width:100%;}}
+</style></head><body>
+<div class="bg"></div><div class="ov"></div><div class="grid"></div>
+${logoSrc?`<img class="logo" src="${logoSrc}">`:''}
+<div class="timer">15 SEC</div>
+<div class="c">
+  <div class="eye">Featured at Copper Canyon Dental</div>
+  <div class="name">${biz||'Your Business'}</div>
+  <div class="line"></div>
+  ${tagline?`<div class="tline">${tagline}</div>`:''}
+  ${offer?`<div class="ofr">${offer}</div>`:''}
+  <div class="cta">${cta||'Visit us today'}</div>
+  ${loc?`<div class="loc">📍 ${loc}</div>`:''}
+</div>
+<div class="prog"></div>
+</body></html>`;
+}
+
+function buildStory(biz, tagline, offer, cta, loc, logoSrc, images) {
+  const s1bg = images[0] ? `url('${images[0]}') center/cover` : 'linear-gradient(135deg,#1C2B32,#3D8E8B)';
+  const s2bg = images[1] ? `url('${images[1]}') center/cover` : 'linear-gradient(135deg,#0D2B28,#1C5250)';
+  const s3bg = images[2] ? `url('${images[2]}') center/cover` : 'linear-gradient(135deg,#1C2B32,#B85A10)';
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}html,body{width:100%;height:100%;overflow:hidden;font-family:'Arial',sans-serif;}
+.sc{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.s1{background:${s1bg};animation:s1 5s forwards;}
+.s2{background:${s2bg};opacity:0;animation:s2 5s 5s forwards;}
+.s3{background:${s3bg};opacity:0;animation:s3 5s 10s forwards;}
+.ov{position:absolute;inset:0;background:rgba(0,0,0,.55);}
+.pad{position:relative;z-index:1;padding:6%;}
+.s1 .lbl{font-size:clamp(10px,1.5vw,20px);text-transform:uppercase;letter-spacing:.4em;color:#4AACAA;margin-bottom:1em;animation:fu .8s .3s both;}
+.s1 .nm{font-size:clamp(28px,8vw,100px);font-weight:900;color:white;line-height:.95;animation:fu .9s .5s both;}
+.s1 .lc{font-size:clamp(9px,1.3vw,20px);color:rgba(255,255,255,.5);margin-top:.8em;animation:fu .8s .8s both;}
+.s2 .nm2{font-size:clamp(22px,5vw,52px);font-weight:700;color:white;animation:fu .8s 5.2s both;}
+.s2 .tg{font-size:clamp(12px,2.5vw,34px);color:rgba(255,255,255,.75);max-width:70vw;margin:.8em auto;animation:fu .8s 5.4s both;}
+.s2 .ofr{background:#E8921E;border-radius:6px;padding:.4em 1.8em;font-size:clamp(11px,2.2vw,36px);font-weight:700;color:white;display:inline-block;animation:si .6s 5.9s both;}
+.s3 .lbl3{font-size:clamp(10px,1.5vw,22px);text-transform:uppercase;letter-spacing:.4em;color:#4AACAA;margin-bottom:.8em;animation:fu .8s 10.3s both;}
+.s3 .ct{font-size:clamp(24px,7vw,80px);font-weight:900;color:white;margin-bottom:.6em;animation:fu .9s 10.5s both;}
+.s3 .tg2{font-size:clamp(11px,2.2vw,30px);color:rgba(255,255,255,.7);animation:fu .8s 10.8s both;}
+.s3 .lc3{font-size:clamp(9px,1.3vw,20px);color:rgba(255,255,255,.4);margin-top:.6em;animation:fu .8s 11s both;}
+${logoSrc?`.logo{position:fixed;bottom:5%;right:4%;max-height:8vh;max-width:16vw;object-fit:contain;z-index:10;animation:fadeIn 1s .5s both;}`:''}
+.prog{position:fixed;bottom:0;left:0;height:5px;background:linear-gradient(90deg,#3D8E8B,#4AACAA,#E8921E);z-index:20;animation:progress 15s linear both;}
+.dots{position:fixed;bottom:1.5%;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:20;}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);}
+.d1{animation:don 5s forwards;}.d2{animation:don 5s 5s forwards;}.d3{animation:don 5s 10s forwards;}
+@keyframes s1{0%{opacity:1;}80%{opacity:1;}100%{opacity:0;pointer-events:none;}}
+@keyframes s2{0%{opacity:0;}10%{opacity:1;}80%{opacity:1;}100%{opacity:0;pointer-events:none;}}
+@keyframes s3{0%{opacity:0;}10%{opacity:1;}100%{opacity:1;}}
+@keyframes fu{from{opacity:0;transform:translateY(1.5em);}to{opacity:1;transform:none;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes si{from{opacity:0;transform:scale(.8);}to{opacity:1;transform:scale(1);}}
+@keyframes progress{from{width:0;}to{width:100%;}}
+@keyframes don{0%{background:rgba(255,255,255,.25);}1%{background:white;}99%{background:white;}100%{background:rgba(255,255,255,.25);}}
+</style></head><body>
+<div class="sc s1"><div class="ov"></div><div class="pad">
+  <div class="lbl">Advertised at Copper Canyon Dental</div>
+  <div class="nm">${biz||'Your Business'}</div>
+  ${loc?`<div class="lc">📍 ${loc}</div>`:''}
+</div></div>
+<div class="sc s2"><div class="ov"></div><div class="pad">
+  <div class="nm2">${biz||'Your Business'}</div>
+  ${tagline?`<div class="tg">${tagline}</div>`:''}
+  ${offer?`<div class="ofr">${offer}</div>`:''}
+</div></div>
+<div class="sc s3"><div class="ov"></div><div class="pad">
+  <div class="lbl3">Come visit us</div>
+  <div class="ct">${cta||'Visit Us Today'}</div>
+  ${tagline?`<div class="tg2">${tagline}</div>`:''}
+  ${loc?`<div class="lc3">📍 ${loc}</div>`:''}
+</div></div>
+${logoSrc?`<img class="logo" src="${logoSrc}">`:''}
+<div class="prog"></div>
+<div class="dots"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div></div>
+</body></html>`;
+}
+</script>
+</body>
+</html>
