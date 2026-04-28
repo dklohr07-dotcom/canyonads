@@ -374,7 +374,7 @@ app.get('/api/fetch-logo', async (req, res) => {
 
   const ua = { 'User-Agent': 'Mozilla/5.0 (compatible; CanyonAds/1.0)' };
 
-  const fetchWithTimeout = (url, opts = {}, ms = 7000) => {
+  const fetchWithTimeout = (url, opts = {}, ms = 6000) => {
     const ctrl  = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), ms);
     return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(timer));
@@ -387,6 +387,7 @@ app.get('/api/fetch-logo', async (req, res) => {
       const ct = r.headers.get('content-type') || 'image/png';
       if (!ct.startsWith('image/') && ct !== 'image/x-icon') return null;
       const buf = await r.arrayBuffer();
+      if (buf.byteLength < 500) return null;
       return `data:${ct};base64,${Buffer.from(buf).toString('base64')}`;
     } catch (e) { return null; }
   };
@@ -394,50 +395,110 @@ app.get('/api/fetch-logo', async (req, res) => {
   try {
     const parsed = new URL(siteUrl);
     const origin = parsed.origin;
+    const domain = parsed.hostname;
 
-    const htmlRes = await fetchWithTimeout(origin, { headers: ua });
-    if (!htmlRes.ok) throw new Error(`HTTP ${htmlRes.status}`);
-    const html = await htmlRes.text();
+    // Fetch HTML for meta tag scanning
+    let html = '';
+    try {
+      const htmlRes = await fetchWithTimeout(origin, { headers: ua });
+      if (htmlRes.ok) html = await htmlRes.text();
+    } catch(e) { /* continue without HTML */ }
 
+    // ── LOGO: Best-to-worst priority ──────────────────────────────────────────
+
+    // Strategy 1: apple-touch-icon in HTML (high-res, actual brand icon)
     let rawLogoUrl = null;
-
-    const ogImg = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
-               || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
-    if (ogImg?.[1]) rawLogoUrl = ogImg[1].startsWith('http') ? ogImg[1] : origin + ogImg[1];
-
-    if (!rawLogoUrl) {
+    if (html) {
       const apple = html.match(/<link[^>]+rel=["']apple-touch-icon[^"']*["'][^>]+href=["']([^"']+)["']/i)
                  || html.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["']apple-touch-icon[^"']*["']/i);
       if (apple?.[1]) rawLogoUrl = apple[1].startsWith('http') ? apple[1] : origin + apple[1];
     }
 
-    if (!rawLogoUrl) {
+    // Strategy 2: PNG favicon from HTML
+    if (!rawLogoUrl && html) {
+      const favPng = html.match(/<link[^>]+rel=["'][^"']*icon[^"']*["'][^>]+href=["']([^"']+\.png[^"']*)["']/i)
+                  || html.match(/<link[^>]+href=["']([^"']+\.png[^"']*)["'][^>]+rel=["'][^"']*icon[^"']*["']/i);
+      if (favPng?.[1]) rawLogoUrl = favPng[1].startsWith('http') ? favPng[1] : origin + favPng[1];
+    }
+
+    // Strategy 3: any icon link tag
+    if (!rawLogoUrl && html) {
       const fav = html.match(/<link[^>]+rel=["'][^"']*icon[^"']*["'][^>]+href=["']([^"']+)["']/i)
                || html.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["'][^"']*icon[^"']*["']/i);
       if (fav?.[1]) rawLogoUrl = fav[1].startsWith('http') ? fav[1] : origin + fav[1];
     }
 
-    if (!rawLogoUrl) rawLogoUrl = origin + '/favicon.ico';
-
-    const logoUrl = await imageToBase64(rawLogoUrl);
-
-    let siteDescription = null;
-    const ogDesc = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']{5,160})["']/i)
-                || html.match(/<meta[^>]+content=["']([^"']{5,160})["'][^>]+property=["']og:description["']/i);
-    if (ogDesc?.[1]) siteDescription = ogDesc[1].trim();
-
-    if (!siteDescription) {
-      const metaDesc = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']{5,160})["']/i)
-                    || html.match(/<meta[^>]+content=["']([^"']{5,160})["'][^>]+name=["']description["']/i);
-      if (metaDesc?.[1]) siteDescription = metaDesc[1].trim();
+    // Strategy 4: img tag with "logo" in src/alt/class/id
+    if (!rawLogoUrl && html) {
+      const logoImg = html.match(/<img[^>]+src=["']([^"']*logo[^"']*)["']/i)
+                   || html.match(/<img[^>]+src=["']([^"']+)["'][^>]*(?:class|id|alt)=["'][^"']*logo[^"']*["']/i);
+      if (logoImg?.[1]) {
+        const s = logoImg[1];
+        rawLogoUrl = s.startsWith('http') ? s : (s.startsWith('/') ? origin + s : origin + '/' + s);
+      }
     }
 
-    return res.json({ logoUrl, rawLogoUrl, siteDescription });
+    // Strategy 5: /favicon.ico directly
+    if (!rawLogoUrl) rawLogoUrl = origin + '/favicon.ico';
+
+    // Try to convert logo to base64
+    let logoUrl = await imageToBase64(rawLogoUrl);
+
+    // Strategy 6: Google's public favicon service (very reliable fallback)
+    if (!logoUrl) {
+      const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+      logoUrl = await imageToBase64(googleFaviconUrl);
+    }
+
+    // Strategy 7: DuckDuckGo favicon (second reliable fallback)
+    if (!logoUrl) {
+      const ddgUrl = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+      logoUrl = await imageToBase64(ddgUrl);
+    }
+
+    // ── TAGLINE: Short punchy text ────────────────────────────────────────────
+    let siteTagline = null;
+
+    if (html) {
+      // 1. twitter:description — usually shorter/punchier
+      const twDesc = html.match(/<meta[^>]+name=["']twitter:description["'][^>]+content=["']([^"']{5,120})["']/i)
+                  || html.match(/<meta[^>]+content=["']([^"']{5,120})["'][^>]+name=["']twitter:description["']/i);
+      if (twDesc?.[1]) siteTagline = twDesc[1].trim();
+
+      // 2. og:description — trim to first sentence
+      if (!siteTagline) {
+        const ogDesc = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']{5,200})["']/i)
+                    || html.match(/<meta[^>]+content=["']([^"']{5,200})["'][^>]+property=["']og:description["']/i);
+        if (ogDesc?.[1]) {
+          const d = ogDesc[1].trim();
+          const first = d.match(/^([^.!?]{10,80}[.!?])/);
+          siteTagline = first ? first[1].trim() : d.slice(0, 80).trim();
+        }
+      }
+
+      // 3. meta description — trim to first sentence
+      if (!siteTagline) {
+        const metaDesc = html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']{5,200})["']/i)
+                      || html.match(/<meta[^>]+content=["']([^"']{5,200})["'][^>]+name=["']description["']/i);
+        if (metaDesc?.[1]) {
+          const d = metaDesc[1].trim();
+          const first = d.match(/^([^.!?]{10,80}[.!?])/);
+          siteTagline = first ? first[1].trim() : d.slice(0, 80).trim();
+        }
+      }
+    }
+
+    return res.json({ logoUrl, rawLogoUrl, siteDescription: siteTagline });
+
   } catch (error) {
     console.error('fetch-logo error:', error.message);
     return res.status(500).json({ error: 'Could not fetch from that URL. Make sure it starts with https://' });
   }
 });
+
+
+
+
 
 
 // API: FETCH IMAGES FROM WEBSITE for slideshow ads
