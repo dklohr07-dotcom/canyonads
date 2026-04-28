@@ -497,18 +497,22 @@ html, body {
 
     <div style="margin-top:8px;">
       <span class="ctrl-label" style="margin-bottom:5px;display:block;">Animation Style</span>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
         <label style="text-align:center;cursor:pointer;">
           <input type="radio" name="ctrl-anim" value="reveal" checked style="display:none;">
-          <div class="ctrl-anim-pick" style="border:1.5px solid #3D8E8B;border-radius:6px;padding:6px 4px;font-size:0.65rem;color:white;background:rgba(61,142,139,0.2);">▶ Reveal</div>
+          <div class="ctrl-anim-pick" style="border:1.5px solid #3D8E8B;border-radius:6px;padding:8px 4px;font-size:0.65rem;color:white;background:rgba(61,142,139,0.2);">▶ Reveal</div>
         </label>
         <label style="text-align:center;cursor:pointer;">
           <input type="radio" name="ctrl-anim" value="pulse" style="display:none;">
-          <div class="ctrl-anim-pick" style="border:1.5px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">◉ Pulse</div>
+          <div class="ctrl-anim-pick" style="border:1.5px solid rgba(255,255,255,0.15);border-radius:6px;padding:8px 4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">◉ Pulse</div>
         </label>
         <label style="text-align:center;cursor:pointer;">
           <input type="radio" name="ctrl-anim" value="story" style="display:none;">
-          <div class="ctrl-anim-pick" style="border:1.5px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">◈ Story</div>
+          <div class="ctrl-anim-pick" style="border:1.5px solid rgba(255,255,255,0.15);border-radius:6px;padding:8px 4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">◈ Story</div>
+        </label>
+        <label style="text-align:center;cursor:pointer;">
+          <input type="radio" name="ctrl-anim" value="slideshow" style="display:none;">
+          <div class="ctrl-anim-pick" style="border:1.5px solid rgba(255,255,255,0.15);border-radius:6px;padding:8px 4px;font-size:0.65rem;color:rgba(255,255,255,0.6);">🖼 Slideshow</div>
         </label>
       </div>
     </div>
@@ -665,32 +669,98 @@ function handleCtrlImages(input) {
 }
 
 // ── FETCH & BUILD AD FROM URL ──────────────────────────────────────
+// Auto-detects whether we're on Railway or local file
+function getApiBase() {
+  // If served from a real server (http/https), use relative paths
+  if (location.protocol === 'http:' || location.protocol === 'https:') {
+    return '';
+  }
+  // Opened as a local file — Railway URL must be hardcoded or prompted
+  return null;
+}
+
 async function fetchAndBuildAd() {
   const url = document.getElementById('ctrl-biz-url').value.trim();
   if (!url) { setStatus('Please enter a website URL first.', 'orange'); return; }
 
+  const name = document.getElementById('ctrl-biz-name').value.trim();
+  if (!name) { setStatus('Please enter a business name first.', 'orange'); return; }
+
   const btn = document.getElementById('ctrl-fetch-btn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spin">⏳</span> Fetching website…';
-  setStatus('Fetching logo and description from website…');
+  btn.innerHTML = '<span class="spin">⏳</span> Fetching…';
 
-  let logoDataUrl = null, desc = null;
+  const apiBase = getApiBase();
 
-  try {
-    const res  = await fetch('/api/fetch-logo?url=' + encodeURIComponent(url));
-    const data = await res.json();
-    if (data.logoUrl)        logoDataUrl = data.logoUrl;
-    if (data.siteDescription && !document.getElementById('ctrl-biz-tagline').value.trim()) {
-      document.getElementById('ctrl-biz-tagline').value = data.siteDescription.slice(0, 100);
-    }
-    setStatus('✓ Website data fetched — building ad…');
-  } catch(e) {
-    setStatus('Could not fetch website — building with entered details.', 'rgba(255,200,100,0.8)');
+  // If running as a local file, the backend isn't available
+  if (apiBase === null) {
+    setStatus('⚠️ Fetch only works when served from Railway. Using "Build Ad" with entered details instead.', 'orange');
+    await new Promise(r => setTimeout(r, 1500));
+    buildAd(null);
+    btn.disabled = false;
+    btn.innerHTML = '🌐 Fetch from Website &amp; Build Ad';
+    return;
   }
 
-  buildAd(logoDataUrl);
-  btn.disabled = false;
-  btn.innerHTML = '🌐 Fetch from Website &amp; Build Ad';
+  let logoDataUrl = null;
+  const anim = document.querySelector('input[name="ctrl-anim"]:checked')?.value || 'reveal';
+
+  try {
+    setStatus('Fetching logo and tagline from website…');
+    const logoRes  = await fetch(apiBase + '/api/fetch-logo?url=' + encodeURIComponent(url));
+    if (!logoRes.ok) throw new Error('Server returned ' + logoRes.status);
+    const logoData = await logoRes.json();
+
+    if (logoData.error) throw new Error(logoData.error);
+
+    if (logoData.logoUrl) {
+      logoDataUrl = logoData.logoUrl;
+      setStatus('✓ Logo found!');
+    } else {
+      setStatus('No logo found — will build without one.');
+    }
+
+    // Auto-fill tagline from site description if field is empty
+    if (logoData.siteDescription) {
+      const taglineField = document.getElementById('ctrl-biz-tagline');
+      if (!taglineField.value.trim()) {
+        taglineField.value = logoData.siteDescription.slice(0, 100);
+      }
+    }
+  } catch(e) {
+    console.warn('Logo fetch failed:', e.message);
+    setStatus('Could not fetch logo (' + e.message + ') — building without it.', 'rgba(255,180,80,0.9)');
+  }
+
+  // For slideshow — also fetch images from the website
+  if (anim === 'slideshow') {
+    try {
+      setStatus('📸 Fetching images from website…');
+      const imgRes  = await fetch(apiBase + '/api/fetch-images?url=' + encodeURIComponent(url));
+      if (!imgRes.ok) throw new Error('Server returned ' + imgRes.status);
+      const imgData = await imgRes.json();
+
+      if (imgData.images && imgData.images.length > 0) {
+        ctrlImages = [...imgData.images, ...ctrlImages].slice(0, 5);
+        setStatus(`✓ Found ${imgData.images.length} image(s) — building slideshow…`);
+      } else {
+        setStatus('No images found on website — using uploaded images or gradient fallback.');
+      }
+    } catch(e) {
+      console.warn('Image fetch failed:', e.message);
+      setStatus('Could not fetch images (' + e.message + ') — using uploaded images.', 'rgba(255,180,80,0.9)');
+    }
+  }
+
+  try {
+    buildAd(logoDataUrl);
+  } catch(e) {
+    setStatus('Error building ad: ' + e.message, 'rgba(255,100,100,0.9)');
+    console.error('buildAd error:', e);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '🌐 Fetch from Website &amp; Build Ad';
+  }
 }
 
 function buildManualAd() {
@@ -710,9 +780,10 @@ function buildAd(logoSrc) {
   const images = [...ctrlImages];
 
   let html;
-  if (anim === 'reveal')      html = buildReveal(name, tagline, offer, offer||'Visit us today', loc, logoSrc, images);
-  else if (anim === 'pulse')  html = buildPulse(name, tagline, offer, offer||'Visit us today', loc, logoSrc, images);
-  else                        html = buildStory(name, tagline, offer, offer||'Visit us today', loc, logoSrc, images);
+  if (anim === 'reveal')          html = buildReveal(name, tagline, offer, offer||'Visit us today', loc, logoSrc, images);
+  else if (anim === 'pulse')      html = buildPulse(name, tagline, offer, offer||'Visit us today', loc, logoSrc, images);
+  else if (anim === 'slideshow')  html = buildSlideshow(name, tagline, offer, loc, logoSrc, images);
+  else                            html = buildStory(name, tagline, offer, offer||'Visit us today', loc, logoSrc, images);
 
   addAd({ name, tagline, offer, loc, html });
   setStatus(`✓ "${name}" added to queue (${ADS.length} total).`, '#4AACAA');
@@ -982,6 +1053,213 @@ ${logoSrc?`.logo{position:fixed;bottom:5%;right:4%;max-height:8vh;max-width:16vw
 ${logoSrc?`<img class="logo" src="${logoSrc}">`:''}
 <div class="prog"></div>
 <div class="dots"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div></div>
+</body></html>`;
+}
+
+// ── FETCH IMAGES FROM WEBSITE ─────────────────────────────────────
+// Called by fetchAndBuildAd when slideshow style is selected
+// Falls back gracefully if backend not available
+async function fetchSiteImages(url) {
+  try {
+    const res  = await fetch('/api/fetch-images?url=' + encodeURIComponent(url));
+    const data = await res.json();
+    return data.images || [];
+  } catch(e) { return []; }
+}
+
+// ── SLIDESHOW AD BUILDER ──────────────────────────────────────────
+// Pure image-driven slideshow — no avatar, no characters
+// Ken Burns zoom + pan effect on each image, crossfade transitions
+// Text appears as a lower-third overlay on the last slide
+function buildSlideshow(biz, tagline, offer, loc, logoSrc, images) {
+  // Need at least 1 image — use a gradient placeholder if none
+  const hasImages = images && images.length > 0;
+  const imgs = hasImages ? images.slice(0, 5) : [];
+  const count = Math.max(imgs.length, 1);
+  const slideDur = 15 / count; // seconds per slide
+
+  // Ken Burns directions — alternate zoom/pan for variety
+  const kbEffects = [
+    'kenBurns1', 'kenBurns2', 'kenBurns3', 'kenBurns4', 'kenBurns5'
+  ];
+
+  // Build slide divs
+  const slides = imgs.length > 0
+    ? imgs.map((src, i) => {
+        const delay   = i * slideDur;
+        const effect  = kbEffects[i % kbEffects.length];
+        const isFirst = i === 0;
+        const isLast  = i === imgs.length - 1;
+        return `<div class="slide" style="background-image:url('${src}');animation-name:${effect},slideLifecycle;animation-duration:${slideDur}s,${slideDur}s;animation-delay:${delay}s,${delay}s;animation-fill-mode:both,both;animation-timing-function:ease-in-out,ease-in-out;z-index:${count - i};">${isLast ? '<div class="slide-is-last"></div>' : ''}</div>`;
+      }).join('')
+    : `<div class="slide no-img" style="animation-name:kenBurns1,slideLifecycle;animation-duration:15s,15s;animation-fill-mode:both,both;animation-timing-function:ease-in-out,ease-in-out;z-index:1;"></div>`;
+
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Arial',sans-serif;background:#0A1410;}
+
+/* ── SLIDES ── */
+.slide {
+  position:fixed; inset:0;
+  background-size:cover; background-position:center;
+  opacity:0;
+  will-change:transform,opacity;
+}
+.no-img { background:linear-gradient(135deg,#0D2B28 0%,#1C4A44 50%,#0A1E1B 100%); opacity:1; }
+
+/* ── KEN BURNS EFFECTS (zoom + pan variations) ── */
+@keyframes kenBurns1 { 0%{transform:scale(1.0) translate(0%,0%);} 100%{transform:scale(1.12) translate(-2%,-1%);} }
+@keyframes kenBurns2 { 0%{transform:scale(1.12) translate(2%,1%);} 100%{transform:scale(1.0) translate(0%,0%);} }
+@keyframes kenBurns3 { 0%{transform:scale(1.0) translate(-1%,2%);} 100%{transform:scale(1.1) translate(2%,-2%);} }
+@keyframes kenBurns4 { 0%{transform:scale(1.1) translate(0%,-2%);} 100%{transform:scale(1.0) translate(1%,2%);} }
+@keyframes kenBurns5 { 0%{transform:scale(1.0) translate(2%,0%);} 100%{transform:scale(1.12) translate(-1%,1%);} }
+
+/* ── SLIDE LIFECYCLE (fade in → hold → fade out) ── */
+@keyframes slideLifecycle {
+  0%   { opacity:0; }
+  8%   { opacity:1; }
+  85%  { opacity:1; }
+  100% { opacity:0; }
+}
+
+/* ── DARK VIGNETTE OVERLAY ── */
+.vignette {
+  position:fixed; inset:0;
+  background:radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);
+  pointer-events:none; z-index:50;
+}
+
+/* ── BOTTOM GRADIENT for text legibility ── */
+.text-gradient {
+  position:fixed; bottom:0; left:0; right:0;
+  height:45%;
+  background:linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.75) 100%);
+  pointer-events:none; z-index:51;
+}
+
+/* ── LOWER THIRD TEXT — fades in after ${slideDur * 0.5}s ── */
+.lower-third {
+  position:fixed;
+  bottom:9%; left:0; right:0;
+  padding:0 7%;
+  z-index:60;
+  animation:lowerThirdIn 1s ${slideDur * (count - 1) + slideDur * 0.35}s both;
+}
+@keyframes lowerThirdIn {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:none; }
+}
+
+.lt-eyebrow {
+  font-size:clamp(10px,1.2vw,16px);
+  text-transform:uppercase;
+  letter-spacing:0.4em;
+  color:#4AACAA;
+  margin-bottom:0.5em;
+}
+.lt-name {
+  font-size:clamp(28px,7vw,80px);
+  font-weight:900;
+  color:white;
+  line-height:1;
+  margin-bottom:0.2em;
+  text-shadow:0 2px 20px rgba(0,0,0,0.8);
+}
+.lt-tagline {
+  font-size:clamp(12px,2.2vw,26px);
+  color:rgba(255,255,255,0.82);
+  margin-bottom:0.6em;
+  text-shadow:0 1px 8px rgba(0,0,0,0.6);
+  max-width:60vw;
+}
+.lt-offer {
+  display:inline-block;
+  background:#E8921E;
+  color:white;
+  font-size:clamp(10px,1.8vw,20px);
+  font-weight:700;
+  padding:0.35em 1.2em;
+  border-radius:4px;
+  letter-spacing:0.04em;
+}
+.lt-loc {
+  font-size:clamp(9px,1.1vw,15px);
+  color:rgba(255,255,255,0.45);
+  margin-top:0.6em;
+}
+
+/* ── LOGO ── */
+${logoSrc ? `.logo {
+  position:fixed;
+  top:5%; right:5%;
+  max-height:9vh; max-width:18vw;
+  object-fit:contain;
+  z-index:70;
+  animation:fadeIn 1.5s 0.5s both;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+}` : ''}
+
+/* ── PROGRESS BAR ── */
+.progress {
+  position:fixed;
+  bottom:0; left:0;
+  height:4px;
+  background:linear-gradient(90deg,#3D8E8B,#4AACAA,#E8921E);
+  z-index:80;
+  animation:progress 15s linear both;
+}
+@keyframes progress { from{width:0;} to{width:100%;} }
+
+/* ── FOOTER STRIP ── */
+.footer-strip {
+  position:fixed;
+  bottom:0; left:0; right:0;
+  height:5%;
+  background:rgba(0,0,0,0.6);
+  border-top:2px solid rgba(61,142,139,0.35);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 5%;
+  z-index:75;
+}
+.footer-left {
+  font-size:clamp(9px,1.2vw,15px);
+  color:rgba(255,255,255,0.55);
+  text-transform:uppercase;
+  letter-spacing:0.15em;
+}
+.footer-right {
+  font-size:clamp(9px,1vw,13px);
+  color:rgba(255,255,255,0.3);
+}
+
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+</style></head><body>
+
+${slides}
+
+<div class="vignette"></div>
+<div class="text-gradient"></div>
+
+<!-- Lower third — appears on final slide -->
+<div class="lower-third">
+  <div class="lt-eyebrow">Advertised at Copper Canyon Dental</div>
+  <div class="lt-name">${biz || 'Your Business'}</div>
+  ${tagline ? `<div class="lt-tagline">${tagline}</div>` : ''}
+  ${offer   ? `<div class="lt-offer">${offer}</div>` : ''}
+  ${loc     ? `<div class="lt-loc">📍 ${loc}</div>` : ''}
+</div>
+
+${logoSrc ? `<img class="logo" src="${logoSrc}">` : ''}
+
+<div class="footer-strip">
+  <span class="footer-left">Copper Canyon Dental · Gilbert, AZ</span>
+  <span class="footer-right">15 sec</span>
+</div>
+<div class="progress"></div>
+
 </body></html>`;
 }
 </script>

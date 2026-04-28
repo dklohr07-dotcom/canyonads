@@ -14,13 +14,11 @@ const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 const ADMIN_PASSWORD        = process.env.ADMIN_PASSWORD || 'change-this-password';
 const STRIPE_SECRET_KEY     = process.env.STRIPE_SECRET_KEY || '';
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || '';
-const STRIPE_PRICE_BASIC    = process.env.STRIPE_PRICE_BASIC || '';
-const STRIPE_PRICE_STANDARD = process.env.STRIPE_PRICE_STANDARD || '';
-const STRIPE_PRICE_PREMIUM  = process.env.STRIPE_PRICE_PREMIUM || '';
+const STRIPE_PRICE_ID = process.env.STRIPE_PRICE_ID || '';
 const stripe = STRIPE_SECRET_KEY ? new Stripe(STRIPE_SECRET_KEY) : null;
 
-function getPriceId(planName) {
-  return { Basic: STRIPE_PRICE_BASIC, Standard: STRIPE_PRICE_STANDARD, Premium: STRIPE_PRICE_PREMIUM }[planName] || STRIPE_PRICE_STANDARD;
+function getPriceId() {
+  return STRIPE_PRICE_ID;
 }
 
 // PATHS
@@ -109,11 +107,26 @@ app.use((req, res, next) => {
 app.use('/uploads', express.static(uploadsDir));
 app.use(express.static(publicDir));
 
+// API: PUBLIC slot count — no auth required
+app.get('/api/slots', async (req, res) => {
+  try {
+    const row = await dbGet(
+      "SELECT COUNT(*) as count FROM advertisers WHERE status IN ('active','draft') AND payment_status != 'canceled'"
+    );
+    const filled    = row?.count || 0;
+    const total     = 24;
+    const remaining = Math.max(0, total - filled);
+    return res.json({ filled, total, remaining });
+  } catch (error) {
+    return res.json({ filled: 0, total: 24, remaining: 24 });
+  }
+});
+
 // API: CONFIG
 app.get('/api/config', (_req, res) => {
   res.json({
-    stripeEnabled: Boolean(stripe && STRIPE_PRICE_STANDARD),
-    plans: { Basic: { price: 99 }, Standard: { price: 199 }, Premium: { price: 249 } },
+    stripeEnabled: Boolean(stripe && STRIPE_PRICE_ID),
+    plan: { name: 'Starter', price: 99 },
     limitedSpots: 24,
   });
 });
@@ -148,7 +161,7 @@ app.post('/api/advertisers', upload.fields([
     `, [
       id, businessName, contactName, email, phone||null, businessAddress||null,
       website||null, offerText||null, adStyle||'Premium Modern',
-      planName||'Standard', includeQr==='true'?1:0, 1,
+      'Starter', includeQr==='true'?1:0, 1,
       aiGenerateAd==='true'?1:0, logoPath, imagePath,
       req.body.previewPath||null, createdAt, createdAt
     ]);
@@ -172,7 +185,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
     const advertiser = await dbGet('SELECT * FROM advertisers WHERE id = ?', [advertiserId]);
     if (!advertiser) return res.status(404).json({ error: 'Advertiser not found.' });
 
-    const priceId = getPriceId(advertiser.plan_name);
+    const priceId = getPriceId();
     if (!priceId) return res.json({ stripeNotConfigured: true });
 
     const session = await stripe.checkout.sessions.create({
@@ -243,6 +256,65 @@ app.patch('/api/advertisers/:id', async (req, res) => {
 });
 
 // API: GENERATE AD COPY (Claude via server — avoids browser CORS)
+// API: DALL-E IMAGE AD GENERATION
+app.post('/api/generate-image-ad', upload.fields([
+  { name: 'logo',  maxCount: 1 },
+  { name: 'image', maxCount: 1 }
+]), async (req, res) => {
+  try {
+    const openaiKey = process.env.OPENAI_API_KEY;
+    if (!openaiKey) {
+      return res.status(400).json({ error: 'OPENAI_API_KEY not configured. Add it in Railway → Variables.' });
+    }
+    const { businessName, tagline, offerText, adStyle, website } = req.body;
+    if (!businessName) return res.status(400).json({ error: 'businessName is required.' });
+
+    const openai = new OpenAI({ apiKey: openaiKey });
+    let imageAnalysis = '';
+    const uploads = [];
+    if (req.files?.logo?.[0])  uploads.push(req.files.logo[0]);
+    if (req.files?.image?.[0]) uploads.push(req.files.image[0]);
+
+    if (uploads.length > 0) {
+      try {
+        const visionContent = [
+          { type: 'text', text: 'Analyse these brand assets for a TV advertisement. In 2-3 sentences describe: primary colours and palette, overall style and mood, key visual characteristics. Be concise and design-focused.' },
+          ...uploads.map(f => ({ type: 'image_url', image_url: { url: `data:${f.mimetype};base64,${require('fs').readFileSync(f.path).toString('base64')}` } }))
+        ];
+        const visionRes = await openai.chat.completions.create({ model: 'gpt-4o', messages: [{ role: 'user', content: visionContent }], max_tokens: 150 });
+        imageAnalysis = visionRes.choices[0].message.content.trim();
+      } catch(e) { console.warn('Vision analysis failed:', e.message); }
+    }
+
+    const styles = {
+      premium:   `Professional elegant widescreen 16:9 TV ad. Cream background. Business name "${businessName}" large dark serif left side. Right soft photo area. Navy footer bar. Navy, gold, cream palette. Luxury flat design. No people. No watermarks.`,
+      cinematic: `Cinematic widescreen 16:9 TV ad. Deep teal gradient background. Business name "${businessName}" large white serif centred. Frosted glass footer strip. Teal, amber, white palette. Film-title aesthetic. No people. No watermarks.`,
+      bold:      `Bold high-contrast widescreen 16:9 TV ad. Black background. Business name "${businessName}" enormous white bold sans-serif. Thin teal left accent stripe. Amber underline. Minimal, powerful, modern. No people. No watermarks.`,
+      neon:      `Neon widescreen 16:9 TV ad. Very dark background with subtle grid. Business name "${businessName}" glowing teal neon. Radial teal glow orb. Futuristic. No people. No watermarks.`,
+      editorial: `Editorial magazine widescreen 16:9 TV ad. Warm cream background two-column. Left: business name "${businessName}" large serif. Right: photo area. Black rule top, orange accents. Magazine style. No people. No watermarks.`,
+      retro:     `Vintage retro widescreen 16:9 TV ad. Deep amber-brown background. Double border frame, diamond corners. Business name "${businessName}" serif uppercase centred. 1920s poster. No people. No watermarks.`,
+    };
+
+    const key = (adStyle||'premium').toLowerCase();
+    const basePrompt = styles[key] || styles.premium;
+    const offerClause = offerText ? ` Offer: "${offerText}".` : '';
+    const analysisClause = imageAnalysis ? ` Brand style: ${imageAnalysis}` : '';
+    const prompt = basePrompt + offerClause + analysisClause;
+
+    const aiRes = await openai.images.generate({ model: 'dall-e-3', prompt, size: '1792x1024', quality: 'hd', n: 1 });
+    const imgRes = await fetch(aiRes.data[0].url);
+    const buf = await imgRes.arrayBuffer();
+    const filename = `dalle-${Date.now()}.png`;
+    require('fs').writeFileSync(require('path').join(__dirname, 'uploads', filename), Buffer.from(buf));
+
+    return res.json({ imageUrl: `/uploads/${filename}` });
+  } catch (error) {
+    console.error('DALL-E error:', error.message);
+    return res.status(500).json({ error: error.message || 'Could not generate image ad.' });
+  }
+});
+
+
 app.post('/api/generate-copy', async (req, res) => {
   try {
     const anthropicKey = process.env.ANTHROPIC_API_KEY;
@@ -364,6 +436,87 @@ app.get('/api/fetch-logo', async (req, res) => {
   } catch (error) {
     console.error('fetch-logo error:', error.message);
     return res.status(500).json({ error: 'Could not fetch from that URL. Make sure it starts with https://' });
+  }
+});
+
+
+// API: FETCH IMAGES FROM WEBSITE for slideshow ads
+// Scrapes og:image, then all meaningful <img> tags, returns as base64 array
+app.get('/api/fetch-images', async (req, res) => {
+  const siteUrl = req.query.url;
+  if (!siteUrl) return res.status(400).json({ error: 'url parameter required' });
+
+  const ua = { 'User-Agent': 'Mozilla/5.0 (compatible; CanyonAds/1.0)' };
+
+  const fetchWithTimeout = (url, opts = {}, ms = 6000) => {
+    const ctrl  = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, { ...opts, signal: ctrl.signal }).finally(() => clearTimeout(timer));
+  };
+
+  const imageToBase64 = async (imgUrl) => {
+    try {
+      const r = await fetchWithTimeout(imgUrl, { headers: ua }, 4000);
+      if (!r.ok) return null;
+      const ct = r.headers.get('content-type') || 'image/jpeg';
+      if (!ct.startsWith('image/')) return null;
+      const buf = await r.arrayBuffer();
+      if (buf.byteLength < 5000) return null; // skip tiny icons
+      return `data:${ct};base64,${Buffer.from(buf).toString('base64')}`;
+    } catch (e) { return null; }
+  };
+
+  try {
+    const parsed = new URL(siteUrl);
+    const origin = parsed.origin;
+
+    const htmlRes = await fetchWithTimeout(origin, { headers: ua });
+    if (!htmlRes.ok) throw new Error(`HTTP ${htmlRes.status}`);
+    const html = await htmlRes.text();
+
+    // Collect candidate image URLs — priority order
+    const candidates = new Set();
+
+    // 1. og:image (highest quality, usually the hero image)
+    const ogImg = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+               || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+    if (ogImg?.[1]) {
+      const u = ogImg[1].startsWith('http') ? ogImg[1] : origin + ogImg[1];
+      candidates.add(u);
+    }
+
+    // 2. twitter:image
+    const twImg = html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i)
+               || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i);
+    if (twImg?.[1]) {
+      const u = twImg[1].startsWith('http') ? twImg[1] : origin + twImg[1];
+      candidates.add(u);
+    }
+
+    // 3. All <img src="..."> tags that look like real photos (not icons/logos)
+    const imgTags = [...html.matchAll(/<img[^>]+src=["']([^"']+)["']/gi)];
+    for (const match of imgTags) {
+      const src = match[1];
+      // Skip tiny images, icons, base64, and SVGs
+      if (!src || src.startsWith('data:') || src.endsWith('.svg')) continue;
+      if (src.includes('icon') || src.includes('logo') || src.includes('sprite')) continue;
+      const u = src.startsWith('http') ? src : (src.startsWith('/') ? origin + src : origin + '/' + src);
+      candidates.add(u);
+      if (candidates.size >= 12) break; // enough candidates
+    }
+
+    // Download up to 5 images that are real photos (>5KB)
+    const results = [];
+    for (const url of candidates) {
+      if (results.length >= 5) break;
+      const b64 = await imageToBase64(url);
+      if (b64) results.push(b64);
+    }
+
+    return res.json({ images: results, count: results.length });
+  } catch (error) {
+    console.error('fetch-images error:', error.message);
+    return res.status(500).json({ images: [], error: error.message });
   }
 });
 
