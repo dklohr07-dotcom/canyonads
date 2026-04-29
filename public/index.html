@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Advertise With Us — Copper Canyon Dental</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,600&family=Bebas+Neue&family=Anton&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 /* ── BRAND TOKENS (matched from Copper Canyon Dental site) ── */
@@ -1368,12 +1368,12 @@ body {
         <!-- Design tab pills — scrollable on mobile -->
         <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:1.2rem;padding-bottom:2px;">
           <div style="display:flex;gap:6px;border-bottom:1px solid var(--rule);min-width:max-content;">
-            <button class="des-tab on" onclick="showDesign(0,this)">1 · Split</button>
-            <button class="des-tab" onclick="showDesign(1,this)">2 · Cinematic</button>
-            <button class="des-tab" onclick="showDesign(2,this)">3 · Bold Type</button>
-            <button class="des-tab" onclick="showDesign(3,this)">4 · Neon</button>
-            <button class="des-tab" onclick="showDesign(4,this)">5 · Editorial</button>
-            <button class="des-tab" onclick="showDesign(5,this)">6 · Retro</button>
+            <button class="des-tab on" onclick="showDesign(0,this)">1 · Impact</button>
+            <button class="des-tab" onclick="showDesign(1,this)">2 · Split Color</button>
+            <button class="des-tab" onclick="showDesign(2,this)">3 · Editorial</button>
+            <button class="des-tab" onclick="showDesign(3,this)">4 · Headline</button>
+            <button class="des-tab" onclick="showDesign(4,this)">5 · Spotlight</button>
+            <button class="des-tab" onclick="showDesign(5,this)">6 · Minimal</button>
             <button class="des-tab" onclick="showVideoPanel(this)" id="tab-video" style="color:var(--gold);font-weight:700;">🎬 Video Ad</button>
             <button class="des-tab" onclick="showDallePanel(this)" id="tab-dalle" style="color:#7B61FF;font-weight:700;">✦ AI Image</button>
           </div>
@@ -2002,507 +2002,205 @@ function flowQrChip(size) {
 }
 
 /* ── 3 SLIDE RENDERERS ── */
-function renderFlowSplit(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  const loc = location ? location : 'Gilbert, AZ';
-  const photoSection = photoSrc
-    ? `<div style="flex:1;background:url(${photoSrc}) center/cover;position:relative;"><div style="position:absolute;inset:0;background:rgba(28,58,56,0.3);"></div></div>`
-    : `<div style="flex:1;background:#2A5250;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-         <div style="font-size:5rem;font-weight:900;color:rgba(255,255,255,0.04);letter-spacing:-0.05em;">★</div>
-       </div>`;
+
+// ═══════════════════════════════════════════════════════════════════════
+// BILLBOARD-STYLE STATIC AD RENDERERS
+// Converted from standalone preview → work inside the signup flow
+// Signature: (containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location)
+// ═══════════════════════════════════════════════════════════════════════
+
+// Shared helpers used by all billboard renderers
+function _logo(src, mh, mw, filter) {
+  if (!src) return '';
+  return `<img src="${src}" style="max-height:${mh}px;max-width:${mw}px;object-fit:contain;display:block;${filter?'filter:'+filter+';':''}">`;
+}
+function _qr(size, light) {
+  if (!flowQrDataUrl) return '';
+  const bg = light ? '#fff' : 'rgba(255,255,255,0.95)';
+  return `<div style="background:${bg};border-radius:4px;padding:3px;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="${flowQrDataUrl}" style="width:${size-6}px;height:${size-6}px;"></div>`;
+}
+const FLOW_ACCENT = '#E8921E'; // default, overridden per-render
+
+/* DESIGN 1 — IMPACT */
+function renderFlowSplit(cId, biz, tag, offer, body, cta, logoSrc, photoSrc, loc) {
+  const el = document.getElementById(cId); if(!el) return;
+  const acc = FLOW_ACCENT;
+  const bg = photoSrc ? `background:url('${photoSrc}') center/cover;` : `background:linear-gradient(160deg,#0A1A18,#1C3A38,#071210);`;
   el.innerHTML = `
-    <div style="position:absolute;inset:0;display:flex;font-family:'Nunito Sans',sans-serif;color:white;">
-      <div style="width:55%;background:#1C3A38;display:flex;flex-direction:column;justify-content:space-between;padding:12px 14px;">
-        <div>
-          ${logoSrc ? `<img src="${logoSrc}" class="slide-logo" style="margin-bottom:7px;">` : ''}
-          <div style="font-family:'Playfair Display',serif;font-size:clamp(0.85rem,2.5vw,1.2rem);font-weight:700;line-height:1.15;">${biz||'Your Business'}</div>
-          <div style="font-size:clamp(0.5rem,1.3vw,0.7rem);opacity:0.75;margin-top:5px;line-height:1.35;">${tagline||''}</div>
-          ${offer?`<div style="margin-top:7px;background:#E8921E;display:inline-block;padding:3px 9px;border-radius:3px;font-size:clamp(0.42rem,1vw,0.58rem);font-weight:700;">${offer}</div>`:''}
-        </div>
-        <div style="border-top:1px solid rgba(255,255,255,0.15);padding-top:5px;display:flex;justify-content:space-between;align-items:flex-end;">
-          <div>
-            <div style="font-size:0.38rem;opacity:0.5;text-transform:uppercase;letter-spacing:0.07em;">Advertised at</div>
-            <div style="font-size:0.42rem;font-weight:700;opacity:0.8;">Copper Canyon Dental · ${loc}</div>
-          </div>
-          ${flowQrChip(34)}
-        </div>
-      </div>
-      <div style="width:45%;display:flex;flex-direction:column;">
-        ${photoSection}
-        <div style="background:#E8921E;padding:5px 10px;display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:clamp(0.38rem,0.9vw,0.48rem);font-weight:800;letter-spacing:0.06em;text-transform:uppercase;">${cta||'Visit us today'}</span>
-          <span style="font-size:0.36rem;opacity:0.8;font-weight:600;">15 sec</span>
-        </div>
-      </div>
+    <div style="position:absolute;inset:0;${bg}"></div>
+    ${photoSrc?`<div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.45) 60%,rgba(0,0,0,0.1) 100%);"></div>`:''}
+    <div style="position:absolute;left:0;top:0;bottom:0;width:62%;display:flex;flex-direction:column;justify-content:center;padding:0 5%;">
+      ${logoSrc?`<div style="margin-bottom:3%;">${_logo(logoSrc,22,100,'brightness(0) invert(1)')}</div>`:''}
+      <div style="font-family:'Bebas Neue',Anton,sans-serif;font-size:clamp(1.6rem,7vw,4.5rem);line-height:0.88;color:white;text-transform:uppercase;text-shadow:0 2px 20px rgba(0,0,0,0.5);">${biz||'Your Business'}</div>
+      <div style="width:15%;height:4px;background:${acc};margin:3% 0 2%;"></div>
+      ${tag?`<div style="font-size:clamp(0.55rem,1.6vw,0.85rem);color:rgba(255,255,255,0.82);font-weight:300;letter-spacing:0.04em;margin-bottom:2%;">${tag}</div>`:''}
+      ${offer?`<div style="display:inline-block;background:${acc};padding:0.3em 1em;font-size:clamp(0.48rem,1.2vw,0.68rem);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;border-radius:2px;">${offer||cta}</div>`:''}
+    </div>
+    ${flowQrDataUrl?`<div style="position:absolute;right:4%;bottom:15%;display:flex;flex-direction:column;align-items:center;gap:5px;">${_qr(46)}<div style="font-size:0.32rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.08em;">Scan</div></div>`:''}
+    <div style="position:absolute;bottom:0;left:0;right:0;height:9%;background:rgba(0,0,0,0.7);border-top:2px solid ${acc};display:flex;align-items:center;justify-content:space-between;padding:0 5%;">
+      <span style="font-size:clamp(0.32rem,0.9vw,0.5rem);font-weight:700;letter-spacing:0.12em;text-transform:uppercase;opacity:0.7;">Copper Canyon Dental · Gilbert, AZ</span>
+      ${loc?`<span style="font-size:clamp(0.3rem,0.8vw,0.44rem);color:rgba(255,255,255,0.5);">📍 ${loc}</span>`:''}
     </div>`;
 }
 
-function renderFlowCinematic(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  const loc = location ? location : 'Gilbert, AZ';
-  const bgStyle = photoSrc ? `background:url(${photoSrc}) center/cover;` : `background:linear-gradient(160deg,#0D2B28 0%,#1C5250 45%,#0A1F1E 100%);`;
+/* DESIGN 2 — SPLIT COLOR */
+function renderFlowCinematic(cId, biz, tag, offer, body, cta, logoSrc, photoSrc, loc) {
+  const el = document.getElementById(cId); if(!el) return;
+  const acc = FLOW_ACCENT;
   el.innerHTML = `
-    <div style="position:absolute;inset:0;${bgStyle}font-family:'Nunito Sans',sans-serif;color:white;">
-      ${photoSrc?`<div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,20,18,0.45) 0%,rgba(5,20,18,0.1) 40%,rgba(5,20,18,0.8) 100%);"></div>`:''}
-      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#3D8E8B,#E8921E,transparent);"></div>
-      ${logoSrc?`<img src="${logoSrc}" class="slide-logo" style="position:absolute;top:10px;left:13px;">`:''}
-      <div style="position:absolute;top:10px;right:11px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:2px 7px;font-size:0.4rem;font-weight:700;letter-spacing:0.06em;">15 SEC</div>
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px 34px;">
-        <div style="font-family:'Playfair Display',serif;font-size:clamp(0.9rem,2.8vw,1.4rem);font-weight:700;text-align:center;line-height:1.15;text-shadow:0 2px 12px rgba(0,0,0,0.6);">${biz||'Your Business'}</div>
-        <div style="width:36px;height:1px;background:rgba(255,255,255,0.4);margin:6px auto;"></div>
-        <div style="font-size:clamp(0.5rem,1.4vw,0.73rem);opacity:0.85;text-align:center;max-width:72%;line-height:1.4;text-shadow:0 1px 5px rgba(0,0,0,0.5);">${tagline||''}</div>
-        ${offer?`<div style="margin-top:8px;background:rgba(232,146,30,0.9);border-radius:20px;padding:3px 13px;font-size:clamp(0.44rem,1vw,0.58rem);font-weight:700;">${offer}</div>`:''}
+    <div style="position:absolute;inset:0;display:flex;">
+      <div style="width:45%;background:${acc};display:flex;flex-direction:column;justify-content:center;padding:6% 5% 6% 6%;position:relative;overflow:hidden;">
+        <div style="position:absolute;right:-15%;top:-20%;width:70%;padding-top:70%;border-radius:50%;background:rgba(255,255,255,0.08);"></div>
+        ${logoSrc?`<div style="margin-bottom:6%;">${_logo(logoSrc,22,88,'brightness(0) invert(1)')}</div>`:''}
+        <div style="font-family:'Bebas Neue',Anton,sans-serif;font-size:clamp(1.2rem,5.5vw,3.2rem);line-height:0.9;color:white;text-transform:uppercase;">${biz||'Your Business'}</div>
+        ${offer?`<div style="margin-top:8%;background:white;color:${acc};font-size:clamp(0.42rem,1.1vw,0.62rem);font-weight:800;padding:0.4em 0.9em;display:inline-block;text-transform:uppercase;letter-spacing:0.06em;">${offer||cta}</div>`:''}
       </div>
-      <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(5,20,18,0.72);padding:5px 13px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(61,142,139,0.4);">
-        <div>
-          <div style="font-size:0.36rem;opacity:0.5;text-transform:uppercase;letter-spacing:0.08em;">Proud sponsor · ${loc}</div>
-          <div style="font-size:0.46rem;font-weight:700;color:#4AACAA;">${cta||'Visit us today'}</div>
+      <div style="width:55%;position:relative;overflow:hidden;background:#0D1F1C;">
+        ${photoSrc?`<div style="position:absolute;inset:0;background:url('${photoSrc}') center/cover;opacity:0.35;"></div>`:''}
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:6% 6% 6% 8%;">
+          ${tag?`<div style="font-size:clamp(0.65rem,2vw,1.1rem);color:white;font-weight:300;line-height:1.25;max-width:90%;letter-spacing:0.02em;margin-bottom:6%;">${tag}</div>`:''}
+          <div style="width:30px;height:3px;background:${acc};margin-bottom:5%;"></div>
+          ${loc?`<div style="font-size:clamp(0.38rem,1vw,0.55rem);color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.1em;">📍 ${loc}</div>`:''}
+          ${flowQrDataUrl?`<div style="position:absolute;bottom:14%;right:5%;">${_qr(42)}</div>`:''}
         </div>
-        ${flowQrChip(32)}
       </div>
+    </div>
+    <div style="position:absolute;bottom:0;left:0;right:0;height:8%;background:rgba(0,0,0,0.65);display:flex;align-items:center;padding:0 5%;border-top:1px solid rgba(255,255,255,0.1);">
+      <span style="font-size:clamp(0.3rem,0.85vw,0.48rem);color:rgba(255,255,255,0.5);letter-spacing:0.1em;text-transform:uppercase;">Copper Canyon Dental · Gilbert, AZ</span>
     </div>`;
 }
 
-function renderFlowBoldType(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  const loc = location ? location : 'Gilbert, AZ';
-  const nameFs = biz && biz.length > 14 ? 'clamp(0.9rem,2.6vw,1.35rem)' : 'clamp(1.1rem,3.2vw,1.8rem)';
+/* DESIGN 3 — EDITORIAL LAYER */
+function renderFlowBoldType(cId, biz, tag, offer, body, cta, logoSrc, photoSrc, loc) {
+  const el = document.getElementById(cId); if(!el) return;
+  const acc   = FLOW_ACCENT;
+  const words = (biz||'Your Business').toUpperCase().split(' ');
+  const ghost = words[0]||'';
   el.innerHTML = `
-    <div style="position:absolute;inset:0;background:#0A0F0E;font-family:'Nunito Sans',sans-serif;color:white;overflow:hidden;">
-      <div style="position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(to bottom,#3D8E8B,#E8921E);"></div>
-      <div style="position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:6rem;font-weight:900;color:rgba(255,255,255,0.03);line-height:1;letter-spacing:-0.05em;">${(biz||'BIZ').toUpperCase()}</div>
-      ${logoSrc?`<img src="${logoSrc}" class="slide-logo" style="position:absolute;top:10px;right:11px;opacity:0.9;">`:''}
-      <div style="position:absolute;left:18px;top:50%;transform:translateY(-55%);">
-        <div style="font-size:0.44rem;text-transform:uppercase;letter-spacing:0.14em;color:#3D8E8B;font-weight:700;margin-bottom:6px;">Now advertising at</div>
-        <div style="font-family:'Playfair Display',serif;font-size:${nameFs};font-weight:700;line-height:1.05;letter-spacing:-0.02em;max-width:68%;">${biz||'Your Business'}</div>
-        <div style="width:32px;height:2px;background:#E8921E;margin:8px 0;"></div>
-        <div style="font-size:clamp(0.48rem,1.2vw,0.68rem);color:rgba(255,255,255,0.7);max-width:62%;line-height:1.4;">${tagline||''}</div>
+    <style>
+      @keyframes fbb-maskReveal{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 0% 0 0);}}
+      @keyframes fbb-ghostRise{from{opacity:0;transform:translateY(8%);}to{opacity:1;transform:none;}}
+      @keyframes fbb-ruleX{from{transform:scaleX(0);transform-origin:left;}to{transform:scaleX(1);transform-origin:left;}}
+      @keyframes fbb-clipUp{from{clip-path:inset(100% 0 0 0);}to{clip-path:inset(0% 0 0 0);}}
+      @keyframes fbb-rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+      @keyframes fbb-pop{0%{opacity:0;transform:scale(0.8);}70%{transform:scale(1.04);}100%{opacity:1;transform:scale(1);}}
+      @keyframes fbb-pulse{0%,100%{opacity:0.06;}50%{opacity:0.1;}}
+    </style>
+    <div style="position:absolute;inset:0;background:#08100F;"></div>
+    ${photoSrc?`
+      <div style="position:absolute;inset:0;animation:fbb-maskReveal 1.1s cubic-bezier(0.77,0,0.18,1) 0.2s both;">
+        <div style="position:absolute;inset:0;background:url('${photoSrc}') center/cover;"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,16,15,0.97) 0%,rgba(8,16,15,0.65) 40%,rgba(8,16,15,0.15) 70%,rgba(8,16,15,0.4) 100%);"></div>
+      </div>`
+    :`<div style="position:absolute;right:-10%;top:-10%;width:60%;height:120%;background:radial-gradient(ellipse,rgba(61,142,139,0.12) 0%,transparent 70%);animation:fbb-maskReveal 1.4s 0.3s both;"></div>`}
+    <div style="position:absolute;top:50%;left:38%;transform:translateY(-52%);pointer-events:none;overflow:hidden;animation:fbb-ghostRise 1.2s 0.4s both;">
+      <div style="font-family:'Bebas Neue',Anton,sans-serif;font-size:clamp(4rem,22vw,13rem);line-height:0.82;color:white;opacity:0;animation:fbb-pulse 4s 1.6s infinite;white-space:nowrap;">${ghost}</div>
+    </div>
+    <div style="position:absolute;left:5%;top:0;bottom:0;width:56%;display:flex;flex-direction:column;justify-content:center;padding:5% 0;">
+      ${logoSrc?`<div style="animation:fbb-rise 0.8s 0.6s both;margin-bottom:5%;">${_logo(logoSrc,18,82,'brightness(0) invert(1) opacity(0.55)')}</div>`:''}
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:3%;animation:fbb-rise 0.6s 0.7s both;">
+        <div style="height:1px;background:${acc};width:0;animation:fbb-ruleX 0.5s 0.9s both;flex-shrink:0;max-width:24px;"></div>
+        <div style="font-size:clamp(0.28rem,0.7vw,0.4rem);text-transform:uppercase;letter-spacing:0.35em;color:${acc};font-weight:700;white-space:nowrap;">Copper Canyon Dental presents</div>
       </div>
-      ${offer?`<div style="position:absolute;bottom:30px;left:0;right:0;background:rgba(232,146,30,0.15);border-top:1px solid rgba(232,146,30,0.4);border-bottom:1px solid rgba(232,146,30,0.4);padding:3px 18px;font-size:clamp(0.4rem,1vw,0.54rem);font-weight:700;color:#E8921E;">${offer}</div>`:''}
-      <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(61,142,139,0.12);border-top:1px solid rgba(61,142,139,0.25);padding:4px 13px;display:flex;align-items:center;justify-content:space-between;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          ${flowQrChip(28)}
-          <div>
-            <div style="font-size:0.34rem;opacity:0.45;text-transform:uppercase;letter-spacing:0.08em;">Copper Canyon Dental · ${loc}</div>
-            <div style="font-size:0.42rem;font-weight:700;color:#4AACAA;">${cta||'Visit us today'}</div>
-          </div>
-        </div>
-        <span style="font-size:0.34rem;opacity:0.4;">15 sec</span>
+      <div style="overflow:hidden;margin-bottom:1%;">
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(1.2rem,5vw,2.8rem);font-weight:900;line-height:0.92;color:white;letter-spacing:-0.02em;animation:fbb-clipUp 0.75s cubic-bezier(0.16,1,0.3,1) 1.0s both;">${biz||'Your Business'}</div>
       </div>
+      <div style="height:1px;background:rgba(255,255,255,0.18);margin:3.5% 0 3%;width:0;animation:fbb-ruleX 0.7s 1.7s both;max-width:160px;"></div>
+      ${tag?`<div style="overflow:hidden;margin-bottom:3%;"><div style="font-size:clamp(0.48rem,1.2vw,0.68rem);color:rgba(255,255,255,0.65);font-weight:300;letter-spacing:0.06em;font-style:italic;animation:fbb-clipUp 0.6s 1.9s both;">${tag}</div></div>`:''}
+      ${offer?`<div style="animation:fbb-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 2.2s both;display:inline-block;"><div style="background:${acc};padding:0.32em 1em;font-size:clamp(0.44rem,1.1vw,0.62rem);font-weight:800;text-transform:uppercase;letter-spacing:0.1em;border-radius:1px;display:inline-block;">${offer||cta}</div></div>`:''}
+      ${loc?`<div style="font-size:clamp(0.28rem,0.65vw,0.38rem);color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.15em;margin-top:3%;animation:fbb-rise 0.6s 2.5s both;">📍 ${loc}</div>`:''}
+    </div>
+    ${flowQrDataUrl?`<div style="position:absolute;right:4%;bottom:13%;display:flex;flex-direction:column;align-items:center;gap:4px;animation:fbb-rise 0.6s 2.7s both;">${_qr(40)}<div style="font-size:0.26rem;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.1em;">Scan</div></div>`:''}
+    <div style="position:absolute;bottom:0;left:0;right:0;height:7%;background:rgba(0,0,0,0.5);border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;padding:0 5%;">
+      <span style="font-size:clamp(0.26rem,0.65vw,0.38rem);letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.28);">Copper Canyon Dental · Gilbert, AZ</span>
+      <span style="font-size:clamp(0.24rem,0.6vw,0.34rem);color:rgba(255,255,255,0.18);">15 SEC</span>
     </div>`;
 }
 
-/* ── DESIGN 4: NEON ── */
-function renderFlowNeon(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
-  const el = document.getElementById(containerId); if (!el) return;
-  const loc = location ? location : 'Gilbert, AZ';
+/* DESIGN 4 — HEADLINE (pure type) */
+function renderFlowNeon(cId, biz, tag, offer, body, cta, logoSrc, photoSrc, loc) {
+  const el = document.getElementById(cId); if(!el) return;
+  const acc   = FLOW_ACCENT;
+  const words = (biz||'Your Business').toUpperCase().split(' ');
+  const big   = words[0]||'';
+  const rest  = words.slice(1).join(' ');
   el.innerHTML = `
-    <div style="position:absolute;inset:0;background:#050E0D;font-family:'Nunito Sans',sans-serif;color:white;overflow:hidden;">
-      <!-- grid lines -->
-      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(61,142,139,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(61,142,139,0.07) 1px,transparent 1px);background-size:28px 28px;"></div>
-      <!-- glow orb -->
-      <div style="position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(61,142,139,0.25) 0%,transparent 70%);top:-60px;right:-40px;pointer-events:none;"></div>
-      <!-- top accent line -->
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 0%,#3D8E8B 40%,#4AACAA 60%,transparent 100%);box-shadow:0 0 8px rgba(61,142,139,0.8);"></div>
-
-      ${logoSrc?`<img src="${logoSrc}" class="slide-logo" style="position:absolute;top:11px;left:14px;filter:drop-shadow(0 0 4px rgba(61,142,139,0.8));">`:''}
-
-      <!-- main content -->
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 22px 36px;">
-        <div style="font-size:0.38rem;text-transform:uppercase;letter-spacing:0.2em;color:#3D8E8B;font-weight:700;margin-bottom:6px;text-shadow:0 0 8px rgba(61,142,139,0.8);">◈ Now Featuring ◈</div>
-        <div style="font-family:'Playfair Display',serif;font-size:clamp(0.9rem,2.8vw,1.4rem);font-weight:700;text-align:center;line-height:1.15;text-shadow:0 0 20px rgba(255,255,255,0.3);">${biz||'Your Business'}</div>
-        <div style="width:40px;height:1px;background:#3D8E8B;margin:6px auto;box-shadow:0 0 6px rgba(61,142,139,0.8);"></div>
-        <div style="font-size:clamp(0.5rem,1.3vw,0.7rem);color:rgba(255,255,255,0.75);text-align:center;max-width:75%;line-height:1.4;">${tagline||''}</div>
-        ${offer?`<div style="margin-top:8px;border:1px solid #3D8E8B;border-radius:3px;padding:3px 12px;font-size:clamp(0.42rem,1vw,0.56rem);font-weight:700;color:#4AACAA;text-shadow:0 0 8px rgba(74,172,170,0.6);box-shadow:0 0 8px rgba(61,142,139,0.2);">${offer}</div>`:``}
+    <div style="position:absolute;inset:0;background:#0A0F0E;">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:3vw 3vw;"></div>
+      <div style="position:absolute;left:0;top:0;bottom:0;width:6px;background:${acc};"></div>
+    </div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 6% 0 8%;">
+      <div style="flex:1;">
+        ${logoSrc?`<div style="margin-bottom:3%;">${_logo(logoSrc,18,82,'brightness(0) invert(1) opacity(0.6)')}</div>`:''}
+        <div style="font-family:'Bebas Neue',Anton,sans-serif;font-size:clamp(2rem,11vw,6.5rem);line-height:0.82;color:white;text-transform:uppercase;">${big}</div>
+        ${rest?`<div style="font-family:'Bebas Neue',Anton,sans-serif;font-size:clamp(1rem,5vw,3rem);line-height:0.85;color:${acc};text-transform:uppercase;letter-spacing:0.04em;">${rest}</div>`:''}
+        <div style="width:32px;height:2px;background:rgba(255,255,255,0.25);margin:3% 0 2%;"></div>
+        ${tag?`<div style="font-size:clamp(0.48rem,1.2vw,0.68rem);color:rgba(255,255,255,0.58);font-weight:300;letter-spacing:0.06em;text-transform:uppercase;">${tag}</div>`:''}
       </div>
-      <!-- bottom bar -->
-      <div style="position:absolute;bottom:0;left:0;right:0;border-top:1px solid rgba(61,142,139,0.4);background:rgba(5,14,13,0.8);padding:4px 13px;display:flex;align-items:center;justify-content:space-between;">
-        <div>
-          <div style="font-size:0.32rem;color:rgba(61,142,139,0.7);text-transform:uppercase;letter-spacing:0.1em;">Copper Canyon Dental · ${loc}</div>
-          <div style="font-size:0.42rem;font-weight:700;color:#4AACAA;text-shadow:0 0 6px rgba(74,172,170,0.5);">${cta||'Visit us today'}</div>
-        </div>
-        ${flowQrChip(30)}
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;padding-left:4%;">
+        ${offer?`<div style="background:${acc};padding:0.45em 1em;font-size:clamp(0.44rem,1.1vw,0.62rem);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;border-radius:2px;white-space:nowrap;">${offer||cta}</div>`:''}
+        ${flowQrDataUrl?_qr(44):''}
+        ${loc?`<div style="font-size:clamp(0.3rem,0.72vw,0.4rem);color:rgba(255,255,255,0.32);text-transform:uppercase;letter-spacing:0.1em;text-align:right;">📍 ${loc}</div>`:''}
       </div>
-      <div style="position:absolute;top:10px;right:12px;font-size:0.36rem;color:#3D8E8B;opacity:0.6;">15 SEC</div>
+    </div>
+    <div style="position:absolute;bottom:0;left:0;right:0;height:7%;background:rgba(255,255,255,0.04);border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;padding:0 8%;">
+      <span style="font-size:clamp(0.28rem,0.72vw,0.42rem);color:rgba(255,255,255,0.28);letter-spacing:0.12em;text-transform:uppercase;">Copper Canyon Dental · Gilbert, AZ</span>
     </div>`;
 }
 
-/* ── DESIGN 5: EDITORIAL ── */
-function renderFlowEditorial(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
-  const el = document.getElementById(containerId); if (!el) return;
-  const loc = location ? location : 'Gilbert, AZ';
-  const hasPh = !!photoSrc;
+/* DESIGN 5 — SPOTLIGHT */
+function renderFlowEditorial(cId, biz, tag, offer, body, cta, logoSrc, photoSrc, loc) {
+  const el = document.getElementById(cId); if(!el) return;
+  const acc = FLOW_ACCENT;
+  const hasPhoto = !!photoSrc;
   el.innerHTML = `
-    <div style="position:absolute;inset:0;background:#F5EED8;font-family:'Nunito Sans',sans-serif;overflow:hidden;">
-      <!-- top rule -->
-      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:#1C2B32;"></div>
-      <div style="position:absolute;top:4px;left:0;right:0;height:2px;background:#E8921E;"></div>
-
-      ${hasPh
-        ? `<!-- photo strip right -->
-           <div style="position:absolute;right:0;top:0;bottom:0;width:40%;background:url(${photoSrc}) center/cover;"></div>
-           <div style="position:absolute;right:40%;top:0;bottom:0;width:2px;background:#1C2B32;"></div>`
-        : `<!-- decorative right panel -->
-           <div style="position:absolute;right:0;top:0;bottom:0;width:38%;background:#E8E0C8;display:flex;align-items:center;justify-content:center;">
-             <div style="font-size:4rem;color:rgba(28,43,50,0.08);font-weight:900;transform:rotate(-12deg);">★</div>
-           </div>
-           <div style="position:absolute;right:38%;top:0;bottom:0;width:2px;background:#1C2B32;"></div>`}
-
-      <!-- content left -->
-      <div style="position:absolute;left:0;top:6px;width:${hasPh?'58%':'60%'};bottom:0;padding:12px 16px;display:flex;flex-direction:column;justify-content:space-between;">
-        <div>
-          ${logoSrc?`<img src="${logoSrc}" class="slide-logo-sm" style="margin-bottom:6px;">`:`<div style="font-size:0.32rem;text-transform:uppercase;letter-spacing:0.14em;color:#8A7A5A;margin-bottom:5px;">Local Business Spotlight</div>`}
-          <div style="font-family:'Playfair Display',serif;font-size:clamp(0.8rem,2.4vw,1.2rem);font-weight:700;color:#1C2B32;line-height:1.15;letter-spacing:-0.01em;">${biz||'Your Business'}</div>
-          <div style="width:28px;height:2px;background:#E8921E;margin:5px 0;"></div>
-          <div style="font-size:clamp(0.46rem,1.2vw,0.66rem);color:#4A3E2A;line-height:1.4;font-style:italic;">${tagline||''}</div>
-          ${offer?`<div style="margin-top:6px;background:#E8921E;display:inline-block;padding:2px 8px;font-size:clamp(0.38rem,0.9vw,0.52rem);font-weight:700;color:white;border-radius:2px;">${offer}</div>`:``}
-        </div>
-        <div style="border-top:1px solid rgba(28,43,50,0.2);padding-top:5px;display:flex;align-items:center;justify-content:space-between;">
-          <div style="font-size:0.34rem;color:#8A7A5A;font-style:italic;">Copper Canyon Dental · ${loc}</div>
-          ${flowQrChip(26)}
-        </div>
+    <div style="position:absolute;inset:0;background:#050E0D;">
+      ${hasPhoto?`<div style="position:absolute;inset:0;background:url('${photoSrc}') center/cover;opacity:0.18;"></div>`:''}
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 50% 40%,rgba(61,142,139,0.22) 0%,transparent 70%);"></div>
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 40% 50% at 50% 40%,rgba(255,255,255,0.05) 0%,transparent 60%);"></div>
+    </div>
+    <div style="position:absolute;top:0;left:0;right:0;bottom:18%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 8%;">
+      ${logoSrc?`<div style="margin-bottom:4%;">${_logo(logoSrc,22,100,'brightness(0) invert(1)')}</div>`:''}
+      <div style="font-size:clamp(0.38rem,0.95vw,0.55rem);text-transform:uppercase;letter-spacing:0.4em;color:rgba(255,255,255,0.42);margin-bottom:2%;">Presenting</div>
+      <div style="font-family:'Playfair Display',serif;font-size:clamp(1.5rem,6vw,3.5rem);font-weight:900;font-style:italic;line-height:0.95;color:white;text-shadow:0 0 40px rgba(61,142,139,0.5),0 2px 20px rgba(0,0,0,0.8);">${biz||'Your Business'}</div>
+      ${tag?`<div style="font-size:clamp(0.48rem,1.2vw,0.68rem);color:rgba(255,255,255,0.62);margin-top:3%;font-weight:300;letter-spacing:0.06em;">${tag}</div>`:''}
+    </div>
+    <div style="position:absolute;bottom:0;left:0;right:0;height:18%;background:${acc};display:flex;align-items:center;justify-content:space-between;padding:0 6%;">
+      <div>
+        ${offer?`<div style="font-size:clamp(0.6rem,1.8vw,1rem);font-weight:900;text-transform:uppercase;letter-spacing:0.05em;color:white;">${offer||cta}</div>`:''}
+        <div style="font-size:clamp(0.28rem,0.7vw,0.4rem);color:rgba(255,255,255,0.7);margin-top:2px;letter-spacing:0.1em;text-transform:uppercase;">Copper Canyon Dental · ${loc||'Gilbert, AZ'}</div>
       </div>
-
-      <!-- bottom orange strip -->
-      <div style="position:absolute;bottom:0;left:0;right:0;height:18px;background:#1C2B32;display:flex;align-items:center;justify-content:space-between;padding:0 12px;">
-        <span style="font-size:0.32rem;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.1em;">${cta||'Visit us today'}</span>
-        <span style="font-size:0.3rem;color:rgba(255,255,255,0.4);">15 sec · Advertised at Copper Canyon Dental</span>
-      </div>
+      ${flowQrDataUrl?`<div>${_qr(38,true)}</div>`:''}
     </div>`;
 }
 
-/* ── DESIGN 6: RETRO ── */
-function renderFlowRetro(containerId, biz, tagline, offer, body, cta, logoSrc, photoSrc, location) {
-  const el = document.getElementById(containerId); if (!el) return;
-  const loc = location ? location : 'Gilbert, AZ';
-  const shortBiz = (biz||'Your Business').toUpperCase();
+/* DESIGN 6 — MINIMAL */
+function renderFlowRetro(cId, biz, tag, offer, body, cta, logoSrc, photoSrc, loc) {
+  const el = document.getElementById(cId); if(!el) return;
+  const acc = FLOW_ACCENT;
   el.innerHTML = `
-    <div style="position:absolute;inset:0;background:#2A1A06;font-family:'Nunito Sans',sans-serif;color:#F5D79A;overflow:hidden;">
-      <!-- outer frame -->
-      <div style="position:absolute;inset:5px;border:2px solid rgba(232,146,30,0.5);border-radius:3px;pointer-events:none;"></div>
-      <div style="position:absolute;inset:9px;border:1px solid rgba(232,146,30,0.2);border-radius:2px;pointer-events:none;"></div>
-
-      ${photoSrc?`<div style="position:absolute;inset:12px;background:url(${photoSrc}) center/cover;opacity:0.2;border-radius:2px;"></div>`:''}
-
-      <!-- corner ornaments -->
-      <div style="position:absolute;top:14px;left:14px;font-size:0.5rem;color:rgba(232,146,30,0.5);">◆</div>
-      <div style="position:absolute;top:14px;right:14px;font-size:0.5rem;color:rgba(232,146,30,0.5);">◆</div>
-      <div style="position:absolute;bottom:22px;left:14px;font-size:0.5rem;color:rgba(232,146,30,0.5);">◆</div>
-      <div style="position:absolute;bottom:22px;right:14px;font-size:0.5rem;color:rgba(232,146,30,0.5);">◆</div>
-
-      <!-- center content -->
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 20px 32px;">
-        ${logoSrc?`<img src="${logoSrc}" class="slide-logo-sm" style="margin-bottom:7px;">`:`<div style="font-size:0.32rem;text-transform:uppercase;letter-spacing:0.22em;color:rgba(245,215,154,0.55);margin-bottom:5px;">◈ Established ◈</div>`}
-        <div style="font-family:'Playfair Display',serif;font-size:clamp(0.85rem,2.6vw,1.35rem);font-weight:700;text-align:center;line-height:1.1;color:#F5D79A;letter-spacing:0.02em;">${shortBiz}</div>
-        <div style="display:flex;align-items:center;gap:6px;margin:5px 0;">
-          <div style="height:1px;width:20px;background:rgba(232,146,30,0.6);"></div>
-          <div style="font-size:0.4rem;color:#E8921E;">✦</div>
-          <div style="height:1px;width:20px;background:rgba(232,146,30,0.6);"></div>
-        </div>
-        <div style="font-size:clamp(0.46rem,1.2vw,0.65rem);color:rgba(245,215,154,0.75);text-align:center;max-width:72%;line-height:1.4;font-style:italic;">${tagline||''}</div>
-        ${offer?`<div style="margin-top:7px;border:1px solid rgba(232,146,30,0.7);border-radius:2px;padding:2px 10px;font-size:clamp(0.38rem,0.9vw,0.52rem);font-weight:700;color:#E8921E;text-transform:uppercase;letter-spacing:0.06em;">${offer}</div>`:``}
+    <div style="position:absolute;inset:0;background:#F5EED8;"></div>
+    <div style="position:absolute;top:0;left:0;right:0;height:5px;background:${acc};"></div>
+    <div style="position:absolute;bottom:0;left:0;right:0;height:5px;background:#1C2B32;"></div>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:8% 7%;">
+      <div style="flex:1;padding-right:6%;">
+        ${logoSrc?`<div style="margin-bottom:5%;">${_logo(logoSrc,20,90,'brightness(0)')}</div>`
+          :`<div style="font-size:clamp(0.32rem,0.78vw,0.44rem);font-weight:700;text-transform:uppercase;letter-spacing:0.2em;color:#8A7A5A;margin-bottom:5%;">local business</div>`}
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(1.3rem,5.5vw,3.2rem);font-weight:900;line-height:0.9;color:#1C2B32;letter-spacing:-0.02em;">${biz||'Your Business'}</div>
+        <div style="width:36px;height:3px;background:${acc};margin:4% 0 3%;"></div>
+        ${tag?`<div style="font-size:clamp(0.48rem,1.2vw,0.68rem);color:#4A3E2A;font-style:italic;letter-spacing:0.02em;">${tag}</div>`:''}
+        ${loc?`<div style="font-size:clamp(0.32rem,0.78vw,0.44rem);color:#8A7A5A;margin-top:4%;text-transform:uppercase;letter-spacing:0.1em;">📍 ${loc}</div>`:''}
       </div>
-      <!-- bottom bar -->
-      <div style="position:absolute;bottom:0;left:0;right:0;background:#1A0E03;border-top:1px solid rgba(232,146,30,0.3);padding:3px 12px;display:flex;align-items:center;justify-content:space-between;">
-        <div>
-          <div style="font-size:0.3rem;color:rgba(245,215,154,0.4);text-transform:uppercase;letter-spacing:0.1em;">Copper Canyon Dental · ${loc}</div>
-          <div style="font-size:0.4rem;font-weight:700;color:#E8921E;">${cta||'Visit us today'}</div>
-        </div>
-        ${flowQrChip(28)}
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:9px;flex-shrink:0;">
+        ${offer?`<div style="background:${acc};color:white;padding:0.45em 1em;font-size:clamp(0.44rem,1.1vw,0.62rem);font-weight:800;text-transform:uppercase;letter-spacing:0.06em;border-radius:2px;white-space:nowrap;">${offer||cta}</div>`:''}
+        ${flowQrDataUrl?_qr(46):''}
+        <div style="font-size:clamp(0.28rem,0.7vw,0.38rem);color:#8A7A5A;text-transform:uppercase;letter-spacing:0.1em;text-align:right;">Copper Canyon Dental<br>Gilbert, AZ</div>
       </div>
     </div>`;
 }
-
-// ═══════════════════════════════════════════════════════════════════
-// VIDEO AD SYSTEM
-// ═══════════════════════════════════════════════════════════════════
-let vidStyle = 'reveal';
-let vidImages = [null, null, null]; // base64 data urls for extra images
-let builtVideoHtml = null;
-
-function showVideoPanel(tabEl) {
-  activeDesign = -1; // none of the static designs
-  document.querySelectorAll('.des-tab').forEach(t => {
-    t.style.color = 'var(--ink-light)';
-    t.style.borderBottomColor = 'transparent';
-  });
-  tabEl.style.color = 'var(--gold)';
-  tabEl.style.borderBottomColor = 'var(--gold)';
-  [0,1,2,3,4,5].forEach(i => { document.getElementById('des-'+i).style.display = 'none'; });
-  document.getElementById('des-video').style.display = '';
-  document.getElementById('ai-result-box').style.display = 'none';
-}
-
-function pickVidStyle(el, style) {
-  document.querySelectorAll('.vid-style-pick').forEach(s => {
-    s.style.border = '2px solid var(--rule)';
-    s.style.background = '';
-  });
-  el.style.border = '2px solid var(--teal)';
-  el.style.background = 'var(--teal-pale)';
-  vidStyle = style;
-}
-
-function previewVidImg(input, num) {
-  const file = input.files[0]; if (!file) return;
-  const lbl  = document.getElementById('vid-img-'+num+'-lbl');
-  const prev = document.getElementById('vid-img-'+num+'-prev');
-  const zone = document.getElementById('vid-img-'+num+'-zone');
-  lbl.textContent = file.name.length > 12 ? file.name.slice(0,10)+'…' : file.name;
-  zone.style.borderColor = 'var(--teal)';
-  zone.style.borderStyle = 'solid';
-  const reader = new FileReader();
-  reader.onload = e => {
-    vidImages[num-1] = e.target.result;
-    prev.src = e.target.result;
-    prev.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
-}
-
-// Collect all available images in priority order
-function collectImages() {
-  const imgs = [];
-  // photo upload from step 1
-  const ph = document.getElementById('photo-preview');
-  if (ph && ph.style.display !== 'none' && ph.src) imgs.push(ph.src);
-  // extra video images
-  vidImages.forEach(v => { if (v) imgs.push(v); });
-  // logo as a visual element
-  const lg = document.getElementById('logo-preview');
-  if (lg && lg.style.display !== 'none' && lg.src) imgs.push(lg.src);
-  return imgs;
-}
-
-// ── ANIMATION BUILDER: REVEAL ─────────────────────────────────────
-// Text slides in from left, image zooms in from right, countdown bar
-function buildReveal(biz, tagline, offer, cta, loc, logoSrc, images) {
-  const bg    = images[0] ? `url('${images[0]}') center/cover` : 'linear-gradient(135deg,#1C3A38,#3D8E8B)';
-  const img2  = images[1] ? `<div class="rimg2" style="position:absolute;right:0;top:0;bottom:0;width:42%;background:url('${images[1]}') center/cover;animation:imgReveal 1s 0.8s both;"></div>` : '';
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{width:1920px;height:1080px;overflow:hidden;font-family:'Arial',sans-serif;background:#1C2B32;}
-.bg{position:absolute;inset:0;background:${bg};}
-.overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,30,28,0.92) 0%,rgba(12,30,28,0.75) 55%,rgba(12,30,28,0.1) 100%);}
-${images[0]?'':'.bg{background:linear-gradient(135deg,#0D2B28,#1C5250);}'}
-.content{position:absolute;left:80px;top:50%;transform:translateY(-50%);}
-.tag{font-size:18px;text-transform:uppercase;letter-spacing:6px;color:#3D8E8B;margin-bottom:20px;animation:slideIn 0.8s 0.3s both;}
-.name{font-size:88px;font-weight:900;color:white;line-height:1;margin-bottom:16px;animation:slideIn 0.8s 0.55s both;text-shadow:0 4px 20px rgba(0,0,0,0.5);}
-.tagline{font-size:32px;color:rgba(255,255,255,0.8);margin-bottom:28px;max-width:780px;animation:slideIn 0.8s 0.75s both;}
-.offer{display:inline-block;background:#E8921E;color:white;padding:14px 32px;font-size:26px;font-weight:700;border-radius:4px;margin-bottom:32px;animation:slideIn 0.8s 0.95s both;}
-.cta{font-size:22px;color:#4AACAA;font-weight:700;letter-spacing:2px;text-transform:uppercase;animation:slideIn 0.8s 1.1s both;}
-.loc{font-size:18px;color:rgba(255,255,255,0.5);margin-top:8px;animation:slideIn 0.8s 1.2s both;}
-${logoSrc?`.logo{position:absolute;top:50px;right:56px;max-height:70px;max-width:200px;object-fit:contain;animation:fadeIn 1s 0.5s both;}`:''}
-.footer{position:absolute;bottom:0;left:0;right:0;height:60px;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:space-between;padding:0 60px;border-top:3px solid #E8921E;}
-.footer-left{font-size:18px;color:rgba(255,255,255,0.7);letter-spacing:2px;text-transform:uppercase;}
-.footer-right{font-size:18px;color:rgba(255,255,255,0.5);}
-.progress{position:absolute;bottom:60px;left:0;height:4px;background:#E8921E;animation:progress 15s linear both;}
-${img2?'.rimg2{animation:imgReveal 1s 0.8s both;}':''}
-@keyframes slideIn{from{opacity:0;transform:translateX(-60px);}to{opacity:1;transform:none;}}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-@keyframes progress{from{width:0;}to{width:100%;}}
-@keyframes imgReveal{from{opacity:0;transform:scale(1.08);}to{opacity:1;transform:scale(1);}}
-</style></head><body>
-<div class="bg"></div><div class="overlay"></div>
-${img2}
-${logoSrc?`<img class="logo" src="${logoSrc}">`:''}
-<div class="content">
-  <div class="tag">Copper Canyon Dental presents</div>
-  <div class="name">${biz||'Your Business'}</div>
-  ${tagline?`<div class="tagline">${tagline}</div>`:''}
-  ${offer?`<div class="offer">${offer}</div>`:''}
-  <div class="cta">${cta||'Visit us today'}</div>
-  ${loc?`<div class="loc">📍 ${loc}</div>`:''}
-</div>
-<div class="footer">
-  <span class="footer-left">Copper Canyon Dental · Gilbert, AZ</span>
-  <span class="footer-right">15-Second TV Ad</span>
-</div>
-<div class="progress"></div>
-</body></html>`;
-}
-
-// ── ANIMATION BUILDER: PULSE ──────────────────────────────────────
-// Dramatic zoom-out background, text fades in with scale, pulsing CTA
-function buildPulse(biz, tagline, offer, cta, loc, logoSrc, images) {
-  const bg = images[0] ? `url('${images[0]}') center/cover` : 'linear-gradient(160deg,#0A0F0E,#1C3A38,#0D2B28)';
-  const extraImgs = images.slice(1,3).map((src,i) =>
-    `<div style="position:absolute;${i===0?'left:0;top:0;width:50%;height:50%':'right:0;bottom:0;width:50%;height:50%'};background:url('${src}') center/cover;opacity:0.3;"></div>`
-  ).join('');
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{width:1920px;height:1080px;overflow:hidden;font-family:'Arial',sans-serif;background:#0A0F0E;}
-.bg{position:absolute;inset:0;background:${bg};animation:zoomOut 15s ease-out both;}
-.ov{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0.2) 0%,rgba(0,0,0,0.75) 100%);}
-.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(61,142,139,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(61,142,139,0.06) 1px,transparent 1px);background-size:48px 48px;}
-.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px;}
-.eyebrow{font-size:18px;text-transform:uppercase;letter-spacing:8px;color:#3D8E8B;margin-bottom:24px;animation:fadeUp 1s 0.4s both;}
-.name{font-size:110px;font-weight:900;color:white;line-height:0.9;margin-bottom:20px;animation:fadeUp 1s 0.65s both;text-shadow:0 0 60px rgba(61,142,139,0.4);}
-.line{width:100px;height:3px;background:#E8921E;margin:0 auto 24px;animation:expand 0.8s 0.9s both;}
-.tagline{font-size:34px;color:rgba(255,255,255,0.8);max-width:1000px;margin-bottom:32px;animation:fadeUp 1s 1s both;}
-.offer{background:rgba(232,146,30,0.9);border:2px solid #E8921E;border-radius:40px;padding:16px 48px;font-size:28px;font-weight:700;color:white;margin-bottom:24px;animation:pulse 2s 1.5s infinite,fadeUp 1s 1.2s both;}
-.cta{font-size:22px;font-weight:700;color:#4AACAA;text-transform:uppercase;letter-spacing:3px;animation:fadeUp 1s 1.4s both;}
-.loc{font-size:18px;color:rgba(255,255,255,0.45);margin-top:10px;animation:fadeUp 1s 1.5s both;}
-${logoSrc?`.logo{position:absolute;top:44px;left:60px;max-height:64px;max-width:180px;object-fit:contain;animation:fadeIn 1.2s 0.5s both;}`:''}
-.progress{position:absolute;bottom:0;left:0;height:5px;background:linear-gradient(90deg,#3D8E8B,#E8921E);animation:progress 15s linear both;}
-.timer{position:absolute;top:44px;right:60px;font-size:16px;color:rgba(255,255,255,0.35);font-weight:600;letter-spacing:2px;}
-@keyframes zoomOut{from{transform:scale(1.12);}to{transform:scale(1);}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-@keyframes expand{from{width:0;}to{width:100px;}}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,146,30,0.4);}50%{box-shadow:0 0 0 20px rgba(232,146,30,0);}}
-@keyframes progress{from{width:0;}to{width:100%;}}
-</style></head><body>
-<div class="bg"></div>${extraImgs}<div class="ov"></div><div class="grid"></div>
-${logoSrc?`<img class="logo" src="${logoSrc}">`:''}
-<div class="timer">15 SEC</div>
-<div class="center">
-  <div class="eyebrow">Featured at Copper Canyon Dental</div>
-  <div class="name">${biz||'Your Business'}</div>
-  <div class="line"></div>
-  ${tagline?`<div class="tagline">${tagline}</div>`:''}
-  ${offer?`<div class="offer">${offer}</div>`:''}
-  <div class="cta">${cta||'Visit us today'}</div>
-  ${loc?`<div class="loc">📍 ${loc}</div>`:''}
-</div>
-<div class="progress"></div>
-</body></html>`;
-}
-
-// ── ANIMATION BUILDER: STORY ──────────────────────────────────────
-// 3 scenes: intro (0-5s), main (5-10s), CTA (10-15s)
-function buildStory(biz, tagline, offer, cta, loc, logoSrc, images) {
-  const sc1bg = images[0] ? `url('${images[0]}') center/cover` : 'linear-gradient(135deg,#1C2B32,#3D8E8B)';
-  const sc2bg = images[1] ? `url('${images[1]}') center/cover` : 'linear-gradient(135deg,#0D2B28,#1C5250)';
-  const sc3bg = images[2] ? `url('${images[2]}') center/cover` : 'linear-gradient(135deg,#1C2B32,#B85A10)';
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{width:1920px;height:1080px;overflow:hidden;font-family:'Arial',sans-serif;}
-.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
-.s1{background:${sc1bg};animation:scene1 5s forwards;}
-.s2{background:${sc2bg};opacity:0;animation:scene2 5s 5s forwards;}
-.s3{background:${sc3bg};opacity:0;animation:scene3 5s 10s forwards;}
-.ov{position:absolute;inset:0;background:rgba(0,0,0,0.55);}
-.pad{position:relative;z-index:1;padding:80px;}
-/* Scene 1 — intro */
-.s1 .intro-label{font-size:20px;text-transform:uppercase;letter-spacing:7px;color:#4AACAA;margin-bottom:16px;animation:fadeUp 0.8s 0.3s both;}
-.s1 .intro-name{font-size:100px;font-weight:900;color:white;line-height:0.95;animation:fadeUp 0.9s 0.5s both;}
-.s1 .intro-loc{font-size:22px;color:rgba(255,255,255,0.55);margin-top:20px;animation:fadeUp 0.8s 0.8s both;}
-/* Scene 2 — main message */
-.s2 .main-tag{font-size:32px;color:rgba(255,255,255,0.75);margin-bottom:24px;max-width:1100px;animation:fadeUp 0.8s 5.3s both;}
-.s2 .main-offer{background:#E8921E;border-radius:6px;padding:18px 52px;font-size:38px;font-weight:700;color:white;margin-bottom:24px;display:inline-block;animation:scale-in 0.6s 5.8s both;}
-.s2 .main-name{font-size:52px;font-weight:700;color:white;animation:fadeUp 0.8s 5.2s both;}
-/* Scene 3 — CTA */
-.s3 .cta-label{font-size:22px;text-transform:uppercase;letter-spacing:6px;color:#4AACAA;margin-bottom:20px;animation:fadeUp 0.8s 10.3s both;}
-.s3 .cta-main{font-size:80px;font-weight:900;color:white;margin-bottom:20px;animation:fadeUp 0.9s 10.5s both;}
-.s3 .cta-sub{font-size:30px;color:rgba(255,255,255,0.7);animation:fadeUp 0.8s 10.8s both;}
-.s3 .cta-loc{font-size:20px;color:rgba(255,255,255,0.45);margin-top:14px;animation:fadeUp 0.8s 11s both;}
-/* Logo */
-${logoSrc?`.logo{position:absolute;bottom:50px;right:60px;max-height:60px;max-width:160px;object-fit:contain;z-index:10;animation:fadeIn 1s 0.5s both;}`:''}
-/* Progress */
-.progress{position:absolute;bottom:0;left:0;height:5px;background:linear-gradient(90deg,#3D8E8B,#4AACAA,#E8921E);z-index:20;animation:progress 15s linear both;}
-/* Scene dots */
-.dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:20;}
-.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.3);}
-.dot.d1{animation:dotOn 5s forwards;}
-.dot.d2{animation:dotOn 5s 5s forwards;}
-.dot.d3{animation:dotOn 5s 10s forwards;}
-@keyframes scene1{0%{opacity:1;}80%{opacity:1;}100%{opacity:0;pointer-events:none;}}
-@keyframes scene2{0%{opacity:0;}10%{opacity:1;}80%{opacity:1;}100%{opacity:0;pointer-events:none;}}
-@keyframes scene3{0%{opacity:0;}10%{opacity:1;}100%{opacity:1;}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:none;}}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-@keyframes scale-in{from{opacity:0;transform:scale(0.8);}to{opacity:1;transform:scale(1);}}
-@keyframes progress{from{width:0;}to{width:100%;}}
-@keyframes dotOn{0%{background:rgba(255,255,255,0.3);}1%{background:white;}99%{background:white;}100%{background:rgba(255,255,255,0.3);}}
-</style></head><body>
-<!-- Scene 1 -->
-<div class="scene s1"><div class="ov"></div>
-  <div class="pad">
-    <div class="intro-label">Advertised at Copper Canyon Dental</div>
-    <div class="intro-name">${biz||'Your Business'}</div>
-    ${loc?`<div class="intro-loc">📍 ${loc}</div>`:''}
-  </div>
-</div>
-<!-- Scene 2 -->
-<div class="scene s2"><div class="ov"></div>
-  <div class="pad">
-    <div class="main-name">${biz||'Your Business'}</div>
-    ${tagline?`<div class="main-tag">${tagline}</div>`:''}
-    ${offer?`<div class="main-offer">${offer}</div>`:''}
-  </div>
-</div>
-<!-- Scene 3 -->
-<div class="scene s3"><div class="ov"></div>
-  <div class="pad">
-    <div class="cta-label">Come visit us</div>
-    <div class="cta-main">${cta||'Visit Us Today'}</div>
-    ${tagline?`<div class="cta-sub">${tagline}</div>`:''}
-    ${loc?`<div class="cta-loc">📍 ${loc}</div>`:''}
-  </div>
-</div>
-${logoSrc?`<img class="logo" src="${logoSrc}">`:''}
-<div class="progress"></div>
-<div class="dots"><div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div></div>
-</body></html>`;
-}
-
-async function buildVideoAd() {
-  const biz     = document.getElementById('f-biz-name').value.trim() || 'Your Business';
-  const tagline = document.getElementById('f-tagline')?.value.trim() || (desGenerated[0]?.tagline || '');
-  const offer   = document.getElementById('f-offer').value.trim();
-  const cta     = desGenerated[0]?.callToAction || 'Visit us today';
-  const loc     = document.getElementById('f-address')?.value.trim() || '';
-  const logoEl  = document.getElementById('logo-preview');
-  const logoSrc = logoEl && logoEl.style.display !== 'none' ? logoEl.src : null;
-  const images  = collectImages();
-
-  const btn = document.getElementById('vid-build-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;display:inline-block;animation:spin 0.7s linear infinite;margin-right:6px;"></span>Building…';
-
-  // Small delay so spinner renders
-  await new Promise(r => setTimeout(r, 50));
-
-  try {
-    if (vidStyle === 'reveal')      builtVideoHtml = buildReveal(biz, tagline, offer, cta, loc, logoSrc, images);
-    else if (vidStyle === 'pulse')  builtVideoHtml = buildPulse(biz, tagline, offer, cta, loc, logoSrc, images);
-    else                            builtVideoHtml = buildStory(biz, tagline, offer, cta, loc, logoSrc, images);
-
-    // Show inline preview in an iframe
-    const frame = document.getElementById('vid-preview-frame');
-    frame.innerHTML = `<iframe srcdoc="${builtVideoHtml.replace(/"/g,'&quot;')}" style="width:100%;height:100%;border:none;border-radius:6px;pointer-events:none;" scrolling="no"></iframe>`;
-
-    const dlBtn = document.getElementById('vid-download-btn');
-    dlBtn.disabled = false;
-    dlBtn.style.opacity = '1';
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '🎬 Rebuild Video Ad';
-  }
-}
-
-function downloadVideoAd() {
-  if (!builtVideoHtml) { alert('Please build the video ad first.'); return; }
-  const biz  = (document.getElementById('f-biz-name').value.trim() || 'ad').replace(/\s+/g,'-').toLowerCase();
-  const blob = new Blob([builtVideoHtml], { type: 'text/html' });
-  const a    = document.createElement('a');
-  a.href     = URL.createObjectURL(blob);
-  a.download = `${biz}-video-ad-15sec.html`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-// ═══════════════════════════════════════════════════════════════════
-// END VIDEO AD SYSTEM
-// ═══════════════════════════════════════════════════════════════════
 
 const FLOW_RENDERERS = [renderFlowSplit, renderFlowCinematic, renderFlowBoldType, renderFlowNeon, renderFlowEditorial, renderFlowRetro];
+
 const FLOW_TONES = [
   'warm and welcoming, community-focused',
   'high-energy and exciting',
@@ -2527,6 +2225,123 @@ function refreshFlowSlides() {
     const tagline = taglineField || g?.tagline || '';
     FLOW_RENDERERS[i]('dsc-'+i, biz, tagline, offer, g?.body||'', g?.callToAction||'Visit us today', logoSrc, photoSrc, address);
   });
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// VIDEO AD SYSTEM — 3 billboard-quality animated designs
+// ═══════════════════════════════════════════════════════════
+let vidStyle = 'reveal';
+let vidImages = [null, null, null];
+let builtVideoHtml = null;
+
+function showVideoPanel(tabEl) {
+  activeDesign = -1;
+  document.querySelectorAll('.des-tab').forEach(t => { t.style.color='var(--ink-light)'; t.style.borderBottomColor='transparent'; });
+  tabEl.style.color = 'var(--gold)'; tabEl.style.borderBottomColor = 'var(--gold)';
+  [0,1,2,3,4,5].forEach(i => { const el=document.getElementById('des-'+i); if(el) el.style.display='none'; });
+  const dv=document.getElementById('des-video'); if(dv) dv.style.display='';
+  const dd=document.getElementById('des-dalle'); if(dd) dd.style.display='none';
+  const ar=document.getElementById('ai-result-box'); if(ar) ar.style.display='none';
+}
+
+function pickVidStyle(el, style) {
+  document.querySelectorAll('.vid-style-pick').forEach(s => { s.style.border='2px solid var(--rule)'; s.style.background=''; });
+  el.style.border='2px solid var(--teal)'; el.style.background='var(--teal-pale)';
+  vidStyle = style;
+}
+
+function previewVidImg(input, num) {
+  const file=input.files[0]; if(!file) return;
+  document.getElementById('vid-img-'+num+'-lbl').textContent = file.name.length>12?file.name.slice(0,10)+String.fromCharCode(8230):file.name;
+  document.getElementById('vid-img-'+num+'-zone').style.borderColor='var(--teal)';
+  document.getElementById('vid-img-'+num+'-zone').style.borderStyle='solid';
+  const reader=new FileReader();
+  reader.onload=e=>{ vidImages[num-1]=e.target.result; const p=document.getElementById('vid-img-'+num+'-prev'); p.src=e.target.result; p.style.display='block'; };
+  reader.readAsDataURL(file);
+}
+
+function collectImages() {
+  const imgs=[];
+  const ph=document.getElementById('photo-preview');
+  if(ph&&ph.style.display!=='none'&&ph.src) imgs.push(ph.src);
+  vidImages.forEach(v=>{ if(v) imgs.push(v); });
+  return imgs;
+}
+
+function _vidQrBox(sz,dark) {
+  if(!flowQrDataUrl) return '';
+  const bg=dark?'rgba(0,0,0,0.85)':'rgba(255,255,255,0.95)';
+  return '<div style="background:'+bg+';border-radius:4px;padding:3px;width:'+sz+'px;height:'+sz+'px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="'+flowQrDataUrl+'" style="width:'+(sz-6)+'px;height:'+(sz-6)+'px;"></div>';
+}
+
+
+function buildReveal(biz,tag,offer,cta,loc,logoSrc,images){
+  const p1=images[0]||null,acc='#E8921E';
+  const bg=p1?("url('"+p1+"') center/cover"):"linear-gradient(160deg,#0A1A18,#1C4A3A,#071210)";
+  const qrHtml=flowQrDataUrl?('<div style="position:fixed;right:5%;bottom:15%;animation:fadeUp .7s 2.5s both;display:flex;flex-direction:column;align-items:center;gap:5px;">'+_vidQrBox(52)+'</div>'):'';
+  const lgHtml=logoSrc?('<div style="animation:fadeUp .7s .3s both;margin-bottom:3%;"><img src="'+logoSrc+'" style="max-height:clamp(20px,4vh,36px);max-width:clamp(80px,14vw,160px);object-fit:contain;filter:brightness(0) invert(1);"></div>'):'';
+  const tagHtml=tag?('<div style="font-size:clamp(.65rem,1.8vw,1rem);color:rgba(255,255,255,.8);font-weight:300;letter-spacing:.04em;animation:fadeUp .7s 1.9s both;">'+tag+'</div>'):'';
+  const ofrHtml=offer?('<div style="animation:fadeUp .7s 2.2s both;margin-top:2%;"><span style="background:'+acc+';padding:.3em 1em;font-size:clamp(.52rem,1.4vw,.82rem);font-weight:800;text-transform:uppercase;letter-spacing:.08em;border-radius:2px;">'+offer+'</span></div>'):'';
+  const locHtml=loc?('<span style="font-size:clamp(.3rem,.78vw,.44rem);color:rgba(255,255,255,.35);">'+String.fromCharCode(128205)+' '+loc+'</span>'):'';
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito+Sans:wght@300;700;800&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}html,body{width:100%;height:100%;overflow:hidden;}@keyframes kenZ{from{transform:scale(1);}to{transform:scale(1.12);}}@keyframes wipeL{from{opacity:0;clip-path:inset(0 100% 0 0);}to{opacity:1;clip-path:inset(0 0% 0 0);}}@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}@keyframes lineGrow{from{width:0;}to{width:50px;}}@keyframes prog{from{width:0%;}to{width:100%;}}</style></head><body><div style="position:fixed;inset:0;background:'+bg+';animation:kenZ 16s ease-out both;"></div><div style="position:fixed;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.92),rgba(0,0,0,.55) 55%,rgba(0,0,0,.05));"></div><div style="position:fixed;top:0;left:0;right:0;height:3px;background:'+acc+';animation:prog 15s linear both;"></div><div style="position:fixed;left:6%;top:50%;transform:translateY(-50%);">'+lgHtml+'<div style="font-size:clamp(.42rem,1vw,.58rem);text-transform:uppercase;letter-spacing:.4em;color:'+acc+';font-weight:700;margin-bottom:2%;animation:fadeUp .7s .5s both;">Presented by Copper Canyon Dental</div><div style="font-family:Bebas Neue,sans-serif;font-size:clamp(2.5rem,9.5vw,7rem);line-height:.85;color:white;animation:wipeL .9s .8s both;text-shadow:0 2px 20px rgba(0,0,0,.6);">'+biz+'</div><div style="width:0;height:3px;background:'+acc+';margin:2.5% 0 2%;animation:lineGrow .6s 1.7s both;"></div>'+tagHtml+ofrHtml+'</div>'+qrHtml+'<div style="position:fixed;bottom:0;left:0;right:0;height:8%;background:rgba(0,0,0,.7);border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 6%;"><span style="font-size:clamp(.32rem,.85vw,.5rem);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);">Copper Canyon Dental '+String.fromCharCode(183)+' Gilbert, AZ</span>'+locHtml+'</div></body></html>';
+}
+
+function buildPulse(biz,tag,offer,cta,loc,logoSrc,images){
+  const p1=images[0]||null,acc='#E8921E';
+  const bgDiv=p1?('<div style="position:fixed;inset:0;background:url(''+p1+'') center/cover;opacity:.1;"></div>'):'';
+  const lgHtml=logoSrc?('<div style="animation:slideR .5s .9s both;margin-bottom:4%;"><img src="'+logoSrc+'" style="max-height:clamp(18px,3.5vh,32px);max-width:clamp(70px,12vw,140px);object-fit:contain;filter:brightness(0) invert(1);"></div>'):'';
+  const tagHtml=tag?('<div style="font-size:clamp(.55rem,1.3vw,.78rem);color:rgba(255,255,255,.85);font-weight:300;margin-top:4%;letter-spacing:.04em;animation:slideR .5s 1.5s both;">'+tag+'</div>'):'';
+  const ofrHtml=offer?('<div style="animation:bounceIn .6s 1.3s both;margin-bottom:6%;"><div style="font-size:clamp(1.2rem,3.5vw,2.5rem);font-weight:900;color:white;line-height:1;text-transform:uppercase;">'+offer+'</div></div>'):'';
+  const locHtml=loc?('<div style="font-size:clamp(.38rem,.9vw,.52rem);color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.1em;animation:slideR .5s 1.9s both;">'+String.fromCharCode(128205)+' '+loc+'</div>'):'';
+  const qrHtml=flowQrDataUrl?('<div style="margin-top:6%;animation:slideR .5s 2.1s both;">'+_vidQrBox(48)+'</div>'):'';
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito+Sans:wght@300;700;900&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}html,body{width:100%;height:100%;overflow:hidden;}@keyframes peelIn{from{transform:scaleX(0);transform-origin:left;}to{transform:scaleX(1);transform-origin:left;}}@keyframes punch{0%{opacity:0;transform:scale(.2);}60%{transform:scale(1.08);}80%{transform:scale(.97);}100%{opacity:1;transform:scale(1);}}@keyframes bounceIn{0%{opacity:0;transform:translateY(-30px);}60%{transform:translateY(6px);}80%{transform:translateY(-3px);}100%{opacity:1;transform:none;}}@keyframes slideR{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:none;}}@keyframes prog{from{width:0%;}to{width:100%;}}</style></head><body><div style="position:fixed;inset:0;background:#0A0F0E;">'+bgDiv+'</div><div style="position:fixed;left:0;top:0;bottom:0;width:52%;background:'+acc+';animation:peelIn .6s .3s cubic-bezier(.77,0,.18,1) both;overflow:hidden;"><div style="position:absolute;right:-15%;top:-20%;width:80%;padding-top:80%;border-radius:50%;background:rgba(255,255,255,.08);"></div><div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:6% 8% 6% 7%;">'+lgHtml+'<div style="font-family:Bebas Neue,sans-serif;font-size:clamp(2rem,6.8vw,5rem);line-height:.88;color:white;animation:punch .7s .9s both;">'+biz+'</div>'+tagHtml+'</div></div><div style="position:fixed;right:0;top:0;bottom:0;width:48%;display:flex;flex-direction:column;justify-content:center;padding:6% 5% 6% 6%;">'+ofrHtml+'<div style="width:28px;height:3px;background:'+acc+';margin-bottom:4%;"></div>'+locHtml+qrHtml+'</div><div style="position:fixed;bottom:0;left:0;right:0;height:7%;background:rgba(0,0,0,.6);display:flex;align-items:center;padding:0 5%;"><span style="font-size:clamp(.3rem,.78vw,.44rem);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);">Copper Canyon Dental '+String.fromCharCode(183)+' Gilbert, AZ</span></div><div style="position:fixed;bottom:7%;left:0;height:2px;background:'+acc+';animation:prog 15s linear both;"></div></body></html>';
+}
+
+function buildStory(biz,tag,offer,cta,loc,logoSrc,images){
+  const p1=images[0]||null,acc='#E8921E';
+  const ghost=(biz||'Your Business').toUpperCase().split(' ')[0]||'';
+  const photoBlock=p1?('<div style="position:fixed;inset:0;animation:maskReveal 1.1s cubic-bezier(.77,0,.18,1) .2s both;"><div style="position:fixed;inset:0;background:url(''+p1+'') center/cover;"></div><div style="position:fixed;inset:0;background:linear-gradient(90deg,rgba(8,16,15,.97),rgba(8,16,15,.65) 40%,rgba(8,16,15,.15) 70%,rgba(8,16,15,.4));"></div></div>'):('<div style="position:fixed;right:-10%;top:-10%;width:60%;height:120%;background:radial-gradient(ellipse,rgba(61,142,139,.12),transparent 70%);animation:maskReveal 1.4s .3s both;"></div>');
+  const lgHtml=logoSrc?('<div style="animation:riseIn .8s .6s both;margin-bottom:5%;"><img src="'+logoSrc+'" style="max-height:clamp(18px,3.5vh,32px);max-width:clamp(70px,12vw,140px);object-fit:contain;filter:brightness(0) invert(1) opacity(.55);"></div>'):'';
+  const tagHtml=tag?('<div style="overflow:hidden;margin-bottom:3%;"><div style="font-size:clamp(.55rem,1.4vw,.82rem);color:rgba(255,255,255,.65);font-weight:300;letter-spacing:.06em;font-style:italic;animation:clipUp .6s 1.9s both;">'+tag+'</div></div>'):'';
+  const ofrHtml=offer?('<div style="animation:popIn .5s cubic-bezier(.34,1.56,.64,1) 2.2s both;display:inline-block;"><div style="background:'+acc+';padding:.32em 1em;font-size:clamp(.52rem,1.2vw,.72rem);font-weight:800;text-transform:uppercase;letter-spacing:.1em;border-radius:1px;display:inline-block;">'+offer+'</div></div>'):'';
+  const locHtml=loc?('<div style="font-size:clamp(.3rem,.7vw,.4rem);color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.15em;margin-top:3%;animation:riseIn .6s 2.5s both;">'+String.fromCharCode(128205)+' '+loc+'</div>'):'';
+  const qrHtml=flowQrDataUrl?('<div style="position:fixed;right:4%;bottom:13%;display:flex;flex-direction:column;align-items:center;gap:4px;animation:riseIn .6s 2.7s both;">'+_vidQrBox(48)+'<div style="font-size:.28rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;">Scan</div></div>'):'';
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,900;1,700&family=Nunito+Sans:wght@300;700;800&display=swap" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}html,body{width:100%;height:100%;overflow:hidden;}@keyframes maskReveal{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 0% 0 0);}}@keyframes ghostRise{from{opacity:0;transform:translateY(8%);}to{opacity:1;transform:none;}}@keyframes ruleX{from{transform:scaleX(0);transform-origin:left;}to{transform:scaleX(1);transform-origin:left;}}@keyframes clipUp{from{clip-path:inset(100% 0 0 0);}to{clip-path:inset(0% 0 0 0);}}@keyframes riseIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}@keyframes popIn{0%{opacity:0;transform:scale(.8);}70%{transform:scale(1.04);}100%{opacity:1;transform:scale(1);}}@keyframes pulse{0%,100%{opacity:.06;}50%{opacity:.1;}}@keyframes prog{from{width:0%;}to{width:100%;}}</style></head><body><div style="position:fixed;inset:0;background:#08100F;"></div>'+photoBlock+'<div style="position:fixed;top:50%;left:38%;transform:translateY(-52%);pointer-events:none;overflow:hidden;animation:ghostRise 1.2s .4s both;"><div style="font-family:Bebas Neue,sans-serif;font-size:clamp(5rem,22vw,18rem);line-height:.82;color:white;opacity:0;animation:pulse 4s 1.6s infinite;white-space:nowrap;">'+ghost+'</div></div><div style="position:fixed;left:5%;top:0;bottom:0;width:55%;display:flex;flex-direction:column;justify-content:center;padding:5% 0;">'+lgHtml+'<div style="display:flex;align-items:center;gap:8px;margin-bottom:3%;animation:riseIn .6s .7s both;"><div style="height:1px;background:'+acc+';width:0;animation:ruleX .5s .9s both;flex-shrink:0;max-width:28px;"></div><div style="font-size:clamp(.3rem,.7vw,.42rem);text-transform:uppercase;letter-spacing:.35em;color:'+acc+';font-weight:700;white-space:nowrap;">Copper Canyon Dental presents</div></div><div style="overflow:hidden;margin-bottom:1%;"><div style="font-family:Playfair Display,serif;font-size:clamp(1.8rem,6.5vw,4.5rem);font-weight:900;line-height:.92;color:white;letter-spacing:-.02em;animation:clipUp .75s cubic-bezier(.16,1,.3,1) 1s both;">'+biz+'</div></div><div style="height:1px;background:rgba(255,255,255,.18);margin:3.5% 0 3%;width:0;animation:ruleX .7s 1.7s both;max-width:180px;"></div>'+tagHtml+ofrHtml+locHtml+'</div>'+qrHtml+'<div style="position:fixed;bottom:0;left:0;right:0;height:7%;background:rgba(0,0,0,.5);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;padding:0 5%;"><span style="font-size:clamp(.28rem,.65vw,.4rem);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.28);">Copper Canyon Dental '+String.fromCharCode(183)+' Gilbert, AZ</span><span style="font-size:clamp(.24rem,.6vw,.34rem);color:rgba(255,255,255,.18);">15 SEC</span></div><div style="position:fixed;bottom:7%;left:0;height:2px;background:'+acc+';animation:prog 15s linear both;"></div></body></html>';
+}
+
+async function buildVideoAd() {
+  const biz=document.getElementById('f-biz-name').value.trim()||'Your Business';
+  const tagline=document.getElementById('f-tagline')?.value.trim()||(desGenerated[0]?.tagline||'');
+  const offer=document.getElementById('f-offer').value.trim();
+  const cta=desGenerated[0]?.callToAction||'Visit us today';
+  const loc=document.getElementById('f-address')?.value.trim()||'';
+  const logoEl=document.getElementById('logo-preview');
+  const logoSrc=logoEl&&logoEl.style.display!=='none'?logoEl.src:null;
+  const images=collectImages();
+  const btn=document.getElementById('vid-build-btn');
+  btn.disabled=true; btn.innerHTML='<span style="display:inline-block;animation:spin .7s linear infinite;">'+String.fromCharCode(9203)+'</span> Building...';
+  await new Promise(r=>setTimeout(r,50));
+  try {
+    if(vidStyle==='reveal') builtVideoHtml=buildReveal(biz,tagline,offer,cta,loc,logoSrc,images);
+    else if(vidStyle==='pulse') builtVideoHtml=buildPulse(biz,tagline,offer,cta,loc,logoSrc,images);
+    else builtVideoHtml=buildStory(biz,tagline,offer,cta,loc,logoSrc,images);
+    const frame=document.getElementById('vid-preview-frame');
+    frame.innerHTML='<iframe srcdoc="'+builtVideoHtml.replace(/"/g,'&quot;')+'" style="width:100%;height:100%;border:none;border-radius:6px;pointer-events:none;" scrolling="no"></iframe>';
+    const dlBtn=document.getElementById('vid-download-btn');
+    dlBtn.disabled=false; dlBtn.style.opacity='1';
+  } finally {
+    btn.disabled=false; btn.innerHTML='🎬 Rebuild Video Ad';
+  }
+}
+
+function downloadVideoAd() {
+  if(!builtVideoHtml){alert('Please build the video ad first.');return;}
+  const biz=(document.getElementById('f-biz-name').value.trim()||'ad').toLowerCase().replace(/\s+/g,'-');
+  const blob=new Blob([builtVideoHtml],{type:'text/html'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=biz+'-video-ad.html';
+  a.click(); URL.revokeObjectURL(a.href);
 }
 
 // ── DALL-E IMAGE AD ─────────────────────────────────────────────
