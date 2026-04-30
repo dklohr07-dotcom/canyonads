@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CanyonAds Admin — Copper Canyon Dental</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:#3D8E8B; --teal-d:#2A6E6C; --teal-pale:#F0FAFA;
+  --gold:#E8921E; --red:#C94F4F; --green:#3A9E6A;
+  --ink:#1C2B32; --ink-mid:#4A5E68; --ink-light:#8FA3AE;
+  --rule:#DDE6E9; --off:#F8FAFB; --white:#fff;
+  --radius:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito Sans',sans-serif;background:var(--off);color:var(--ink);min-height:100vh;}
+
+/* ── LOGIN SCREEN ── */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0D2B26,#1C4A3A);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.login-card{background:white;border-radius:16px;padding:2.5rem 2rem;width:340px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.3);}
+.login-logo{margin-bottom:1.2rem;}
+.login-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--ink);margin-bottom:.4rem;}
+.login-sub{font-size:.78rem;color:var(--ink-light);margin-bottom:1.6rem;}
+.login-input{width:100%;padding:.7rem 1rem;border:1.5px solid var(--rule);border-radius:var(--radius);font-family:'Nunito Sans',sans-serif;font-size:.9rem;outline:none;margin-bottom:.8rem;}
+.login-input:focus{border-color:var(--teal);}
+.login-btn{width:100%;padding:.75rem;background:var(--teal);color:white;border:none;border-radius:var(--radius);font-family:'Nunito Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;}
+.login-btn:hover{background:var(--teal-d);}
+.login-err{font-size:.75rem;color:var(--red);margin-top:.5rem;min-height:16px;}
+
+/* ── TOP NAV ── */
+.topnav{background:var(--ink);color:white;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.nav-brand{display:flex;align-items:center;gap:10px;}
+.nav-brand-name{font-family:'Playfair Display',serif;font-size:1rem;color:white;}
+.nav-brand-tag{font-size:.6rem;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase;}
+.nav-actions{display:flex;align-items:center;gap:12px;}
+.nav-btn{padding:.4rem .9rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;border:none;font-family:'Nunito Sans',sans-serif;}
+.nav-btn-outline{background:none;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7);}
+.nav-btn-outline:hover{border-color:white;color:white;}
+.nav-btn-teal{background:var(--teal);color:white;}
+.nav-logout{background:none;border:none;color:rgba(255,255,255,.4);font-size:.72rem;cursor:pointer;font-family:'Nunito Sans',sans-serif;}
+.nav-logout:hover{color:white;}
+
+/* ── LAYOUT ── */
+.page{max-width:1200px;margin:0 auto;padding:2rem 1.5rem;}
+
+/* ── STAT CARDS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{background:white;border-radius:var(--radius);padding:1.2rem 1.4rem;border:1px solid var(--rule);}
+.stat-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-light);margin-bottom:.4rem;}
+.stat-value{font-family:'Playfair Display',serif;font-size:2rem;color:var(--ink);line-height:1;}
+.stat-sub{font-size:.7rem;color:var(--ink-light);margin-top:.3rem;}
+.stat-card.green .stat-value{color:var(--green);}
+.stat-card.red .stat-value{color:var(--red);}
+.stat-card.gold .stat-value{color:var(--gold);}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:1.2rem;flex-wrap:wrap;}
+.search-wrap{flex:1;min-width:200px;position:relative;}
+.search-inp{width:100%;padding:.55rem .9rem .55rem 2.2rem;border:1.5px solid var(--rule);border-radius:6px;font-family:'Nunito Sans',sans-serif;font-size:.82rem;outline:none;background:white;}
+.search-inp:focus{border-color:var(--teal);}
+.search-icon{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--ink-light);font-size:.85rem;}
+.filter-select{padding:.52rem .8rem;border:1.5px solid var(--rule);border-radius:6px;font-family:'Nunito Sans',sans-serif;font-size:.78rem;background:white;color:var(--ink);outline:none;cursor:pointer;}
+.filter-select:focus{border-color:var(--teal);}
+.refresh-btn{padding:.52rem .9rem;background:white;border:1.5px solid var(--rule);border-radius:6px;font-family:'Nunito Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;color:var(--ink);}
+.refresh-btn:hover{border-color:var(--teal);color:var(--teal);}
+
+/* ── TABLE ── */
+.table-wrap{background:white;border-radius:var(--radius);border:1px solid var(--rule);overflow:hidden;}
+.table-head{display:grid;grid-template-columns:1.8fr 1.2fr 1fr .9fr .9fr .9fr 1fr;gap:0;background:var(--off);border-bottom:1px solid var(--rule);padding:.7rem 1rem;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-light);}
+.table-row{display:grid;grid-template-columns:1.8fr 1.2fr 1fr .9fr .9fr .9fr 1fr;gap:0;padding:.85rem 1rem;border-bottom:1px solid var(--rule);align-items:center;transition:background .1s;}
+.table-row:last-child{border-bottom:none;}
+.table-row:hover{background:var(--teal-pale);}
+.table-cell{font-size:.8rem;color:var(--ink);min-width:0;}
+.cell-primary{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cell-secondary{font-size:.68rem;color:var(--ink-light);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ── BADGES ── */
+.badge{display:inline-block;padding:3px 8px;border-radius:20px;font-size:.62rem;font-weight:700;white-space:nowrap;}
+.badge-green{background:#EAFAF2;color:var(--green);}
+.badge-gold{background:#FDF3E3;color:var(--gold);}
+.badge-red{background:#FDEFEF;color:var(--red);}
+.badge-gray{background:#F0F3F4;color:var(--ink-light);}
+.badge-blue{background:#EEF2FF;color:#4F6EF7;}
+
+/* ── ACTION BUTTONS ── */
+.actions{display:flex;gap:5px;flex-wrap:wrap;}
+.act-btn{padding:3px 8px;border-radius:4px;font-size:.62rem;font-weight:600;cursor:pointer;border:none;font-family:'Nunito Sans',sans-serif;transition:all .15s;}
+.act-view{background:var(--teal-pale);color:var(--teal);}
+.act-view:hover{background:var(--teal);color:white;}
+.act-paid{background:#EAFAF2;color:var(--green);}
+.act-paid:hover{background:var(--green);color:white;}
+.act-overdue{background:#FDEFEF;color:var(--red);}
+.act-overdue:hover{background:var(--red);color:white;}
+.act-edit{background:var(--off);color:var(--ink-mid);}
+.act-edit:hover{background:var(--rule);color:var(--ink);}
+
+/* ── EMPTY / LOADING ── */
+.empty-row{padding:3rem;text-align:center;color:var(--ink-light);}
+.empty-icon{font-size:2.5rem;margin-bottom:.8rem;}
+.empty-msg{font-size:.85rem;}
+.loading{padding:3rem;text-align:center;color:var(--ink-light);font-size:.85rem;}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.modal-bg.hidden{display:none;}
+.modal{background:white;border-radius:12px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.25);}
+.modal-head{padding:1.4rem 1.6rem;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:1;}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--ink);}
+.modal-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--ink-light);}
+.modal-body{padding:1.4rem 1.6rem;}
+.modal-field{margin-bottom:1rem;}
+.modal-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-light);display:block;margin-bottom:.4rem;}
+.modal-value{font-size:.88rem;color:var(--ink);}
+.modal-value a{color:var(--teal);}
+.modal-divider{border:none;border-top:1px solid var(--rule);margin:1rem 0;}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.modal-select{width:100%;padding:.6rem .8rem;border:1.5px solid var(--rule);border-radius:6px;font-family:'Nunito Sans',sans-serif;font-size:.85rem;outline:none;}
+.modal-select:focus{border-color:var(--teal);}
+.modal-textarea{width:100%;padding:.6rem .8rem;border:1.5px solid var(--rule);border-radius:6px;font-family:'Nunito Sans',sans-serif;font-size:.82rem;resize:vertical;min-height:70px;outline:none;}
+.modal-textarea:focus{border-color:var(--teal);}
+.modal-foot{padding:1rem 1.6rem;border-top:1px solid var(--rule);display:flex;justify-content:flex-end;gap:.6rem;background:var(--off);border-radius:0 0 12px 12px;}
+.modal-save{padding:.6rem 1.4rem;background:var(--teal);color:white;border:none;border-radius:6px;font-family:'Nunito Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;}
+.modal-save:hover{background:var(--teal-d);}
+.modal-cancel{padding:.6rem 1.2rem;background:none;border:1px solid var(--rule);border-radius:6px;font-family:'Nunito Sans',sans-serif;font-size:.85rem;cursor:pointer;color:var(--ink-mid);}
+
+/* ── PAYMENT ALERT BANNER ── */
+.alert-banner{background:#FDF3E3;border:1px solid #FCDAA0;border-radius:var(--radius);padding:.9rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem;font-size:.8rem;}
+.alert-banner.hidden{display:none;}
+.alert-icon{font-size:1.1rem;}
+.alert-count{font-weight:700;color:var(--gold);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:white;padding:.7rem 1.2rem;border-radius:8px;font-size:.8rem;font-weight:600;z-index:1000;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;}
+.toast.show{opacity:1;transform:none;}
+.toast.success{background:var(--green);}
+.toast.error{background:var(--red);}
+
+/* ── EXPORT BTN ── */
+.export-btn{padding:.52rem .9rem;background:var(--ink);color:white;border:none;border-radius:6px;font-family:'Nunito Sans',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;}
+.export-btn:hover{background:#2E4550;}
+
+@media(max-width:768px){
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .table-head,.table-row{grid-template-columns:1.6fr 1fr .8fr 1fr;font-size:.72rem;}
+  .table-head .h-contact,.table-row .c-contact,
+  .table-head .h-plan,.table-row .c-plan,
+  .table-head .h-joined,.table-row .c-joined{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg width="48" height="42" viewBox="0 0 48 42" fill="none">
+        <path d="M3 38 L13 16 L20 28 L28 6 L42 38 Z" fill="none" stroke="#3D8E8B" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M3 38 L13 16 L20 28 L28 6 L42 38 Z" fill="rgba(61,142,139,.18)"/>
+      </svg>
+    </div>
+    <div class="login-title">CanyonAds Admin</div>
+    <div class="login-sub">Copper Canyon Dental · Gilbert, AZ</div>
+    <input type="password" class="login-input" id="pwd-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- ── TOP NAV ── -->
+<nav class="topnav" id="main-ui" style="display:none;">
+  <div class="nav-brand">
+    <svg width="32" height="28" viewBox="0 0 32 28" fill="none">
+      <path d="M2 26 L9 10 L14 18 L19 4 L28 26 Z" fill="none" stroke="#3D8E8B" stroke-width="2" stroke-linejoin="round"/>
+    </svg>
+    <div>
+      <div class="nav-brand-name">CanyonAds Admin</div>
+      <div class="nav-brand-tag">Copper Canyon Dental</div>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <button class="nav-btn nav-btn-teal" onclick="openAdd()">+ Add Advertiser</button>
+    <button class="export-btn" onclick="exportCSV()">⬇ Export CSV</button>
+    <button class="nav-logout" onclick="doLogout()">Sign out</button>
+  </div>
+</nav>
+
+<!-- ── MAIN PAGE ── -->
+<div class="page" id="page" style="display:none;">
+
+  <!-- Stats row -->
+  <div class="stats-row">
+    <div class="stat-card green">
+      <div class="stat-label">Active Advertisers</div>
+      <div class="stat-value" id="stat-active">—</div>
+      <div class="stat-sub">Currently on air</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-label">Monthly Revenue</div>
+      <div class="stat-value" id="stat-rev">—</div>
+      <div class="stat-sub">Paid this cycle</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">Overdue Payments</div>
+      <div class="stat-value" id="stat-overdue">—</div>
+      <div class="stat-sub">Need follow-up</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Sign-ups</div>
+      <div class="stat-value" id="stat-total">—</div>
+      <div class="stat-sub">All time</div>
+    </div>
+  </div>
+
+  <!-- Overdue alert -->
+  <div class="alert-banner hidden" id="overdue-banner">
+    <span class="alert-icon">⚠️</span>
+    <span><span class="alert-count" id="overdue-count">0</span> advertiser(s) have overdue or missed payments — see highlighted rows below and reach out.</span>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-inp" id="search" placeholder="Search by business, contact, or email…" oninput="renderTable()">
+    </div>
+    <select class="filter-select" id="filter-status" onchange="renderTable()">
+      <option value="">All Statuses</option>
+      <option value="active">Active</option>
+      <option value="draft">Draft</option>
+      <option value="paused">Paused</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+    <select class="filter-select" id="filter-payment" onchange="renderTable()">
+      <option value="">All Payments</option>
+      <option value="paid">Paid</option>
+      <option value="pending">Pending</option>
+      <option value="overdue">Overdue</option>
+      <option value="failed">Failed</option>
+      <option value="canceled">Canceled</option>
+    </select>
+    <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="table-head">
+      <div>Business</div>
+      <div class="h-contact">Contact</div>
+      <div class="h-plan">Plan</div>
+      <div>Status</div>
+      <div>Payment</div>
+      <div class="h-joined">Joined</div>
+      <div>Actions</div>
+    </div>
+    <div id="table-body"><div class="loading">Loading advertisers…</div></div>
+  </div>
+</div>
+
+<!-- ── DETAIL / EDIT MODAL ── -->
+<div class="modal-bg hidden" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">Advertiser Details</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot">
+      <button class="modal-cancel" onclick="closeModal()">Close</button>
+      <button class="modal-save" onclick="saveModal()" id="modal-save-btn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── ADD ADVERTISER MODAL ── -->
+<div class="modal-bg hidden" id="add-modal-bg" onclick="if(event.target===this)closeAdd()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Add Advertiser Manually</div>
+      <button class="modal-close" onclick="closeAdd()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <div class="modal-field"><label class="modal-label">Business Name *</label><input class="modal-select" id="add-biz" placeholder="Peak Yoga Studio"></div>
+        <div class="modal-field"><label class="modal-label">Contact Name *</label><input class="modal-select" id="add-contact" placeholder="Jane Smith"></div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field"><label class="modal-label">Email *</label><input class="modal-select" id="add-email" type="email" placeholder="jane@example.com"></div>
+        <div class="modal-field"><label class="modal-label">Phone</label><input class="modal-select" id="add-phone" placeholder="(480) 555-0000"></div>
+      </div>
+      <div class="modal-row">
+        <div class="modal-field"><label class="modal-label">Plan</label>
+          <select class="modal-select" id="add-plan">
+            <option value="Starter">Starter — $99/mo</option>
+            <option value="Premium">Premium (custom)</option>
+          </select>
+        </div>
+        <div class="modal-field"><label class="modal-label">Status</label>
+          <select class="modal-select" id="add-status">
+            <option value="active">Active</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-field"><label class="modal-label">Business Address</label><input class="modal-select" id="add-address" placeholder="123 Main St, Gilbert AZ 85295"></div>
+      <div class="modal-field"><label class="modal-label">Website</label><input class="modal-select" id="add-website" placeholder="https://yourbusiness.com"></div>
+      <div class="modal-field"><label class="modal-label">Notes</label><textarea class="modal-textarea" id="add-notes" placeholder="Any notes about this advertiser…"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="modal-cancel" onclick="closeAdd()">Cancel</button>
+      <button class="modal-save" onclick="submitAdd()">Add Advertiser</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────
+let password = '';
+let allAds   = [];
+let editingId = null;
+
+// ── LOGIN ──────────────────────────────────────────────────────────
+function doLogin() {
+  const pwd = document.getElementById('pwd-input').value.trim();
+  if (!pwd) return;
+  password = pwd;
+  loadData().then(ok => {
+    if (ok) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('main-ui').style.display = '';
+      document.getElementById('page').style.display = '';
+    } else {
+      document.getElementById('login-err').textContent = 'Incorrect password. Try again.';
+      password = '';
+    }
+  });
+}
+
+function doLogout() {
+  password = '';
+  document.getElementById('login-screen').style.display = '';
+  document.getElementById('main-ui').style.display = 'none';
+  document.getElementById('page').style.display = 'none';
+  document.getElementById('pwd-input').value = '';
+}
+
+// ── LOAD DATA ──────────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const res  = await fetch(`/api/advertisers?password=${encodeURIComponent(password)}`);
+    if (res.status === 401) return false;
+    const data = await res.json();
+    allAds = data.advertisers || [];
+    updateStats();
+    renderTable();
+    return true;
+  } catch(e) {
+    showToast('Could not reach server.', 'error');
+    return false;
+  }
+}
+
+// ── STATS ──────────────────────────────────────────────────────────
+function updateStats() {
+  const active  = allAds.filter(a => a.status === 'active').length;
+  const paid    = allAds.filter(a => a.payment_status === 'paid').length;
+  const overdue = allAds.filter(a => ['overdue','failed'].includes(a.payment_status)).length;
+  const rev     = paid * 99; // $99/mo per advertiser
+
+  document.getElementById('stat-active').textContent  = active;
+  document.getElementById('stat-rev').textContent     = '$' + rev.toLocaleString();
+  document.getElementById('stat-overdue').textContent = overdue;
+  document.getElementById('stat-total').textContent   = allAds.length;
+
+  const banner = document.getElementById('overdue-banner');
+  const ct     = document.getElementById('overdue-count');
+  if (overdue > 0) {
+    banner.classList.remove('hidden');
+    ct.textContent = overdue;
+  } else {
+    banner.classList.add('hidden');
+  }
+}
+
+// ── TABLE ──────────────────────────────────────────────────────────
+function renderTable() {
+  const q       = document.getElementById('search').value.toLowerCase();
+  const fStatus  = document.getElementById('filter-status').value;
+  const fPayment = document.getElementById('filter-payment').value;
+
+  const filtered = allAds.filter(a => {
+    const matchQ = !q ||
+      (a.business_name||'').toLowerCase().includes(q) ||
+      (a.contact_name||'').toLowerCase().includes(q)  ||
+      (a.email||'').toLowerCase().includes(q);
+    const matchS = !fStatus  || a.status === fStatus;
+    const matchP = !fPayment || a.payment_status === fPayment;
+    return matchQ && matchS && matchP;
+  });
+
+  const body = document.getElementById('table-body');
+
+  if (!filtered.length) {
+    body.innerHTML = `<div class="empty-row"><div class="empty-icon">📋</div><div class="empty-msg">No advertisers match your filters.</div></div>`;
+    return;
+  }
+
+  body.innerHTML = filtered.map(a => {
+    const isOverdue = ['overdue','failed'].includes(a.payment_status);
+    const joined    = a.created_at ? new Date(a.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+    return `
+    <div class="table-row" style="${isOverdue?'background:#FFF9F9;':''}">
+      <div class="table-cell c-biz">
+        <div class="cell-primary">${esc(a.business_name||'—')}</div>
+        <div class="cell-secondary">${esc(a.email||'')}</div>
+      </div>
+      <div class="table-cell c-contact">
+        <div class="cell-primary">${esc(a.contact_name||'—')}</div>
+        <div class="cell-secondary">${esc(a.phone||'')}</div>
+      </div>
+      <div class="table-cell c-plan">${esc(a.plan_name||'Starter')}</div>
+      <div class="table-cell">${statusBadge(a.status)}</div>
+      <div class="table-cell">${paymentBadge(a.payment_status)}</div>
+      <div class="table-cell c-joined" style="font-size:.72rem;color:var(--ink-light);">${joined}</div>
+      <div class="table-cell">
+        <div class="actions">
+          <button class="act-btn act-view" onclick="openDetail('${a.id}')">View</button>
+          ${a.payment_status !== 'paid'
+            ? `<button class="act-btn act-paid" onclick="markPaid('${a.id}')">✓ Paid</button>`
+            : ''}
+          ${isOverdue
+            ? `<button class="act-btn act-overdue" onclick="contactOverdue('${a.id}')">📧 Chase</button>`
+            : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function statusBadge(s) {
+  const map = { active:'badge-green', draft:'badge-gray', paused:'badge-gold', cancelled:'badge-red' };
+  return `<span class="badge ${map[s]||'badge-gray'}">${s||'draft'}</span>`;
+}
+function paymentBadge(p) {
+  const map = { paid:'badge-green', pending:'badge-gold', overdue:'badge-red', failed:'badge-red', canceled:'badge-gray' };
+  return `<span class="badge ${map[p]||'badge-gray'}">${p||'pending'}</span>`;
+}
+function esc(s) { return String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── MARK PAID ──────────────────────────────────────────────────────
+async function markPaid(id) {
+  await patch(id, { payment_status: 'paid', status: 'active' });
+  showToast('Marked as paid ✓', 'success');
+}
+
+// ── CONTACT OVERDUE ────────────────────────────────────────────────
+function contactOverdue(id) {
+  const ad = allAds.find(a => a.id === id);
+  if (!ad) return;
+  const subject = encodeURIComponent(`Your CanyonAds payment is overdue — ${ad.business_name}`);
+  const body = encodeURIComponent(
+    `Hi ${ad.contact_name},\n\nThis is a friendly reminder that your CanyonAds advertising payment for ${ad.business_name} is currently overdue.\n\nTo keep your ad running on our operatory TVs, please arrange payment at your earliest convenience.\n\nIf you have any questions, please don't hesitate to reach out.\n\nThank you,\nCopper Canyon Dental\n(480) 553-9909`
+  );
+  window.open(`mailto:${ad.email}?subject=${subject}&body=${body}`);
+}
+
+// ── DETAIL MODAL ───────────────────────────────────────────────────
+function openDetail(id) {
+  const ad = allAds.find(a => a.id === id);
+  if (!ad) return;
+  editingId = id;
+  document.getElementById('modal-title').textContent = ad.business_name || 'Advertiser';
+
+  const joined = ad.created_at ? new Date(ad.created_at).toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}) : '—';
+
+  document.getElementById('modal-body').innerHTML = `
+    <!-- Contact info -->
+    <div class="modal-row">
+      <div class="modal-field"><label class="modal-label">Business Name</label><div class="modal-value">${esc(ad.business_name||'—')}</div></div>
+      <div class="modal-field"><label class="modal-label">Contact</label><div class="modal-value">${esc(ad.contact_name||'—')}</div></div>
+    </div>
+    <div class="modal-row">
+      <div class="modal-field"><label class="modal-label">Email</label><div class="modal-value"><a href="mailto:${esc(ad.email||'')}">${esc(ad.email||'—')}</a></div></div>
+      <div class="modal-field"><label class="modal-label">Phone</label><div class="modal-value"><a href="tel:${esc(ad.phone||'')}">${esc(ad.phone||'—')}</a></div></div>
+    </div>
+    <div class="modal-row">
+      <div class="modal-field"><label class="modal-label">Address</label><div class="modal-value">${esc(ad.business_address||'—')}</div></div>
+      <div class="modal-field"><label class="modal-label">Website</label><div class="modal-value">${ad.website?`<a href="${esc(ad.website)}" target="_blank">${esc(ad.website)}</a>`:'—'}</div></div>
+    </div>
+    <div class="modal-row">
+      <div class="modal-field"><label class="modal-label">Plan</label><div class="modal-value">${esc(ad.plan_name||'Starter')}</div></div>
+      <div class="modal-field"><label class="modal-label">Signed Up</label><div class="modal-value">${joined}</div></div>
+    </div>
+
+    <hr class="modal-divider">
+
+    <!-- Editable fields -->
+    <div class="modal-row">
+      <div class="modal-field">
+        <label class="modal-label">Ad Status</label>
+        <select class="modal-select" id="edit-status">
+          <option value="active"    ${ad.status==='active'   ?'selected':''}>Active</option>
+          <option value="draft"     ${ad.status==='draft'    ?'selected':''}>Draft</option>
+          <option value="paused"    ${ad.status==='paused'   ?'selected':''}>Paused</option>
+          <option value="cancelled" ${ad.status==='cancelled'?'selected':''}>Cancelled</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label class="modal-label">Payment Status</label>
+        <select class="modal-select" id="edit-payment">
+          <option value="paid"     ${ad.payment_status==='paid'    ?'selected':''}>Paid ✓</option>
+          <option value="pending"  ${ad.payment_status==='pending' ?'selected':''}>Pending</option>
+          <option value="overdue"  ${ad.payment_status==='overdue' ?'selected':''}>Overdue ⚠</option>
+          <option value="failed"   ${ad.payment_status==='failed'  ?'selected':''}>Failed ✗</option>
+          <option value="canceled" ${ad.payment_status==='canceled'?'selected':''}>Canceled</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Notes (internal — not shown to advertiser)</label>
+      <textarea class="modal-textarea" id="edit-notes" placeholder="Payment history, special arrangements, contact notes…">${esc(ad.notes||'')}</textarea>
+    </div>
+
+    <hr class="modal-divider">
+
+    <!-- Quick actions -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button onclick="contactOverdue('${ad.id}')" style="padding:.4rem .9rem;border:1px solid var(--rule);border-radius:6px;background:white;font-family:'Nunito Sans',sans-serif;font-size:.75rem;cursor:pointer;">📧 Email Advertiser</button>
+      ${ad.phone?`<button onclick="window.open('tel:${esc(ad.phone)}')" style="padding:.4rem .9rem;border:1px solid var(--rule);border-radius:6px;background:white;font-family:'Nunito Sans',sans-serif;font-size:.75rem;cursor:pointer;">📞 Call ${esc(ad.phone)}</button>`:''}
+      ${ad.stripe_customer_id?`<button onclick="window.open('https://dashboard.stripe.com/customers/${esc(ad.stripe_customer_id)}')" style="padding:.4rem .9rem;border:1px solid #6772E5;border-radius:6px;background:#F0F1FF;color:#6772E5;font-family:'Nunito Sans',sans-serif;font-size:.75rem;cursor:pointer;">Stripe →</button>`:''}
+    </div>
+  `;
+
+  document.getElementById('modal-bg').classList.remove('hidden');
+}
+
+async function saveModal() {
+  if (!editingId) return;
+  const status         = document.getElementById('edit-status').value;
+  const payment_status = document.getElementById('edit-payment').value;
+  const notes          = document.getElementById('edit-notes').value;
+  await patch(editingId, { status, payment_status, notes });
+  showToast('Changes saved ✓', 'success');
+  closeModal();
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.add('hidden');
+  editingId = null;
+}
+
+// ── ADD ADVERTISER MANUALLY ────────────────────────────────────────
+function openAdd()  { document.getElementById('add-modal-bg').classList.remove('hidden'); }
+function closeAdd() { document.getElementById('add-modal-bg').classList.add('hidden'); }
+
+async function submitAdd() {
+  const biz     = document.getElementById('add-biz').value.trim();
+  const contact = document.getElementById('add-contact').value.trim();
+  const email   = document.getElementById('add-email').value.trim();
+  if (!biz || !contact || !email) { showToast('Business name, contact, and email are required.', 'error'); return; }
+
+  const form = new FormData();
+  form.append('businessName',    biz);
+  form.append('contactName',     contact);
+  form.append('email',           email);
+  form.append('phone',           document.getElementById('add-phone').value.trim());
+  form.append('businessAddress', document.getElementById('add-address').value.trim());
+  form.append('website',         document.getElementById('add-website').value.trim());
+  form.append('planName',        document.getElementById('add-plan').value);
+  form.append('contentRightsAccepted', 'true');
+  form.append('aiGenerateAd',    'false');
+
+  try {
+    const res = await fetch('/api/advertisers', { method:'POST', body:form });
+    if (!res.ok) throw new Error('Server error');
+    // Set status immediately
+    const data = await res.json();
+    if (data.id) {
+      await patch(data.id, {
+        status:         document.getElementById('add-status').value,
+        payment_status: 'pending',
+        notes:          document.getElementById('add-notes').value.trim()
+      });
+    }
+    showToast(`"${biz}" added ✓`, 'success');
+    closeAdd();
+    loadData();
+  } catch(e) {
+    showToast('Could not add advertiser.', 'error');
+  }
+}
+
+// ── PATCH HELPER ──────────────────────────────────────────────────
+async function patch(id, body) {
+  await fetch(`/api/advertisers/${id}?password=${encodeURIComponent(password)}`, {
+    method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  await loadData();
+}
+
+// ── CSV EXPORT ─────────────────────────────────────────────────────
+function exportCSV() {
+  const headers = ['Business Name','Contact','Email','Phone','Address','Website','Plan','Status','Payment','Signed Up','Notes'];
+  const rows    = allAds.map(a => [
+    a.business_name, a.contact_name, a.email, a.phone,
+    a.business_address, a.website, a.plan_name,
+    a.status, a.payment_status,
+    a.created_at ? new Date(a.created_at).toLocaleDateString() : '',
+    a.notes||''
+  ].map(v => `"${String(v||'').replace(/"/g,'""')}"`));
+
+  const csv  = [headers.join(','), ...rows.map(r=>r.join(','))].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a    = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `canyonads-advertisers-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(a.href);
+  showToast('CSV exported ✓', 'success');
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast show' + (type?' '+type:'');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upgraded Video Ad Designs — CanyonAds</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Dancing+Script:wght@700&family=Bebas+Neue&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--teal:#3D8E8B;--gold:#E8921E;--ink:#1C2B32;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito Sans',sans-serif;background:#060D0C;color:white;padding:1.5rem;}
+h1{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--teal);text-align:center;margin-bottom:3px;}
+.sub{font-size:.72rem;color:rgba(255,255,255,.35);text-align:center;margin-bottom:1.4rem;}
+.controls{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1rem;margin-bottom:1.4rem;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.f label{display:block;font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-bottom:3px;}
+.f input{width:100%;padding:6px 8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:6px;color:white;font-family:'Nunito Sans',sans-serif;font-size:.78rem;outline:none;}
+.f input::placeholder{color:rgba(255,255,255,.25);}
+.upload-row{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.uz{border:1.5px dashed rgba(255,255,255,.15);border-radius:7px;padding:7px;text-align:center;cursor:pointer;position:relative;overflow:hidden;background:rgba(255,255,255,.02);}
+.uz:hover{border-color:var(--teal);}
+.uz input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.uz .ico{font-size:.9rem;}
+.uz .lbl{font-size:.56rem;color:rgba(255,255,255,.4);margin-top:2px;}
+.uz img{max-height:26px;max-width:100%;margin-top:3px;border-radius:2px;object-fit:cover;object-position:center;}
+.btn-row{grid-column:1/-1;display:flex;gap:8px;}
+.btn{flex:1;padding:.6rem;border:none;border-radius:8px;font-family:'Nunito Sans',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;}
+.btn-t{background:var(--teal);color:white;}
+.btn-g{background:var(--gold);color:white;}
+.tabs{display:flex;gap:5px;margin-bottom:1rem;overflow-x:auto;padding-bottom:2px;}
+.tab{padding:5px 13px;font-size:.7rem;font-weight:700;border:1.5px solid rgba(255,255,255,.12);border-radius:20px;background:none;color:rgba(255,255,255,.45);cursor:pointer;white-space:nowrap;transition:all .15s;}
+.tab.on{border-color:var(--teal);background:rgba(61,142,139,.18);color:white;}
+.tv{background:#0E0E0E;border-radius:14px;padding:9px;box-shadow:0 12px 48px rgba(0,0,0,.6);}
+.screen{border-radius:7px;aspect-ratio:16/9;position:relative;overflow:hidden;background:#111;}
+.stand{width:60px;height:8px;background:#161616;border-radius:0 0 4px 4px;margin:0 auto;}
+.cap{text-align:center;font-size:.56rem;color:rgba(255,255,255,.22);margin-top:4px;letter-spacing:.06em;text-transform:uppercase;}
+.pbar{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:8px;overflow:hidden;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;width:0%;}
+.playback{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.pb{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);background:none;color:white;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pb:hover{border-color:var(--teal);color:var(--teal);}
+.tl{font-size:.62rem;color:rgba(255,255,255,.3);}
+.dl{font-size:.62rem;color:rgba(255,255,255,.2);margin-left:auto;}
+.panel{display:none;}.panel.on{display:block;}
+</style>
+</head>
+<body>
+
+<h1>Upgraded Video Ad Designs</h1>
+<div class="sub">6 bold animated designs · 15 seconds · Inspired by your reference images</div>
+
+<div class="controls">
+  <div class="f"><label>Business Name *</label><input id="c-biz" value="Peak Yoga Studio" oninput="syncAll()"></div>
+  <div class="f"><label>Tagline</label><input id="c-tag" value="Find your calm." oninput="syncAll()"></div>
+  <div class="f"><label>Offer / CTA</label><input id="c-offer" value="First class FREE" oninput="syncAll()"></div>
+  <div class="f"><label>Location</label><input id="c-loc" value="Gilbert, AZ" oninput="syncAll()"></div>
+  <div class="f"><label>Website (QR)</label><input id="c-url" value="https://peakyoga.com" oninput="scheduleQR()"></div>
+  <div class="f"><label>Accent Color</label><input type="color" id="c-color" value="#E8921E" oninput="syncAll()" style="height:34px;padding:2px;"></div>
+  <div class="upload-row">
+    <div><div class="uz"><input type="file" accept="image/*" onchange="upload(this,'logo')"><div class="ico">🖼</div><div class="lbl">Logo</div><img id="logo-t" style="display:none;"></div></div>
+    <div><div class="uz"><input type="file" accept="image/*" onchange="upload(this,'p1')"><div class="ico">📷</div><div class="lbl">Photo 1</div><img id="p1-t" style="display:none;"></div></div>
+    <div><div class="uz"><input type="file" accept="image/*" onchange="upload(this,'p2')"><div class="ico">📷</div><div class="lbl">Photo 2</div><img id="p2-t" style="display:none;"></div></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-t" onclick="playAll()">▶ Play All</button>
+    <button class="btn btn-g" onclick="downloadCurrent()">⬇ Download Current</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" onclick="showTab(0,this)">1 · Grand Reveal</button>
+  <button class="tab" onclick="showTab(1,this)">2 · Split Punch</button>
+  <button class="tab" onclick="showTab(2,this)">3 · Script Story</button>
+  <button class="tab" onclick="showTab(3,this)">4 · Dark Gold</button>
+  <button class="tab" onclick="showTab(4,this)">5 · Photo Burn</button>
+  <button class="tab" onclick="showTab(5,this)">6 · Luxury Card</button>
+</div>
+
+<div id="p0" class="panel on"><div class="tv"><div class="screen" id="s0"></div></div><div class="stand"></div><div class="cap">1 · Grand Reveal — cream bg · Oswald name wipes in · accent blobs animate · bold offer badge</div><div class="pbar"><div class="pfill" id="pf0"></div></div><div class="playback"><button class="pb" onclick="playOne(0)" id="pb0">▶</button><span class="tl" id="tl0">0:00</span><span class="dl">0:15</span></div></div>
+<div id="p1" class="panel"><div class="tv"><div class="screen" id="s1"></div></div><div class="stand"></div><div class="cap">2 · Split Punch — warm orange left · photo right · name punches in · diagonal wedge animates</div><div class="pbar"><div class="pfill" id="pf1"></div></div><div class="playback"><button class="pb" onclick="playOne(1)" id="pb1">▶</button><span class="tl" id="tl1">0:00</span><span class="dl">0:15</span></div></div>
+<div id="p2" class="panel"><div class="tv"><div class="screen" id="s2"></div></div><div class="stand"></div><div class="cap">3 · Script Story — dancing script sweeps in · elegant full-bleed photo · pill CTA pulses</div><div class="pbar"><div class="pfill" id="pf2"></div></div><div class="playback"><button class="pb" onclick="playOne(2)" id="pb2">▶</button><span class="tl" id="tl2">0:00</span><span class="dl">0:15</span></div></div>
+<div id="p3" class="panel"><div class="tv"><div class="screen" id="s3"></div></div><div class="stand"></div><div class="cap">4 · Dark Gold — black bg · giant 2-color Oswald · gold ornamental rule · gold bottom strip</div><div class="pbar"><div class="pfill" id="pf3"></div></div><div class="playback"><button class="pb" onclick="playOne(3)" id="pb3">▶</button><span class="tl" id="tl3">0:00</span><span class="dl">0:15</span></div></div>
+<div id="p4" class="panel"><div class="tv"><div class="screen" id="s4"></div></div><div class="stand"></div><div class="cap">5 · Photo Burn — 2 photos cross-dissolve · starburst badge spins in · bold offer climax</div><div class="pbar"><div class="pfill" id="pf4"></div></div><div class="playback"><button class="pb" onclick="playOne(4)" id="pb4">▶</button><span class="tl" id="tl4">0:00</span><span class="dl">0:15</span></div></div>
+<div id="p5" class="panel"><div class="tv"><div class="screen" id="s5"></div></div><div class="stand"></div><div class="cap">6 · Luxury Card — triptych photo sides · frosted centre card reveals · gold ornamental rules</div><div class="pbar"><div class="pfill" id="pf5"></div></div><div class="playback"><button class="pb" onclick="playOne(5)" id="pb5">▶</button><span class="tl" id="tl5">0:00</span><span class="dl">0:15</span></div></div>
+
+<div id="qrs" style="position:absolute;left:-9999px;width:80px;height:80px;"></div>
+<script>
+let logoSrc=null,p1Src=null,p2Src=null,qrDataUrl=null;
+const DUR=15000;
+let timers={},rafs={},starts={};
+
+function upload(input,key){
+  const file=input.files[0];if(!file)return;
+  const t=document.getElementById(key+'-t');
+  const r=new FileReader();
+  r.onload=e=>{
+    if(key==='logo')logoSrc=e.target.result;
+    else if(key==='p1')p1Src=e.target.result;
+    else p2Src=e.target.result;
+    t.src=e.target.result;t.style.display='block';syncAll();
+  };r.readAsDataURL(file);
+}
+
+let qrTmr;
+function scheduleQR(){clearTimeout(qrTmr);qrTmr=setTimeout(async()=>{const u=document.getElementById('c-url').value.trim();if(u){qrDataUrl=await makeQR(u);syncAll();}else qrDataUrl=null;},600);}
+function makeQR(url){return new Promise(resolve=>{const d=document.getElementById('qrs');d.innerHTML='';try{new QRCode(d,{text:url,width:80,height:80,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});setTimeout(()=>{const c=d.querySelector('canvas'),i=d.querySelector('img');resolve(c?c.toDataURL():i?i.src:null);},250);}catch(e){resolve(null);}});}
+function qr(sz,dark){if(!qrDataUrl)return '';const bg=dark?'rgba(0,0,0,.88)':'rgba(255,255,255,.95)';return `<div style="background:${bg};border-radius:3px;padding:3px;width:${sz}px;height:${sz}px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;"><img src="${qrDataUrl}" style="width:${sz-6}px;height:${sz-6}px;"></div>`;}
+function lg(mh,mw,f){if(!logoSrc)return '';return `<img src="${logoSrc}" style="max-height:${mh}px;max-width:${mw}px;object-fit:contain;object-position:center;display:block;${f?'filter:'+f+';':''}">` ;}
+function g(){return{biz:document.getElementById('c-biz').value.trim()||'Your Business',tag:document.getElementById('c-tag').value.trim(),offer:document.getElementById('c-offer').value.trim(),loc:document.getElementById('c-loc').value.trim(),acc:document.getElementById('c-color').value};}
+
+let activeTab=0;
+function showTab(i,el){activeTab=i;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));el.classList.add('on');document.getElementById('p'+i).classList.add('on');}
+
+// Playback
+function playOne(idx){
+  stopOne(idx);
+  const btn=document.getElementById('pb'+idx);
+  btn.textContent='■';btn.onclick=()=>stopOne(idx);
+  const pf=document.getElementById('pf'+idx),tl=document.getElementById('tl'+idx),sc=document.getElementById('s'+idx);
+  starts[idx]=performance.now();
+  function tick(now){
+    const el=now-starts[idx],pct=Math.min(100,(el/DUR)*100);
+    pf.style.width=pct+'%';
+    const s=Math.floor(el/1000);tl.textContent='0:'+(s<10?'0':'')+Math.min(s,15);
+    if(el<DUR)rafs[idx]=requestAnimationFrame(tick);
+    else stopOne(idx,true);
+  }
+  rafs[idx]=requestAnimationFrame(tick);
+  BUILDERS[idx](sc);
+}
+function stopOne(idx,done){
+  cancelAnimationFrame(rafs[idx]);
+  const btn=document.getElementById('pb'+idx);
+  btn.textContent='▶';btn.onclick=()=>playOne(idx);
+  if(!done){document.getElementById('pf'+idx).style.width='0%';document.getElementById('tl'+idx).textContent='0:00';}
+}
+function playAll(){[0,1,2,3,4,5].forEach(i=>playOne(i));}
+function syncAll(){[0,1,2,3,4,5].forEach(i=>BUILDERS[i](document.getElementById('s'+i)));}
+
+// ═══════════════════════════════════════════════════════════════════
+// VIDEO AD BUILDERS
+// ═══════════════════════════════════════════════════════════════════
+
+/*
+  DESIGN 1: GRAND REVEAL
+  Inspired by: image 1 (sofa offer), image 5 (grand opening boba)
+  Cream warm background · accent color blobs animate in from corners
+  Oswald name wipes left-to-right · offer badge scales in
+  Bottom accent strip slides up
+*/
+function b0(el){
+  const{biz,tag,offer,loc,acc}=g();
+  el.innerHTML=`<style>
+    @keyframes blobTL{from{transform:translate(-50%,-50%) scale(0);}to{transform:translate(0,0) scale(1);}}
+    @keyframes blobBR{from{transform:translate(50%,50%) scale(0);}to{transform:translate(0,0) scale(1);}}
+    @keyframes nameWipe{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 0% 0 0);}}
+    @keyframes scriptDrop{from{opacity:0;transform:translateY(-20px) rotate(-2deg);}to{opacity:1;transform:translateY(0) rotate(-2deg);}}
+    @keyframes badgeScale{from{opacity:0;transform:scale(0) rotate(-15deg);}to{opacity:1;transform:scale(1) rotate(-8deg);}}
+    @keyframes stripUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+    @keyframes prog{from{width:0%;}to{width:100%;}}
+    @keyframes photoReveal{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 0% 0 0);}}
+  </style>
+  <div style="position:absolute;inset:0;background:#F5F0E8;overflow:hidden;">
+    <!-- Animated accent blobs -->
+    <div style="position:absolute;top:-10%;left:-6%;width:28%;padding-top:28%;border-radius:50%;background:${acc};opacity:.85;animation:blobTL .9s .2s cubic-bezier(.34,1.56,.64,1) both;"></div>
+    <div style="position:absolute;bottom:-8%;right:-4%;width:22%;padding-top:22%;border-radius:50%;background:${acc};opacity:.65;animation:blobBR .9s .4s cubic-bezier(.34,1.56,.64,1) both;"></div>
+    <div style="position:absolute;top:-4%;right:42%;width:12%;padding-top:12%;border-radius:50%;background:${acc};opacity:.35;animation:blobTL .8s .6s cubic-bezier(.34,1.56,.64,1) both;"></div>
+  </div>
+
+  <!-- Right: photo reveals -->
+  ${p1Src?`<div style="position:absolute;right:0;top:0;width:44%;bottom:11%;overflow:hidden;animation:photoReveal 1s .5s cubic-bezier(.77,0,.18,1) both;">
+    <img src="${p1Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
+    <div style="position:absolute;left:0;top:0;bottom:0;width:30%;background:linear-gradient(90deg,#F5F0E8,transparent);"></div>
+  </div>`:''}
+
+  <!-- Left: content -->
+  <div style="position:absolute;left:0;top:0;width:${p1Src?'58%':'75%'};bottom:11%;display:flex;flex-direction:column;justify-content:center;padding:6% 4% 6% 7%;">
+    ${logoSrc?`<div style="animation:fadeUp .6s .4s both;margin-bottom:3%;">${lg(22,90,'brightness(0) sepia(1) saturate(2) brightness(.4)')}</div>`:''}
+    <div style="font-family:'Dancing Script',cursive;font-size:clamp(.8rem,2.5vw,1.5rem);color:${acc};transform:rotate(-2deg);animation:scriptDrop .7s .6s both;">Now featuring</div>
+    <div style="font-family:'Oswald',sans-serif;font-size:clamp(2rem,8vw,4.8rem);color:#1A1208;line-height:.88;text-transform:uppercase;animation:nameWipe .9s .9s cubic-bezier(.77,0,.18,1) both;">${biz}</div>
+    ${tag?`<div style="font-size:clamp(.5rem,1.3vw,.72rem);color:#4A3E2A;margin-top:2%;animation:fadeUp .6s 1.7s both;">${tag}</div>`:''}
+    ${offer?`<div style="animation:fadeUp .6s 2s both;margin-top:3%;">
+      <div style="display:inline-block;background:${acc};color:white;padding:.35em 1.2em;font-size:clamp(.52rem,1.3vw,.72rem);font-weight:800;text-transform:uppercase;letter-spacing:.06em;border-radius:2px;">${offer}</div>
+    </div>`:''}
+  </div>
+
+  <!-- Starburst badge -->
+  ${offer?`<div style="position:absolute;right:${p1Src?'40%':'8%'};bottom:15%;width:clamp(52px,9.5vw,84px);height:clamp(52px,9.5vw,84px);z-index:5;animation:badgeScale .6s 2.3s cubic-bezier(.34,1.56,.64,1) both;">
+    <div style="position:absolute;inset:0;background:#1A1208;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);"></div>
+    <div style="position:absolute;inset:14%;background:white;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:inset 0 0 0 2px ${acc};">
+      <div style="font-family:'Oswald',sans-serif;font-size:clamp(.34rem,.85vw,.5rem);color:${acc};font-weight:700;text-transform:uppercase;line-height:1.1;">SPECIAL<br>OFFER</div>
+    </div>
+  </div>`:''}
+
+  <!-- Bottom strip -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:11%;background:${acc};animation:stripUp .6s .3s cubic-bezier(.77,0,.18,1) both;display:flex;align-items:center;justify-content:space-between;padding:0 5%;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      ${logoSrc?`<div>${lg(18,70,'brightness(0) invert(1)')}</div>`:''}
+      <span style="font-size:clamp(.28rem,.72vw,.42rem);color:white;font-weight:700;letter-spacing:.1em;text-transform:uppercase;">Copper Canyon Dental · ${loc||'Gilbert, AZ'}</span>
+    </div>
+    ${qr(32,true)}
+  </div>
+  <div style="position:absolute;bottom:11%;left:0;height:3px;background:rgba(255,255,255,.3);animation:prog 15s linear both;"></div>`;
+}
+
+/*
+  DESIGN 2: SPLIT PUNCH
+  Inspired by: image 7 (Buy One Get One coffee), image 9 (warrior gym)
+  Warm accent panel peels from left · photo reveals right · name punches to scale
+  Diagonal wedge creates the divide · starburst at junction
+*/
+function b1(el){
+  const{biz,tag,offer,loc,acc}=g();
+  el.innerHTML=`<style>
+    @keyframes peelIn{from{transform:scaleX(0);transform-origin:left;}to{transform:scaleX(1);transform-origin:left;}}
+    @keyframes photoSlide{from{clip-path:inset(0 0 0 100%);}to{clip-path:inset(0 0 0 0%);}}
+    @keyframes punch{0%{opacity:0;transform:scale(.15);}55%{transform:scale(1.07);}75%{transform:scale(.97);}100%{opacity:1;transform:scale(1);}}
+    @keyframes slideUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+    @keyframes badgeSpin{from{opacity:0;transform:rotate(-180deg) scale(0);}to{opacity:1;transform:rotate(-8deg) scale(1);}}
+    @keyframes stripUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+    @keyframes prog{from{width:0%;}to{width:100%;}}
+  </style>
+  <div style="position:absolute;inset:0;background:#0A0A08;">
+    <!-- Right photo panel -->
+    ${p1Src?`<div style="position:absolute;right:0;top:0;width:52%;bottom:0;overflow:hidden;animation:photoSlide .9s .4s cubic-bezier(.77,0,.18,1) both;">
+      <img src="${p1Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
+      <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 50%,rgba(0,0,0,.35) 100%);"></div>
+    </div>`
+    :`<div style="position:absolute;right:0;top:0;width:52%;bottom:0;background:linear-gradient(135deg,rgba(232,146,30,.15),rgba(0,0,0,.4));"></div>`}
+
+    <!-- Left accent panel peels in -->
+    <div style="position:absolute;left:0;top:0;width:52%;bottom:0;background:${acc};animation:peelIn .7s .2s cubic-bezier(.77,0,.18,1) both;overflow:hidden;">
+      <div style="position:absolute;right:-15%;top:-20%;width:80%;padding-top:80%;border-radius:50%;background:rgba(255,255,255,.08);"></div>
+      <div style="position:absolute;right:-5%;bottom:-10%;width:40%;padding-top:40%;border-radius:50%;background:rgba(255,255,255,.05);"></div>
+    </div>
+
+    <!-- Diagonal wedge on top -->
+    <div style="position:absolute;left:46%;top:0;bottom:0;width:10%;overflow:hidden;z-index:2;">
+      <div style="position:absolute;inset:0;background:${acc};clip-path:polygon(0 0,100% 0,0 100%);"></div>
+    </div>
+  </div>
+
+  <!-- Left content -->
+  <div style="position:absolute;left:0;top:0;width:50%;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:6% 5% 6% 7%;z-index:3;">
+    ${logoSrc?`<div style="animation:slideUp .5s .9s both;margin-bottom:4%;">${lg(22,88,'brightness(0) invert(1)')}</div>`:''}
+    ${offer?`<div style="font-family:'Dancing Script',cursive;font-size:clamp(.7rem,2.2vw,1.3rem);color:rgba(255,255,255,.9);animation:slideUp .5s 1s both;margin-bottom:1%;">${offer}</div>`:''}
+    <div style="font-family:'Oswald',sans-serif;font-size:clamp(1.8rem,7.5vw,4.5rem);color:white;line-height:.88;text-transform:uppercase;animation:punch .7s 1.1s both;text-shadow:2px 2px 0 rgba(0,0,0,.2);">${biz}</div>
+    ${tag?`<div style="font-size:clamp(.48rem,1.2vw,.68rem);color:rgba(255,255,255,.85);font-weight:300;margin-top:3%;animation:slideUp .5s 1.8s both;">${tag}</div>`:''}
+  </div>
+
+  <!-- Right content overlay -->
+  <div style="position:absolute;right:3%;bottom:18%;z-index:3;display:flex;flex-direction:column;align-items:flex-end;gap:8px;animation:slideUp .6s 2s both;">
+    ${qr(42)}
+    ${loc?`<div style="font-size:clamp(.3rem,.75vw,.44rem);color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.1em;text-align:right;">📍 ${loc}</div>`:''}
+  </div>
+
+  <!-- Starburst at junction -->
+  ${offer?`<div style="position:absolute;left:44%;top:8%;transform:translateX(-50%);width:clamp(56px,10vw,90px);height:clamp(56px,10vw,90px);z-index:5;animation:badgeSpin .8s 1.4s cubic-bezier(.34,1.56,.64,1) both;">
+    <div style="position:absolute;inset:0;background:#1A1208;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);"></div>
+    <div style="position:absolute;inset:13%;background:white;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:inset 0 0 0 2px ${acc};">
+      <div style="font-family:'Oswald',sans-serif;font-size:clamp(.34rem,.85vw,.5rem);color:${acc};font-weight:700;text-transform:uppercase;line-height:1.1;">SPECIAL<br>OFFER</div>
+    </div>
+  </div>`:''}
+
+  <!-- Bottom bar -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:10%;background:rgba(0,0,0,.72);border-top:2px solid ${acc};animation:stripUp .5s .2s both;display:flex;align-items:center;justify-content:space-between;padding:0 5%;z-index:4;">
+    <span style="font-size:clamp(.28rem,.72vw,.42rem);color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase;">Copper Canyon Dental · ${loc||'Gilbert, AZ'}</span>
+    <span style="font-size:clamp(.26rem,.65vw,.36rem);color:rgba(255,255,255,.3);">15 SEC</span>
+  </div>
+  <div style="position:absolute;bottom:10%;left:0;height:2px;background:${acc};opacity:.7;animation:prog 15s linear both;z-index:4;"></div>`;
+}
+
+/*
+  DESIGN 3: SCRIPT STORY
+  Inspired by: image 3 (podcast cassette), image 14 (food & drink)
+  Full bleed photo background · large Dancing Script name sweeps in
+  Thin accent rule expands · tagline fades · pill CTA button pulses in
+  Bottom frosted bar slides up with ornamental details
+*/
+function b2(el){
+  const{biz,tag,offer,loc,acc}=g();
+  el.innerHTML=`<style>
+    @keyframes kenZ{from{transform:scale(1.08);}to{transform:scale(1);}}
+    @keyframes scriptSweep{from{opacity:0;clip-path:inset(0 100% 0 0);}to{opacity:1;clip-path:inset(0 0% 0 0);}}
+    @keyframes ruleExp{from{width:0;}to{width:60px;}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+    @keyframes pillPop{0%{opacity:0;transform:scale(.7);}70%{transform:scale(1.06);}100%{opacity:1;transform:scale(1);}}
+    @keyframes barUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+    @keyframes prog{from{width:0%;}to{width:100%;}}
+    @keyframes sparkle{0%,100%{opacity:0;transform:scale(0) rotate(0deg);}50%{opacity:1;transform:scale(1) rotate(180deg);}}
+  </style>
+  <div style="position:absolute;inset:0;background:#1A0E06;overflow:hidden;">
+    ${p1Src?`<img src="${p1Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;animation:kenZ 16s ease-out both;">`:''}
+    ${p2Src?`<img src="${p2Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;opacity:.2;">`:''}
+    <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,6,2,.82) 0%,rgba(10,6,2,.55) 50%,rgba(10,6,2,.75) 100%);"></div>
+    <!-- Top accent line -->
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,${acc},rgba(255,255,255,.3),${acc});"></div>
+  </div>
+
+  <!-- Content -->
+  <div style="position:absolute;left:6%;top:0;bottom:13%;width:65%;display:flex;flex-direction:column;justify-content:center;">
+    ${logoSrc?`<div style="animation:fadeUp .6s .3s both;margin-bottom:4%;">${lg(20,82,'brightness(0) invert(1)')}</div>`:''}
+    <!-- Large script name -->
+    <div style="font-family:'Dancing Script',cursive;font-size:clamp(1.6rem,6.5vw,4rem);color:white;line-height:.95;text-shadow:0 2px 20px rgba(0,0,0,.7);animation:scriptSweep 1.1s .5s cubic-bezier(.77,0,.18,1) both;">${biz}</div>
+    <!-- Expanding rule -->
+    <div style="height:2px;background:${acc};margin:3% 0 2%;width:0;animation:ruleExp .7s 1.6s both;"></div>
+    ${tag?`<div style="font-size:clamp(.52rem,1.4vw,.78rem);color:rgba(255,255,255,.75);font-weight:300;letter-spacing:.05em;animation:fadeUp .6s 1.8s both;">${tag}</div>`:''}
+    ${offer?`<div style="margin-top:4%;animation:pillPop .6s 2.2s cubic-bezier(.34,1.56,.64,1) both;display:inline-block;">
+      <div style="background:${acc};color:white;padding:.38em 1.6em;font-size:clamp(.52rem,1.3vw,.72rem);font-weight:800;text-transform:uppercase;letter-spacing:.08em;border-radius:40px;box-shadow:0 4px 20px rgba(0,0,0,.4);">${offer} →</div>
+    </div>`:''}
+    <!-- Decorative sparkles -->
+    <div style="position:absolute;right:-8%;top:20%;font-size:clamp(.8rem,2vw,1.4rem);color:${acc};animation:sparkle 3s 2s infinite;">✦</div>
+    <div style="position:absolute;right:2%;top:5%;font-size:clamp(.5rem,1.2vw,.9rem);color:${acc};opacity:.5;animation:sparkle 3s 2.5s infinite;">✦</div>
+  </div>
+
+  <!-- QR bottom right -->
+  ${qrDataUrl?`<div style="position:absolute;right:5%;bottom:16%;animation:fadeUp .6s 2.5s both;display:flex;flex-direction:column;align-items:center;gap:4px;">
+    ${qr(44)}
+    <div style="font-size:.28rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;">Scan</div>
+  </div>`:''}
+
+  <!-- Bottom frosted bar -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:13%;background:rgba(0,0,0,.7);border-top:2px solid ${acc};animation:barUp .6s .2s both;display:flex;align-items:center;justify-content:space-between;padding:0 6%;">
+    <div>
+      <div style="font-size:clamp(.26rem,.65vw,.36rem);color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.12em;margin-bottom:2px;">Advertised at</div>
+      <div style="font-size:clamp(.34rem,.85vw,.5rem);color:white;font-weight:700;letter-spacing:.06em;">Copper Canyon Dental · ${loc||'Gilbert, AZ'}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div style="width:1px;height:24px;background:rgba(255,255,255,.2);"></div>
+      <span style="font-size:clamp(.26rem,.65vw,.36rem);color:rgba(255,255,255,.3);">15 SEC</span>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:13%;left:0;height:2px;background:${acc};opacity:.5;animation:prog 15s linear both;"></div>`;
+}
+
+/*
+  DESIGN 4: DARK GOLD
+  Inspired by: image 8 (Buy One Get One), image 17 (Larana restaurant dark)
+  Pure black · giant 2-color Oswald — word 1 in accent, rest white
+  Gold ornamental triple-dot rule · photo tint right
+  Bold gold bottom strip slides up with location
+*/
+function b3(el){
+  const{biz,tag,offer,loc,acc}=g();
+  const words=(biz||'Your Business').toUpperCase().split(' ');
+  // Adaptive font: single long word gets smaller, multi-word stacks nicely
+  const totalLen=(biz||'').replace(/\s/g,'').length;
+  const fs0=totalLen>12?'clamp(1.4rem,5.5vw,3.2rem)':totalLen>8?'clamp(1.8rem,7vw,4.2rem)':'clamp(2.2rem,8.5vw,5.2rem)';
+  const fs1=totalLen>12?'clamp(1.1rem,4.2vw,2.4rem)':'clamp(1.7rem,6.5vw,3.8rem)';
+  const wordLines=words.map((w,i)=>`
+    <div style="overflow:hidden;line-height:.92;">
+      <div style="font-family:'Oswald',sans-serif;font-size:${i===0?fs0:fs1};color:${i===0?acc:'white'};text-transform:uppercase;white-space:nowrap;animation:slideFromLeft .7s ${.8+i*.18}s cubic-bezier(.77,0,.18,1) both;${i===0?`text-shadow:2px 2px 0 rgba(0,0,0,.4);`:''}">${w}</div>
+    </div>`).join('');
+  el.innerHTML=`<style>
+    @keyframes slideFromLeft{from{transform:translateX(-80px);opacity:0;}to{transform:none;opacity:1;}}
+    @keyframes slideFromRight{from{transform:translateX(60px);opacity:0;}to{transform:none;opacity:1;}}
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    @keyframes ruleExp{from{transform:scaleX(0);transform-origin:left;}to{transform:scaleX(1);transform-origin:left;}}
+    @keyframes stripUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+    @keyframes photoFade{from{opacity:0;}to{opacity:1;}}
+    @keyframes prog{from{width:0%;}to{width:100%;}}
+    @keyframes ornIn{from{opacity:0;letter-spacing:.8em;}to{opacity:1;letter-spacing:.4em;}}
+  </style>
+  <div style="position:absolute;inset:0;background:#080806;">
+    ${p1Src?`<div style="position:absolute;right:0;top:0;width:40%;bottom:11%;overflow:hidden;animation:photoFade 1.2s .4s both;">
+      <img src="${p1Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
+      <div style="position:absolute;inset:0;background:linear-gradient(90deg,#080806 0%,rgba(8,8,6,.55) 45%,rgba(8,8,6,.1) 100%);"></div>
+    </div>`:''}
+    <!-- Top ornamental rule -->
+    <div style="position:absolute;top:7%;left:5%;right:5%;display:flex;align-items:center;gap:8px;animation:ornIn .8s .3s both;">
+      <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,${acc});"></div>
+      <div style="font-size:clamp(.38rem,.95vw,.55rem);color:${acc};letter-spacing:.4em;">◆ ◈ ◆</div>
+      <div style="flex:1;height:1px;background:linear-gradient(90deg,${acc},transparent);"></div>
+    </div>
+  </div>
+
+  <!-- Left content — full width so long names never clip -->
+  <div style="position:absolute;left:5%;top:0;right:${p1Src?'38%':'5%'};bottom:11%;display:flex;flex-direction:column;justify-content:center;padding:14% 0 8%;overflow:hidden;">
+    ${logoSrc?`<div style="animation:fadeIn .6s .5s both;margin-bottom:4%;">${lg(20,82,'brightness(0) invert(1) sepia(1) saturate(4) hue-rotate(5deg)')}</div>`:''}
+    ${wordLines}
+    <!-- Ornamental divider -->
+    <div style="display:flex;align-items:center;gap:6px;margin:3% 0 2%;animation:ruleExp .6s ${.8+words.length*.18}s both;">
+      <div style="width:24px;height:1px;background:${acc};"></div>
+      <div style="width:5px;height:5px;border-radius:50%;background:${acc};"></div>
+      <div style="width:14px;height:1px;background:${acc};"></div>
+    </div>
+    ${tag?`<div style="font-size:clamp(.44rem,1.1vw,.62rem);color:rgba(255,255,255,.55);letter-spacing:.06em;animation:slideFromLeft .6s ${1+words.length*.18}s both;">${tag}</div>`:''}
+    ${offer?`<div style="margin-top:4%;animation:slideFromLeft .6s ${1.3+words.length*.18}s both;">
+      <div style="display:inline-block;background:${acc};color:white;padding:.32em 1.1em;font-size:clamp(.48rem,1.2vw,.68rem);font-weight:800;text-transform:uppercase;letter-spacing:.08em;border-radius:2px;">${offer}</div>
+    </div>`:''}
+  </div>
+
+  <!-- QR bottom right -->
+  ${qrDataUrl?`<div style="position:absolute;right:4%;bottom:15%;animation:slideFromRight .6s 2.2s both;display:flex;flex-direction:column;align-items:center;gap:4px;">
+    ${qr(46)}
+    ${loc?`<div style="font-size:.28rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;text-align:center;">📍 ${loc}</div>`:''}
+  </div>`:''}
+
+  <!-- Bottom gold strip -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:11%;background:${acc};animation:stripUp .6s .2s cubic-bezier(.77,0,.18,1) both;display:flex;align-items:center;justify-content:space-between;padding:0 5%;">
+    <div>
+      <div style="font-size:clamp(.26rem,.65vw,.36rem);color:rgba(0,0,0,.5);text-transform:uppercase;letter-spacing:.12em;">Copper Canyon Dental</div>
+      <div style="font-size:clamp(.4rem,1vw,.58rem);font-weight:900;color:#0A0806;text-transform:uppercase;">${loc||'Gilbert, AZ'} · Advertised here</div>
+    </div>
+    <div style="font-size:clamp(.26rem,.65vw,.36rem);color:rgba(0,0,0,.4);font-weight:700;">15 SEC</div>
+  </div>
+  <div style="position:absolute;bottom:11%;left:0;height:2px;background:rgba(255,255,255,.2);animation:prog 15s linear both;"></div>`;
+}
+
+/*
+  DESIGN 5: PHOTO BURN
+  Inspired by: image 6 (spaghetti bolognese), image 16 (burger flambé)
+  Two photos cross-dissolve with warm amber burn flash
+  Business name stays locked through transition
+  Starburst spins in · bold climax offer at end
+*/
+function b4(el){
+  const{biz,tag,offer,loc,acc}=g();
+  el.innerHTML=`<style>
+    @keyframes ph1{0%{opacity:1;}55%{opacity:1;}72%{opacity:0;}100%{opacity:0;}}
+    @keyframes ph2{0%{opacity:0;}58%{opacity:0;}74%{opacity:1;}100%{opacity:1;}}
+    @keyframes burnFlash{0%{opacity:0;}58%{opacity:0;}63%{opacity:.85;}67%{opacity:.4;}71%{opacity:0;}100%{opacity:0;}}
+    @keyframes nameReveal{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+    @keyframes badgeSpin{from{opacity:0;transform:rotate(-200deg) scale(0);}to{opacity:1;transform:rotate(-8deg) scale(1);}}
+    @keyframes offerBlast{0%{opacity:0;transform:scale(.5);}70%{transform:scale(1.1);}100%{opacity:1;transform:scale(1);}}
+    @keyframes prog{from{width:0%;}to{width:100%;}}
+    @keyframes grain{0%,100%{background-position:0 0;}25%{background-position:100% 0;}50%{background-position:100% 100%;}75%{background-position:0 100%;}}
+  </style>
+  <div style="position:absolute;inset:0;background:#1A0A04;overflow:hidden;">
+    ${p1Src?`<img src="${p1Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;animation:ph1 15s linear both;">`
+    :`<div style="position:absolute;inset:0;background:linear-gradient(135deg,#1C3A38,#3D8E8B);animation:ph1 15s linear both;"></div>`}
+    ${p2Src?`<img src="${p2Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;animation:ph2 15s linear both;">`
+    :`<div style="position:absolute;inset:0;background:linear-gradient(135deg,#1C2B32,${acc});animation:ph2 15s linear both;"></div>`}
+    <!-- Warm film burn flash -->
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse,rgba(255,180,60,.95),rgba(220,80,10,.7));animation:burnFlash 15s linear both;pointer-events:none;"></div>
+    <!-- Film grain -->
+    <div style="position:absolute;inset:0;opacity:.035;background-size:200px 200px;animation:grain .12s steps(1) infinite;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%224%22/></filter><rect width=%22200%22 height=%22200%22 filter=%22url(%23n)%22/></svg>');pointer-events:none;"></div>
+    <!-- Vignette -->
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.65) 100%);"></div>
+    <!-- Bottom gradient -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,transparent,rgba(0,0,0,.88));"></div>
+  </div>
+
+  <!-- Content -->
+  <div style="position:absolute;bottom:12%;left:0;right:0;padding:0 6%;display:flex;align-items:flex-end;justify-content:space-between;">
+    <div>
+      ${logoSrc?`<div style="animation:fadeUp .7s .3s both;margin-bottom:3%;">${lg(20,80,'brightness(0) invert(1)')}</div>`:''}
+      <div style="font-family:'Oswald',sans-serif;font-size:clamp(1.4rem,6vw,3.8rem);color:white;line-height:.88;text-transform:uppercase;animation:nameReveal .9s .4s both;text-shadow:0 2px 20px rgba(0,0,0,.8);word-break:break-word;max-width:90%;">${biz}</div>
+      ${tag?`<div style="font-size:clamp(.5rem,1.3vw,.72rem);color:rgba(255,255,255,.72);font-weight:300;margin-top:2%;animation:fadeUp .6s 1.5s both;">${tag}</div>`:''}
+      ${offer?`<div style="animation:offerBlast .6s 9.5s both;margin-top:3%;">
+        <div style="display:inline-block;background:${acc};color:white;padding:.32em 1.2em;font-size:clamp(.52rem,1.3vw,.72rem);font-weight:900;text-transform:uppercase;letter-spacing:.06em;border-radius:2px;">${offer}</div>
+      </div>`:''}
+    </div>
+    <!-- Starburst spins in at burn moment -->
+    ${offer?`<div style="flex-shrink:0;width:clamp(56px,10vw,90px);height:clamp(56px,10vw,90px);animation:badgeSpin .8s 9s cubic-bezier(.34,1.56,.64,1) both;">
+      <div style="position:absolute;inset:0;background:white;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);"></div>
+      <div style="position:absolute;inset:13%;background:${acc};border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+        <div style="font-family:'Oswald',sans-serif;font-size:clamp(.36rem,.9vw,.52rem);color:white;font-weight:700;text-transform:uppercase;line-height:1.1;">SPECIAL<br>OFFER</div>
+      </div>
+    </div>`:''}
+  </div>
+
+  <!-- Footer -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:11%;background:rgba(0,0,0,.75);border-top:2px solid ${acc};display:flex;align-items:center;justify-content:space-between;padding:0 6%;">
+    <span style="font-size:clamp(.28rem,.72vw,.42rem);color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase;">Copper Canyon Dental · ${loc||'Gilbert, AZ'}</span>
+    ${qr(30)}
+  </div>
+  <div style="position:absolute;bottom:11%;left:0;height:2px;background:${acc};animation:prog 15s linear both;"></div>`;
+}
+
+/*
+  DESIGN 6: LUXURY CARD
+  Inspired by: image 17 (Larana), image 20 (modern social media)
+  Triptych: blurred photo panels left & right · center card reveals
+  Frosted dark card · gold ornamental rules animate in
+  Elegant Playfair Display name · dancing script tagline
+*/
+function b5(el){
+  const{biz,tag,offer,loc,acc}=g();
+  el.innerHTML=`<style>
+    @keyframes panelReveal{from{opacity:0;transform:scaleY(0);transform-origin:top;}to{opacity:1;transform:scaleY(1);transform-origin:top;}}
+    @keyframes cardReveal{from{opacity:0;transform:scaleX(0);}to{opacity:1;transform:scaleX(1);}}
+    @keyframes ruleGrow{from{transform:scaleX(0);transform-origin:center;}to{transform:scaleX(1);transform-origin:center;}}
+    @keyframes nameClip{from{clip-path:inset(100% 0 0 0);}to{clip-path:inset(0% 0 0 0);}}
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    @keyframes scriptIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+    @keyframes ornIn{from{opacity:0;letter-spacing:.8em;}to{opacity:1;letter-spacing:.4em;}}
+    @keyframes prog{from{width:0%;}to{width:100%;}}
+  </style>
+  <div style="position:absolute;inset:0;display:flex;">
+    <!-- Left photo panel -->
+    <div style="width:20%;position:relative;overflow:hidden;background:${p1Src?'transparent':'linear-gradient(135deg,#1C2B32,#0A1A18)'};animation:panelReveal .8s .1s cubic-bezier(.77,0,.18,1) both;">
+      ${p1Src?`<img src="${p1Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;">`:''}
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);"></div>
+    </div>
+    <!-- Centre card -->
+    <div style="flex:1;position:relative;overflow:hidden;background:#06100E;animation:cardReveal .8s .4s cubic-bezier(.77,0,.18,1) both;">
+      ${p1Src?`<img src="${p1Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;opacity:.07;">`:''}
+      <!-- Content -->
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5% 6%;text-align:center;">
+        <!-- Top ornamental rule -->
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:4%;animation:ornIn .8s .9s both;">
+          <div style="width:16px;height:1px;background:${acc};"></div>
+          <div style="font-size:clamp(.38rem,.95vw,.55rem);color:${acc};">◆</div>
+          <div style="width:28px;height:1px;background:${acc};"></div>
+          <div style="font-size:clamp(.38rem,.95vw,.55rem);color:${acc};">◈</div>
+          <div style="width:28px;height:1px;background:${acc};"></div>
+          <div style="font-size:clamp(.38rem,.95vw,.55rem);color:${acc};">◆</div>
+          <div style="width:16px;height:1px;background:${acc};"></div>
+        </div>
+        ${logoSrc?`<div style="animation:fadeIn .6s 1s both;margin-bottom:4%;">${lg(22,90,'brightness(0) invert(1) opacity(.6)')}</div>`:''}
+        <div style="font-size:clamp(.32rem,.8vw,.46rem);text-transform:uppercase;letter-spacing:.35em;color:rgba(255,255,255,.4);margin-bottom:2%;animation:fadeIn .6s 1.1s both;">Presenting</div>
+        <!-- Name clips up -->
+        <div style="overflow:hidden;">
+          <div style="font-family:'Playfair Display',serif;font-size:clamp(1.3rem,5.2vw,3rem);font-weight:900;color:white;line-height:.95;letter-spacing:.04em;animation:nameClip .8s cubic-bezier(.16,1,.3,1) 1.2s both;">${biz.toUpperCase()}</div>
+        </div>
+        ${tag?`<div style="font-family:'Dancing Script',cursive;font-size:clamp(.6rem,1.9vw,1.1rem);color:${acc};margin-top:2%;animation:scriptIn .6s 2s both;">${tag}</div>`:''}
+        <!-- Bottom ornamental rule -->
+        <div style="height:1px;background:${acc};margin:3% 0;width:0;animation:ruleGrow .6s 2.2s both;max-width:120px;align-self:stretch;"></div>
+        ${offer?`<div style="animation:fadeIn .5s 2.5s both;background:${acc};color:white;padding:.3em 1.4em;font-size:clamp(.44rem,1.1vw,.62rem);font-weight:800;text-transform:uppercase;letter-spacing:.1em;border-radius:1px;">${offer}</div>`:''}
+        <div style="margin-top:3%;font-size:clamp(.26rem,.65vw,.36rem);color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.14em;animation:fadeIn .5s 2.8s both;">Copper Canyon Dental · ${loc||'Gilbert, AZ'}</div>
+        ${qrDataUrl?`<div style="margin-top:2%;animation:fadeIn .5s 3s both;">${qr(30)}</div>`:''}
+        <!-- Bottom ornamental -->
+        <div style="display:flex;align-items:center;gap:5px;margin-top:3%;animation:ornIn .8s 2.8s both;">
+          <div style="width:16px;height:1px;background:${acc};opacity:.5;"></div>
+          <div style="font-size:clamp(.38rem,.95vw,.55rem);color:${acc};opacity:.5;">◇</div>
+          <div style="width:28px;height:1px;background:${acc};opacity:.5;"></div>
+          <div style="font-size:clamp(.38rem,.95vw,.55rem);color:${acc};opacity:.5;">✦</div>
+          <div style="width:28px;height:1px;background:${acc};opacity:.5;"></div>
+          <div style="font-size:clamp(.38rem,.95vw,.55rem);color:${acc};opacity:.5;">◇</div>
+          <div style="width:16px;height:1px;background:${acc};opacity:.5;"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Right photo panel -->
+    <div style="width:20%;position:relative;overflow:hidden;background:${p2Src?'transparent':p1Src?'transparent':'linear-gradient(135deg,#2A1A06,'+acc+')'};animation:panelReveal .8s .2s cubic-bezier(.77,0,.18,1) both;">
+      ${p2Src?`<img src="${p2Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;">`:
+        p1Src?`<img src="${p1Src}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;">`:''}
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);"></div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;height:3px;background:${acc};animation:prog 15s linear both;"></div>`;
+}
+
+const BUILDERS=[b0,b1,b2,b3,b4,b5];
+
+function downloadCurrent(){
+  const{biz}=g();
+  const sc=document.getElementById('s'+activeTab);
+  const fonts='https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Dancing+Script:wght@700&family=Bebas+Neue&family=Oswald:wght@400;700&display=swap';
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><link href="${fonts}" rel="stylesheet"><style>*{margin:0;padding:0;box-sizing:border-box;}html,body{width:100%;height:100%;overflow:hidden;background:#000;}</style></head><body><div style="position:relative;width:100%;height:100%;overflow:hidden;">${sc.innerHTML}</div></body></html>`;
+  const blob=new Blob([html],{type:'text/html'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=(biz||'ad').toLowerCase().replace(/\s+/g,'-')+'-video-ad.html';
+  a.click();URL.revokeObjectURL(a.href);
+}
+
+(async()=>{
+  const u=document.getElementById('c-url').value.trim();
+  if(u)qrDataUrl=await makeQR(u);
+  syncAll();
+})();
+</script>
+</body>
+</html>
