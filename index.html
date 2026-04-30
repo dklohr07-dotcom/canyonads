@@ -1267,7 +1267,9 @@ body {
       <!-- STEP 1: Business Info -->
       <div class="flow-panel active" id="panel-1">
         <div class="panel-title">Tell us about your business</div>
-        <p class="panel-sub">This info will be used to generate your TV ad — the more detail, the better.</p>
+        <p class="panel-sub">Start with your business details — we'll use your website to auto-fill your logo and tagline.</p>
+
+        <!-- ── BUSINESS INFO ── -->
         <div class="form-row">
           <div class="form-group">
             <label>Business Name *</label>
@@ -1287,10 +1289,44 @@ body {
             </select>
           </div>
         </div>
+
+        <!-- ── WEBSITE URL — with auto-fill note ── -->
+        <div class="form-group">
+          <label>Website URL <span style="font-weight:400;color:var(--ink-light)">(enter this first — we'll fetch your logo &amp; tagline automatically)</span></label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="url" id="f-website" placeholder="https://yourbusiness.com" autocomplete="url" oninput="scheduleQRUpdate()" style="flex:1;">
+            <button type="button" onclick="fetchAllFromWebsite()" id="fetch-all-btn" style="white-space:nowrap;padding:0.55rem 1rem;font-size:0.78rem;font-weight:700;color:white;background:var(--teal);border:none;border-radius:6px;cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;gap:6px;">🌐 Auto-fill</button>
+          </div>
+          <div id="fetch-all-status" style="font-size:0.68rem;color:var(--ink-light);margin-top:4px;display:none;"></div>
+        </div>
+
+        <!-- ── TAGLINE — benefits from website being filled first ── -->
+        <div class="form-group">
+          <label>Tagline <span style="font-weight:400;color:var(--ink-light)">(shows on your ad · AI writes one if blank)</span></label>
+          <div style="display:flex;gap:8px;align-items:stretch;">
+            <input type="text" id="f-tagline" placeholder="e.g. Gilbert's most loved yoga studio" oninput="syncPreview()" style="flex:1;" autocomplete="off">
+            <button type="button" onclick="fetchTaglineFromWebsite()" id="fetch-tagline-btn" style="white-space:nowrap;padding:0 12px;font-size:0.74rem;font-weight:600;color:var(--teal);background:var(--teal-pale);border:1.5px solid #B8E0DE;border-radius:6px;cursor:pointer;font-family:'Nunito Sans',sans-serif;">🌐 Fetch</button>
+          </div>
+          <div id="fetch-tagline-status" style="font-size:0.68rem;color:var(--ink-light);margin-top:3px;display:none;"></div>
+        </div>
+
+        <div class="form-group">
+          <label>What do you offer? <span style="font-weight:400;color:var(--ink-light)">(used to write your ad)</span></label>
+          <textarea id="f-desc" placeholder="e.g. Hot yoga, meditation classes, and wellness coaching for the whole family. Family-owned since 2018." oninput="syncPreview()"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Special Offer or Coupon <span style="font-weight:400;color:var(--ink-light)">(optional)</span></label>
+          <input type="text" id="f-offer" placeholder="e.g. First class free — mention CanyonAds" oninput="syncPreview()">
+        </div>
+
+        <!-- ── DIVIDER ── -->
+        <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink-mid);margin:1.4rem 0 1rem;padding-top:1.2rem;border-top:1px solid var(--rule);">Your Contact Info</div>
+
         <div class="form-row">
           <div class="form-group">
             <label>Contact Name *</label>
-            <input type="text" id="f-contact" placeholder="First & Last Name" autocomplete="name">
+            <input type="text" id="f-contact" placeholder="First &amp; Last Name" autocomplete="name">
           </div>
           <div class="form-group">
             <label>Email *</label>
@@ -1307,40 +1343,20 @@ body {
             <input type="text" id="f-address" placeholder="Street, Gilbert AZ" autocomplete="street-address">
           </div>
         </div>
-        <div class="form-group">
-          <label>What do you offer? (used to write your ad)</label>
-          <textarea id="f-desc" placeholder="e.g. Hot yoga, meditation classes, and wellness coaching for the whole family. Family-owned since 2018." oninput="syncPreview()"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Tagline <span style="font-weight:400;color:var(--ink-light)">(optional — shows on your ad · AI will write one if blank)</span></label>
-          <div style="display:flex;gap:8px;align-items:stretch;">
-            <input type="text" id="f-tagline" placeholder="e.g. Gilbert's most loved yoga studio" oninput="syncPreview()" style="flex:1;" autocomplete="off">
-            <button type="button" onclick="fetchTaglineFromWebsite()" id="fetch-tagline-btn" style="white-space:nowrap;padding:0 12px;font-size:0.74rem;font-weight:600;color:var(--teal);background:var(--teal-pale);border:1.5px solid #B8E0DE;border-radius:6px;cursor:pointer;font-family:'Nunito Sans',sans-serif;" title="Pull tagline from website description">🌐 Fetch</button>
-          </div>
-          <div id="fetch-tagline-status" style="font-size:0.68rem;color:var(--ink-light);margin-top:3px;display:none;"></div>
-        </div>
-        <div class="form-group">
-          <label>Special Offer or Coupon (optional)</label>
-          <input type="text" id="f-offer" placeholder="e.g. First class free — mention CanyonAds" oninput="syncPreview()">
-        </div>
-        <div class="form-group">
-          <label>Website URL <span style="font-weight:400;color:var(--ink-light)">(optional — AI uses this to match your brand style)</span></label>
-          <input type="url" id="f-website" placeholder="https://yourbusiness.com" autocomplete="url" oninput="scheduleQRUpdate()">
-        </div>
 
-        <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); margin: 1.2rem 0 0.75rem; padding-top: 1.2rem; border-top: 1px solid var(--rule);">Brand Assets <span style="font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-light); font-size: 0.75rem;">— optional, makes your ad shine</span></div>
+        <!-- ── BRAND ASSETS ── -->
+        <div style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--teal);margin:1.4rem 0 0.75rem;padding-top:1.2rem;border-top:1px solid var(--rule);">Brand Assets <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-light);font-size:0.75rem;">— optional, makes your ad shine</span></div>
         <div class="uploads-grid-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start;">
           <div class="form-group" style="display:flex;flex-direction:column;">
             <label style="min-height:2.4rem;display:flex;align-items:flex-end;margin-bottom:5px;">Logo <span style="font-weight:400;color:var(--ink-light);margin-left:4px;">(PNG or JPG)</span></label>
-            <!-- file input outside the zone, triggered by label -->
             <input type="file" id="f-logo" accept="image/*" style="display:none" onchange="previewUpload(this,'logo-zone','logo-preview')">
             <label for="f-logo" class="upload-zone" id="logo-zone" style="flex:1;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;">
               <div class="upload-icon">🖼</div>
               <div class="upload-text">Click to upload logo</div>
               <div class="upload-hint">PNG, JPG up to 10MB</div>
             </label>
-            <img id="logo-preview" style="display:none; margin-top:8px; max-height:60px; max-width:100%; object-fit:contain; border-radius:4px; border:1px solid var(--rule);">
-            <button type="button" id="fetch-logo-btn" onclick="fetchLogoFromWebsite()" style="margin-top:7px;width:100%;padding:6px;font-size:0.74rem;font-weight:600;color:var(--teal);background:var(--teal-pale);border:1.5px solid #B8E0DE;border-radius:6px;cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;">🌐 Fetch from website</button>
+            <img id="logo-preview" style="display:none;margin-top:8px;max-height:60px;max-width:100%;object-fit:contain;border-radius:4px;border:1px solid var(--rule);">
+            <button type="button" id="fetch-logo-btn" onclick="fetchLogoFromWebsite()" style="margin-top:7px;width:100%;padding:6px;font-size:0.74rem;font-weight:600;color:var(--teal);background:var(--teal-pale);border:1.5px solid #B8E0DE;border-radius:6px;cursor:pointer;font-family:'Nunito Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;">🌐 Fetch logo from website</button>
             <div id="fetch-logo-status" style="font-size:0.68rem;color:var(--ink-light);margin-top:4px;text-align:center;display:none;"></div>
           </div>
           <div class="form-group" style="display:flex;flex-direction:column;">
@@ -1351,9 +1367,10 @@ body {
               <div class="upload-text">Click to upload photo</div>
               <div class="upload-hint">PNG, JPG up to 10MB</div>
             </label>
-            <img id="photo-preview" style="display:none; margin-top:8px; max-height:60px; width:100%; object-fit:cover; border-radius:4px; border:1px solid var(--rule);">
+            <img id="photo-preview" style="display:none;margin-top:8px;max-height:60px;width:100%;object-fit:cover;border-radius:4px;border:1px solid var(--rule);">
           </div>
         </div>
+
         <div class="flow-nav">
           <span></span>
           <button class="btn-next" onclick="goStep(2)">Next: Preview Your Ad →</button>
@@ -1865,83 +1882,119 @@ function syncSidebar() {
   document.getElementById('sum-price').textContent = '$' + selectedPlan.price + '/mo';
 }
 
-/* ── FETCH TAGLINE FROM WEBSITE ── */
-async function fetchTaglineFromWebsite() {
+/* ── API BASE DETECTION ── */
+function getApiBase() {
+  if (location.protocol === 'http:' || location.protocol === 'https:') return '';
+  return null; // local file — no backend
+}
+function setFetchStatus(elId, msg, color) {
+  const el = document.getElementById(elId); if (!el) return;
+  el.style.display = msg ? 'block' : 'none';
+  el.textContent   = msg;
+  el.style.color   = color || 'var(--ink-light)';
+}
+
+/* ── FETCH ALL (logo + tagline in one click) ── */
+async function fetchAllFromWebsite() {
   const url = document.getElementById('f-website').value.trim();
-  if (!url) { alert('Please enter a website URL first (below).'); return; }
-
-  const btn    = document.getElementById('fetch-tagline-btn');
-  const status = document.getElementById('fetch-tagline-status');
-  const input  = document.getElementById('f-tagline');
-  btn.disabled = true;
-  btn.textContent = '⏳';
-  status.style.display = 'block';
-  status.textContent = 'Reading website…';
-
+  if (!url) { alert('Please enter your website URL first.'); return; }
+  const apiBase = getApiBase();
+  const btn = document.getElementById('fetch-all-btn');
+  if (apiBase === null) {
+    setFetchStatus('fetch-all-status', 'Auto-fill only works on the live site (ads.coppercanyondentalaz.com). Upload your logo manually below.', 'orange');
+    return;
+  }
+  btn.disabled = true; btn.textContent = '⏳ Fetching…';
+  setFetchStatus('fetch-all-status', 'Reading your website…');
   try {
-    const res  = await fetch('/api/fetch-logo?url=' + encodeURIComponent(url));
+    const res  = await fetch(apiBase + '/api/fetch-logo?url=' + encodeURIComponent(url));
+    if (!res.ok) throw new Error('Server returned ' + res.status);
     const data = await res.json();
-    // Re-use the same endpoint — it returns siteDescription if found
-    if (data.siteDescription) {
-      input.value = data.siteDescription;
-      syncPreview();
-      status.textContent = '✓ Tagline pulled from website.';
-      status.style.color = 'var(--teal)';
-    } else {
-      status.textContent = 'No tagline found — try typing one manually.';
-      status.style.color = 'var(--ink-light)';
+    const filled = [];
+    if (data.logoUrl) {
+      const preview = document.getElementById('logo-preview');
+      const zone    = document.getElementById('logo-zone');
+      preview.src   = data.logoUrl;
+      preview.style.display = 'block';
+      zone.classList.add('has-file');
+      zone.querySelector('.upload-text').textContent = 'Logo from website';
+      zone.querySelector('.upload-hint').textContent = new URL(url).hostname;
+      document.getElementById('fetch-logo-btn').style.display = 'none';
+      filled.push('logo');
+      if (typeof refreshFlowSlides === 'function') refreshFlowSlides();
     }
+    if (data.siteDescription && !document.getElementById('f-tagline').value.trim()) {
+      document.getElementById('f-tagline').value = data.siteDescription.slice(0, 90);
+      syncPreview();
+      filled.push('tagline');
+    }
+    setFetchStatus('fetch-all-status',
+      filled.length ? '✓ Auto-filled: ' + filled.join(' & ') + '! Review below and adjust if needed.' : 'Website fetched but no logo or tagline found — fill in manually.',
+      filled.length ? 'var(--teal)' : 'var(--ink-light)');
   } catch(e) {
-    status.textContent = 'Could not reach server.';
-    status.style.color = 'var(--ink-light)';
+    setFetchStatus('fetch-all-status', '✗ Could not reach website (' + e.message + '). Fill in manually below.', '#C94F2A');
   } finally {
-    btn.disabled = false;
-    btn.textContent = '🌐 Fetch';
+    btn.disabled = false; btn.innerHTML = '🌐 Auto-fill';
   }
 }
 
-/* ── FETCH LOGO FROM WEBSITE ── */
+/* ── FETCH TAGLINE ONLY ── */
+async function fetchTaglineFromWebsite() {
+  const url = document.getElementById('f-website').value.trim();
+  if (!url) { alert('Please enter your website URL first.'); return; }
+  const apiBase = getApiBase();
+  if (apiBase === null) { setFetchStatus('fetch-tagline-status', 'Only works on the live site.', 'orange'); return; }
+  const btn = document.getElementById('fetch-tagline-btn');
+  btn.disabled = true; btn.textContent = '⏳';
+  setFetchStatus('fetch-tagline-status', 'Reading website…');
+  try {
+    const res  = await fetch(apiBase + '/api/fetch-logo?url=' + encodeURIComponent(url));
+    if (!res.ok) throw new Error('Server returned ' + res.status);
+    const data = await res.json();
+    if (data.siteDescription) {
+      document.getElementById('f-tagline').value = data.siteDescription.slice(0, 90);
+      syncPreview();
+      setFetchStatus('fetch-tagline-status', '✓ Tagline pulled from website.', 'var(--teal)');
+    } else {
+      setFetchStatus('fetch-tagline-status', 'No tagline found — type one manually.', 'var(--ink-light)');
+    }
+  } catch(e) {
+    setFetchStatus('fetch-tagline-status', '✗ Could not reach server.', '#C94F2A');
+  } finally {
+    btn.disabled = false; btn.textContent = '🌐 Fetch';
+  }
+}
+
+/* ── FETCH LOGO ONLY ── */
 async function fetchLogoFromWebsite() {
   const url = document.getElementById('f-website').value.trim();
-  if (!url) { alert('Please enter a website URL first (in the field above).'); return; }
-
-  const btn    = document.getElementById('fetch-logo-btn');
-  const status = document.getElementById('fetch-logo-status');
+  if (!url) { alert('Please enter your website URL first.'); return; }
+  const apiBase = getApiBase();
+  if (apiBase === null) { setFetchStatus('fetch-logo-status', 'Only works on the live site. Upload manually instead.', 'orange'); return; }
+  const btn     = document.getElementById('fetch-logo-btn');
   const preview = document.getElementById('logo-preview');
-  btn.disabled = true;
-  btn.textContent = '⏳ Fetching…';
-  status.style.display = 'block';
-  status.textContent = 'Looking up logo from website…';
-
+  btn.disabled  = true; btn.textContent = '⏳ Fetching…';
+  setFetchStatus('fetch-logo-status', 'Looking up logo…');
   try {
-    const res  = await fetch('/api/fetch-logo?url=' + encodeURIComponent(url));
+    const res  = await fetch(apiBase + '/api/fetch-logo?url=' + encodeURIComponent(url));
+    if (!res.ok) throw new Error('Server returned ' + res.status);
     const data = await res.json();
-
     if (data.logoUrl) {
-      preview.src = data.logoUrl;
-      preview.style.display = 'block';
-      preview.onerror = () => {
-        preview.style.display = 'none';
-        status.textContent = 'Image loaded but could not display. Try uploading manually.';
-      };
+      preview.src = data.logoUrl; preview.style.display = 'block';
+      preview.onerror = () => { preview.style.display = 'none'; setFetchStatus('fetch-logo-status', 'Could not display image — upload manually.', 'var(--ink-light)'); };
       document.getElementById('logo-zone').classList.add('has-file');
       document.getElementById('logo-zone').querySelector('.upload-text').textContent = 'Logo from website';
       document.getElementById('logo-zone').querySelector('.upload-hint').textContent = new URL(url).hostname;
-      status.textContent = '✓ Logo found — showing exactly as it appears on your site.';
-      status.style.color = 'var(--teal)';
+      setFetchStatus('fetch-logo-status', '✓ Logo fetched!', 'var(--teal)');
       btn.style.display = 'none';
       if (typeof refreshFlowSlides === 'function') refreshFlowSlides();
     } else {
-      status.textContent = 'No logo found automatically. Please upload one manually.';
-      status.style.color = 'var(--ink-light)';
-      btn.disabled = false;
-      btn.innerHTML = '🌐 Try again';
+      setFetchStatus('fetch-logo-status', 'No logo found — upload one manually.', 'var(--ink-light)');
+      btn.disabled = false; btn.innerHTML = '🌐 Try again';
     }
   } catch(e) {
-    status.textContent = 'Could not reach server. Upload your logo manually instead.';
-    status.style.color = 'var(--ink-light)';
-    btn.disabled = false;
-    btn.innerHTML = '🌐 Fetch from website';
+    setFetchStatus('fetch-logo-status', '✗ Could not reach server. Upload manually instead.', '#C94F2A');
+    btn.disabled = false; btn.innerHTML = '🌐 Fetch logo from website';
   }
 }
 
